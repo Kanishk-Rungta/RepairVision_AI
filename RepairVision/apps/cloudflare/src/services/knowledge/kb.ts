@@ -261,6 +261,7 @@ export const KB: KbEntry[] = [
     ],
     technicianOnly: ['Open the case and check the switch and solder joints.'],
   },
+  // ── More mouse faults ──────────────────────────────────────────────────────
   {
     id: 'mouse-no-power',
     deviceType: 'mouse',
@@ -333,6 +334,7 @@ export const KB: KbEntry[] = [
     ],
     technicianOnly: ['Open the case and clean or replace the switch.'],
   },
+  // ── More keyboard faults ───────────────────────────────────────────────────
   {
     id: 'kb-wrong-characters',
     deviceType: 'keyboard',
@@ -422,5 +424,118 @@ export const KB: KbEntry[] = [
       'Check whether the keyboard works normally without light.',
     ],
     technicianOnly: ['Open the case and check the LED strip and its connector.'],
+  },
+  // ── More USB accessory faults ──────────────────────────────────────────────
+  {
+    id: 'usb-headset-audio',
+    deviceType: 'usb_accessory',
+    fault: 'USB headset or speaker with one-sided, crackling or no sound',
+    keywords: [
+      'headset', 'headphones', 'earphones', 'speaker', 'one side', 'one ear', 'crackle',
+      'crackling', 'static', 'no sound', 'quiet', 'mute', 'microphone', 'mic', 'volume',
+      'audio', 'sound',
+    ],
+    explanation:
+      'Crackle or a dead side is usually a break in the cable near the plug or the earcup. No sound at all is more often the wrong output device selected, or a mute switch on the cable.',
+    checks: [
+      'Check the in-line mute or volume control on the cable.',
+      'Check that the computer is playing to the headset and not to other speakers.',
+      'Wiggle the cable near the plug and near each earcup while sound plays and listen for the cut-out.',
+      'Try another USB port, then another computer.',
+    ],
+    technicianOnly: ['Open the earcup and re-solder a broken wire.'],
+  },
+  {
+    id: 'usb-flash-drive',
+    deviceType: 'usb_accessory',
+    fault: 'USB flash drive or storage not detected or asking to format',
+    keywords: [
+      'flash drive', 'pen drive', 'thumb drive', 'memory stick', 'usb stick', 'storage',
+      'hard drive', 'format', 'not showing', 'not detected', 'not recognised', 'not recognized',
+      'read only', 'corrupt', 'slow', 'files', 'disk', 'drive',
+    ],
+    explanation:
+      'A drive that is detected but asks to be formatted usually has a damaged file system, which can often be recovered. A drive that is not detected at all points at the port, the connector or the drive itself.',
+    checks: [
+      'Do not format the drive if it holds files you want.',
+      'Try a different USB port and a second computer.',
+      'Look at the connector for bent metal or a loose, rattling plug.',
+      'Check whether the drive appears in the computer’s disk list even if it has no name.',
+    ],
+    technicianOnly: ['Recover data with a recovery tool before any repair or format.'],
+  },
+  {
+    id: 'usb-slow-charge',
+    deviceType: 'usb_accessory',
+    fault: 'Slow or no charging from a USB cable or charger',
+    keywords: [
+      'slow charge', 'charging slowly', 'wont charge', 'not charging', 'charge', 'charger',
+      'power bank', 'battery', 'takes hours', 'stops charging', 'intermittent', 'adapter',
+      'cable', 'lead',
+    ],
+    explanation:
+      'Charging speed depends on the charger, the cable and the device all agreeing. A thin or worn cable limits the current, and a dirty socket can stop charging while data still works.',
+    checks: [
+      'Try a different cable and a different charger.',
+      'Look into the device socket with a torch for lint.',
+      'Check that the plug is fully seated and does not wobble.',
+      'Try a wall charger instead of a computer port.',
+    ],
+    technicianOnly: ['Clean or replace the socket on the device.'],
+  },
+  {
+    id: 'usb-webcam',
+    deviceType: 'usb_accessory',
+    fault: 'USB webcam showing no picture or not found',
+    keywords: [
+      'webcam', 'camera', 'no picture', 'black screen', 'no image', 'video', 'blurry',
+      'cant find camera', 'not found', 'permission', 'privacy shutter', 'cover',
+      'lens', 'in use',
+    ],
+    explanation:
+      'A black picture is often a closed privacy shutter, a program blocking access, or a camera permission switched off. If the computer cannot find the camera at all, the cable or port is the next suspect.',
+    checks: [
+      'Check for a sliding privacy shutter or cover over the lens.',
+      'Close other programs that might be using the camera, then try again.',
+      'Check the camera permission setting for the program.',
+      'Try a different USB port and wipe the lens with a soft dry cloth.',
+    ],
+    technicianOnly: [],
+  },
+  {
+    id: 'usb-overheat',
+    deviceType: 'usb_accessory',
+    fault: 'USB accessory or charger getting very hot, smelling or sparking',
+    keywords: [
+      'hot', 'overheating', 'burning smell', 'smell', 'smoke', 'melted', 'spark', 'sparks',
+      'swollen', 'bulging', 'scorched', 'discoloured', 'discolored', 'too hot', 'burnt',
+    ],
+    explanation:
+      'A device that is too hot to hold, smells of burning, is discoloured or has bulged is unsafe. This is a short circuit or a failing battery or component, not something to test further.',
+    checks: [
+      'Unplug it now and keep it away from anything that burns.',
+      'Do not plug it in again, and do not charge a swollen battery.',
+      'Hand it to a technician rather than testing it further.',
+    ],
+    technicianOnly: ['Assess the damage. Do not return it to the visitor if it is unsafe.'],
+  },
+  {
+    id: 'usb-needs-driver',
+    deviceType: 'usb_accessory',
+    fault: 'Device detected but not working: driver, software or restart needed',
+    keywords: [
+      'driver', 'software', 'unknown device', 'installing', 'error', 'code 43', 'restart',
+      'detected but', 'not working', 'update', 'recognised but', 'recognized but', 'beeps',
+      'sounds when plugged',
+    ],
+    explanation:
+      'When the computer makes the plug-in sound but the device does nothing, the hardware is probably alive and a driver or setting is missing. This is common after an update.',
+    checks: [
+      'Restart the computer with the device plugged in.',
+      'Try a different USB port, because a driver can be tied to a port.',
+      'Check the manufacturer’s site or the system’s device list for an update.',
+      'Test the device on another computer.',
+    ],
+    technicianOnly: [],
   },
 ];
