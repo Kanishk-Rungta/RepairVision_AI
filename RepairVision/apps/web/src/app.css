@@ -4,94 +4,188 @@
 
 @layer base {
   :root {
-    /* ── Surfaces and text (DESIGN.md: Void Black, Ink, Obsidian, Mist) ──────
+    /* ── Surfaces and text (Apple: Gallery White, Studio Mist, Ink) ──────────
        Space-separated R G B channels so Tailwind can apply opacity. The slate
-       scale is INVERTED: slate-50 is the darkest surface, slate-900 the
-       brightest text. See tailwind.config.js. */
+       scale runs light to dark: slate-50 is the palest surface, slate-900 the
+       darkest text. See tailwind.config.js. */
+    color-scheme: light;
+    --tint: 0 0 0;
+    --canvas: 255 255 255;
+    --surface: 255 255 255;
+    --raised: 245 245 247;
+    --mist: 245 245 247;
+    --fg: 29 29 31;
+    --fg-strong: 29 29 31;
+    --s-50: 245 245 247;
+    --s-100: 238 238 240;
+    --s-200: 230 230 232;
+    --s-300: 214 214 214;
+    --s-400: 118 118 122;
+    --s-500: 112 112 112;
+    --s-600: 86 86 90;
+    --s-700: 66 66 69;
+    --s-800: 44 44 46;
+    --s-900: 29 29 31;
+    --s-950: 0 0 0;
+
+    /* Brand palette. Defaults are Apple blue (#0071e3 at 500). 50–300 are
+       tints, 400 a slight lift, 600 the hover/text deepening and 700–900 are
+       text shades. src/lib/brand.ts sets --brand-l-* (light) and --brand-d-*
+       (dark) per cafe at runtime, and these fall back to the defaults. The
+       accent palette follows the brand unless the cafe sets its own. */
+    --brand-50: var(--brand-l-50, 240 246 253);
+    --brand-100: var(--brand-l-100, 227 239 252);
+    --brand-200: var(--brand-l-200, 204 227 249);
+    --brand-300: var(--brand-l-300, 158 201 244);
+    --brand-400: var(--brand-l-400, 46 139 232);
+    --brand-500: var(--brand-l-500, 0 113 227);
+    --brand-600: var(--brand-l-600, 0 97 195);
+    --brand-700: var(--brand-l-700, 0 79 159);
+    --brand-800: var(--brand-l-800, 0 56 114);
+    --brand-900: var(--brand-l-900, 0 36 73);
+    --accent-50: var(--accent-l-50, 240 246 253);
+    --accent-100: var(--accent-l-100, 227 239 252);
+    --accent-200: var(--accent-l-200, 204 227 249);
+    --accent-300: var(--accent-l-300, 158 201 244);
+    --accent-400: var(--accent-l-400, 46 139 232);
+    --accent-500: var(--accent-l-500, 0 113 227);
+    --accent-600: var(--accent-l-600, 0 97 195);
+    --accent-700: var(--accent-l-700, 0 79 159);
+    --accent-800: var(--accent-l-800, 0 56 114);
+    --accent-900: var(--accent-l-900, 0 36 73);
+    --on-accent: var(--on-accent-l, 255 255 255);
+
+    /* Motion. One ease for everything that settles, one with a little
+       overshoot for things that are pressed. */
+    --ease-apple: cubic-bezier(0.22, 1, 0.36, 1);
+    /* Expo-out: a fast start and a very long, soft landing. Hero only. */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* Typefaces. On Apple devices this is the real SF Pro; everywhere else it
+       falls back to Inter, which is bundled. Geist Mono for small technical
+       labels. A cafe can still repoint --font-sans / --font-display. */
+    --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter Variable', Inter, 'Hanken Grotesk Variable', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', Inter, 'Hanken Grotesk Variable', ui-sans-serif, system-ui, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  }
+  /* Dark theme: chosen with the toggle (data-theme="dark"), or followed from
+     the system when the visitor has not chosen (no data-theme at all). */
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --tint: 255 255 255;
     --canvas: 4 5 6;
     --surface: 10 11 13;
     --raised: 17 18 20;
+    --mist: 13 14 16;
     --fg: 230 230 230;
     --fg-strong: 255 255 255;
     --s-50: 13 14 16;
     --s-100: 21 22 24;
     --s-200: 33 34 36;
     --s-300: 52 53 55;
-    --s-400: 106 107 108;
+    --s-400: 130 131 133;
     --s-500: 156 156 157;
     --s-600: 182 182 184;
     --s-700: 208 208 210;
     --s-800: 230 230 230;
     --s-900: 250 250 250;
     --s-950: 255 255 255;
-
-    /* Default brand palette: Raycast coral (#ff6363 at 500). 50–300 are tints
-       over black, 400 is the hover/text lift, 700–900 are pale tints for text.
-       src/lib/brand.ts overrides these per cafe at runtime. */
-    --brand-50: 24 13 13;
-    --brand-100: 39 18 19;
-    --brand-200: 69 29 30;
-    --brand-300: 117 47 48;
-    --brand-400: 255 122 122;
-    --brand-500: 255 99 99;
-    --brand-600: 224 87 87;
-    --brand-700: 255 158 158;
-    --brand-800: 255 192 192;
-    --brand-900: 255 224 224;
-    /* Accent (call-to-action) palette. Follows the brand unless the cafe sets
-       its own accent colour. */
-    --accent-50: 24 13 13;
-    --accent-100: 39 18 19;
-    --accent-200: 69 29 30;
-    --accent-300: 117 47 48;
-    --accent-400: 255 122 122;
-    --accent-500: 255 99 99;
-    --accent-600: 224 87 87;
-    --accent-700: 255 158 158;
-    --accent-800: 255 192 192;
-    --accent-900: 255 224 224;
-    /* Text colour that sits on a solid accent fill (dark on coral). */
-    --on-accent: 7 8 10;
-
-    /* Typefaces. Inter for everything, Geist Mono for small technical labels.
-       A cafe can still repoint --font-sans / --font-display. */
-    --font-display: 'Inter Variable', Inter, 'Hanken Grotesk Variable', ui-sans-serif, system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
-    --font-sans: 'Inter Variable', Inter, 'Hanken Grotesk Variable', ui-sans-serif, system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
-    --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+    --brand-50: var(--brand-d-50, 4 15 26);
+    --brand-100: var(--brand-d-100, 5 23 41);
+    --brand-200: var(--brand-d-200, 6 38 71);
+    --brand-300: var(--brand-d-300, 7 62 118);
+    --brand-400: var(--brand-d-400, 47 150 255);
+    --brand-500: var(--brand-d-500, 10 132 255);
+    --brand-600: var(--brand-d-600, 9 116 224);
+    --brand-700: var(--brand-d-700, 103 179 255);
+    --brand-800: var(--brand-d-800, 157 206 255);
+    --brand-900: var(--brand-d-900, 206 230 255);
+    --accent-50: var(--accent-d-50, 4 15 26);
+    --accent-100: var(--accent-d-100, 5 23 41);
+    --accent-200: var(--accent-d-200, 6 38 71);
+    --accent-300: var(--accent-d-300, 7 62 118);
+    --accent-400: var(--accent-d-400, 47 150 255);
+    --accent-500: var(--accent-d-500, 10 132 255);
+    --accent-600: var(--accent-d-600, 9 116 224);
+    --accent-700: var(--accent-d-700, 103 179 255);
+    --accent-800: var(--accent-d-800, 157 206 255);
+    --accent-900: var(--accent-d-900, 206 230 255);
+    --on-accent: var(--on-accent-d, 255 255 255);  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      color-scheme: dark;
+      --tint: 255 255 255;
+      --canvas: 4 5 6;
+      --surface: 10 11 13;
+      --raised: 17 18 20;
+      --mist: 13 14 16;
+      --fg: 230 230 230;
+      --fg-strong: 255 255 255;
+      --s-50: 13 14 16;
+      --s-100: 21 22 24;
+      --s-200: 33 34 36;
+      --s-300: 52 53 55;
+      --s-400: 130 131 133;
+      --s-500: 156 156 157;
+      --s-600: 182 182 184;
+      --s-700: 208 208 210;
+      --s-800: 230 230 230;
+      --s-900: 250 250 250;
+      --s-950: 255 255 255;
+      --brand-50: var(--brand-d-50, 4 15 26);
+      --brand-100: var(--brand-d-100, 5 23 41);
+      --brand-200: var(--brand-d-200, 6 38 71);
+      --brand-300: var(--brand-d-300, 7 62 118);
+      --brand-400: var(--brand-d-400, 47 150 255);
+      --brand-500: var(--brand-d-500, 10 132 255);
+      --brand-600: var(--brand-d-600, 9 116 224);
+      --brand-700: var(--brand-d-700, 103 179 255);
+      --brand-800: var(--brand-d-800, 157 206 255);
+      --brand-900: var(--brand-d-900, 206 230 255);
+      --accent-50: var(--accent-d-50, 4 15 26);
+      --accent-100: var(--accent-d-100, 5 23 41);
+      --accent-200: var(--accent-d-200, 6 38 71);
+      --accent-300: var(--accent-d-300, 7 62 118);
+      --accent-400: var(--accent-d-400, 47 150 255);
+      --accent-500: var(--accent-d-500, 10 132 255);
+      --accent-600: var(--accent-d-600, 9 116 224);
+      --accent-700: var(--accent-d-700, 103 179 255);
+      --accent-800: var(--accent-d-800, 157 206 255);
+      --accent-900: var(--accent-d-900, 206 230 255);
+      --on-accent: var(--on-accent-d, 255 255 255);    }
   }
   html {
-    /* The site is a dark interface. Tell the browser, so scrollbars, form
-       controls and the default canvas match. */
-    color-scheme: dark;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
     background: rgb(var(--canvas));
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
   }
   body {
     @apply bg-canvas text-ink antialiased font-sans;
-    font-feature-settings: 'calt', 'kern', 'liga', 'ss03';
-    /* A faint coral glow at the top of every page, the only atmosphere. */
-    background-image:
-      radial-gradient(60rem 28rem at 50% -10rem, rgb(var(--accent-500) / 0.10), transparent 70%);
-    background-repeat: no-repeat;
-    background-attachment: scroll;
+    font-feature-settings: 'calt', 'kern', 'liga';
+    letter-spacing: -0.011em;
+    /* Inter's optical-size axis switches to its tighter display cut at large
+       sizes, the way SF Pro splits into Text and Display. */
+    font-optical-sizing: auto;
   }
   ::selection {
-    background: rgb(var(--accent-500) / 0.35);
-    color: #fff;
+    background: rgb(var(--accent-500) / 0.22);
+    color: inherit;
   }
   :focus-visible {
-    outline: 2px solid rgb(var(--accent-500) / 0.8);
-    outline-offset: 2px;
+    outline: 2px solid rgb(var(--accent-500));
+    outline-offset: 3px;
   }
-  /* Quiet dark scrollbars. */
+  /* Quiet scrollbars. */
   * {
     scrollbar-width: thin;
     scrollbar-color: rgb(var(--s-300)) transparent;
   }
   h1 {
-    @apply text-3xl md:text-5xl font-semibold font-display tracking-[-0.03em] text-pine;
+    @apply text-3xl md:text-5xl font-semibold font-display tracking-[-0.025em] text-pine;
     line-height: 1.08;
   }
   h2 {
@@ -108,7 +202,7 @@
   hr {
     @apply border-slate-200;
   }
-  /* Browser form controls: dark and consistent. */
+  /* Browser form controls. */
   input[type='checkbox'],
   input[type='radio'] {
     accent-color: rgb(var(--accent-500));
@@ -116,7 +210,7 @@
   input[type='date'],
   input[type='time'],
   input[type='datetime-local'] {
-    color-scheme: dark;
+    color-scheme: inherit;
   }
   code, kbd, samp, pre {
     font-family: var(--font-mono);
@@ -145,49 +239,62 @@
   }
 
   /* ── Buttons ─────────────────────────────────────────────────────────────
-     Compact, 8px radius, with a 1px top highlight so they read as pressed
-     keys rather than flat rectangles. */
+     Compact pills. Press is a quick spring; nothing else moves. */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-[15px] font-medium leading-none transition-[background-color,box-shadow,color,transform] duration-150 active:translate-y-px focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas disabled:opacity-40 disabled:cursor-not-allowed disabled:active:translate-y-0;
+    @apply relative inline-flex whitespace-nowrap items-center justify-center gap-2 px-5 py-2.5 rounded-full text-[15px] font-medium leading-none overflow-hidden transition-[background-color,box-shadow,color,transform] duration-300 ease-apple active:scale-[0.97] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100;
   }
   .btn-primary {
-    @apply btn bg-accent-500 text-on-accent hover:bg-accent-400;
-    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.35) inset, 0 0 0 1px rgb(0 0 0 / 0.25), 0 6px 20px -6px rgb(var(--accent-500) / 0.55);
+    @apply btn bg-accent-500 text-on-accent hover:bg-accent-600;
+  }
+  /* A single pass of light across a primary button on hover. */
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.32) 50%, transparent 65%);
+    transform: translateX(-120%);
+    pointer-events: none;
+  }
+  .btn-primary:hover::after {
+    transform: translateX(120%);
+    transition: transform 0.9s var(--ease-apple);
   }
   .btn-secondary {
-    @apply btn bg-white/[0.05] text-slate-800 hover:bg-white/[0.09] hover:text-slate-950;
-    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.08) inset, 0 0 0 1px rgb(255 255 255 / 0.09), 0 2px 4px rgb(0 0 0 / 0.35);
+    @apply btn bg-transparent text-slate-900 hover:bg-slate-50;
+    box-shadow: 0 0 0 1px rgb(134 134 139);
   }
   .btn-ghost {
-    @apply btn bg-transparent text-slate-600 hover:bg-white/[0.06] hover:text-slate-900;
+    @apply btn bg-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900;
   }
   .btn-danger {
-    @apply btn bg-[#e5373d] text-white hover:bg-[#f04349];
-    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.25) inset, 0 0 0 1px rgb(0 0 0 / 0.3);
+    @apply btn bg-[#d70015] text-white hover:bg-[#b80012];
   }
   /* Quiet destructive action. Use where a solid red button would draw too
      much attention, for example on a dashboard the user sees every day. */
   .btn-danger-outline {
     @apply btn bg-transparent text-red-700 hover:bg-red-500/10;
-    box-shadow: 0 0 0 1px rgb(255 90 95 / 0.3);
+    box-shadow: 0 0 0 1px rgb(255 59 48 / 0.45);
   }
   .btn-lg {
-    @apply px-6 py-3.5 text-base;
+    @apply px-7 py-3.5 text-[17px];
   }
   /* Compact button for toolbars, card actions and dense rows. */
   .btn-sm {
-    @apply px-3.5 py-2 text-sm;
+    @apply px-4 py-2 text-sm;
   }
   /* For actions that sit inside a table row. */
   .btn-xs {
-    @apply px-2.5 py-1 text-xs gap-1 rounded-md font-medium;
+    @apply px-3 py-1 text-xs gap-1 rounded-full font-medium;
   }
 
   /* ── Forms ───────────────────────────────────────────────────────────────
-     Inputs are recessed wells: darker than the card they sit on. */
+     Inputs are quiet wells with a 1px outline that turns blue on focus. */
   .input {
-    @apply block w-full rounded-lg border border-white/[0.11] bg-canvas px-3.5 py-2.5 text-[15px] text-slate-900 placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 hover:border-white/20 focus:border-accent-500/70 focus:outline-none focus:ring-2 focus:ring-accent-500/25;
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.5) inset;
+    @apply block w-full rounded-xl border border-transparent bg-slate-50 px-4 py-2.5 text-[15px] text-slate-900 placeholder:text-slate-400 transition-[border-color,box-shadow,background-color] duration-300 ease-apple hover:bg-slate-100 focus:bg-canvas focus:border-accent-500 focus:outline-none focus:ring-4 focus:ring-accent-500/20;
+    box-shadow: 0 0 0 1px rgb(134 134 139 / 0.55) inset;
+  }
+  .input:focus {
+    box-shadow: none;
   }
   .input:disabled {
     @apply opacity-50 cursor-not-allowed;
@@ -199,17 +306,16 @@
   /* ── Surfaces ──────────────────────────────────────────────────────────── */
   .card {
     @apply bg-surface rounded-2xl ring-1 ring-slate-200;
-    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.05) inset, 0 8px 24px -12px rgb(0 0 0 / 0.7);
   }
-  /* A card that is a link or a button. Only the border tint and the surface
-     change on hover; nothing moves. */
+  /* A card that is a link or a button. It lifts a few pixels and its edge
+     darkens; there is no shadow, only movement. */
   .card-link {
-    @apply card block transition-[background-color,box-shadow] duration-150 hover:bg-raised hover:ring-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/70;
+    @apply card block transition-[transform,background-color,box-shadow] duration-500 ease-apple hover:-translate-y-1 hover:ring-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500;
   }
-  /* A dialog panel that floats above the page. Dialogs are the only
-     surface that uses a large shadow. */
+  /* A dialog panel that floats above the page. */
   .modal-panel {
-    @apply w-full rounded-2xl bg-raised p-6 shadow-xl ring-1 ring-slate-300;
+    @apply w-full rounded-2xl bg-surface p-6 ring-1 ring-slate-300;
+    animation: modal-in 0.5s var(--ease-apple) both;
   }
   /* Small mono line above a page or section title. */
   .eyebrow {
@@ -228,31 +334,23 @@
   .section-lede {
     @apply mt-4 text-lg leading-relaxed text-slate-500;
   }
-  /* Headline with a soft white-to-grey fade, for hero titles. */
+  /* Kept so existing markup works. Apple type is flat ink, no gradient. */
   .text-gradient {
-    background: linear-gradient(180deg, #fff 30%, rgb(255 255 255 / 0.62));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: rgb(var(--fg-strong));
   }
   /* Public page rhythm. Every section on the public site uses `.section` so
      the gaps down the page are always the same size. A `.band` is a section
-     on a slightly lifted background; it holds a `.section` inside it. */
+     on a Studio Mist background; it holds a `.section` inside it. */
   .section {
     @apply max-w-6xl mx-auto px-4 py-16 md:py-24;
   }
   .band {
-    @apply bg-surface/70 border-y border-slate-200;
+    background: rgb(var(--mist));
   }
-  /* Hero backdrop: the one place with atmosphere. Coral and blue light on a
-     black field, over a faint grid that fades out toward the edges. */
+  /* Hero backdrop: a white stage with a faint engineering grid that fades in
+     and out toward the edges. The only decoration. */
   .hero-bg {
-    @apply relative isolate overflow-hidden border-b border-slate-200;
-    background:
-      radial-gradient(42rem 22rem at 18% -6rem, rgb(var(--accent-500) / 0.30), transparent 70%),
-      radial-gradient(38rem 24rem at 88% 0%, rgb(99 161 255 / 0.20), transparent 70%),
-      radial-gradient(30rem 16rem at 50% 115%, rgb(var(--accent-500) / 0.12), transparent 70%),
-      rgb(var(--canvas));
+    @apply relative isolate overflow-hidden bg-canvas;
   }
   .hero-bg::before {
     content: '';
@@ -260,11 +358,12 @@
     inset: 0;
     z-index: -1;
     background-image:
-      linear-gradient(to right, rgb(255 255 255 / 0.045) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+      linear-gradient(to right, rgb(var(--tint) / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--tint) / 0.05) 1px, transparent 1px);
     background-size: 56px 56px;
-    -webkit-mask-image: radial-gradient(ellipse 70% 80% at 50% 0%, #000 30%, transparent 75%);
-    mask-image: radial-gradient(ellipse 70% 80% at 50% 0%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 80% at 50% 0%, #000 20%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 80% at 50% 0%, #000 20%, transparent 75%);
+    animation: grid-in 2.4s var(--ease-out) 0.2s backwards;
   }
   /* The home page session ticket: two halves with a perforation between
      them. Each half has two half-circle bites out of the edge it shares with
@@ -272,7 +371,6 @@
   .ticket-top,
   .ticket-bottom {
     --bite: 11px;
-    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.06) inset;
   }
   .ticket-top {
     -webkit-mask:
@@ -297,25 +395,29 @@
     top: 0;
     left: calc(var(--bite) + 10px);
     right: calc(var(--bite) + 10px);
-    border-top: 1.5px dashed rgb(255 255 255 / 0.12);
+    border-top: 1.5px dashed rgb(var(--tint) / 0.14);
   }
   /* Keyboard-key chip, for shortcuts and small technical values. */
   .kbd {
-    @apply inline-flex items-center justify-center rounded-md bg-raised px-1.5 py-0.5 font-mono text-[11px] text-slate-600;
-    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.1) inset, 0 0 0 1px rgb(255 255 255 / 0.08), 0 1px 2px rgb(0 0 0 / 0.5);
+    @apply inline-flex items-center justify-center rounded-md bg-slate-50 px-1.5 py-0.5 font-mono text-[11px] text-slate-600;
+    box-shadow: 0 0 0 1px rgb(var(--tint) / 0.12);
   }
   /* Tile that holds one icon (render the icon at size 22). */
   .icon-chip {
-    @apply inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-500/10 text-brand-400 ring-1 ring-brand-500/25;
-    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.08) inset;
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full bg-brand-500/10 text-brand-600;
+    transition: transform 0.5s var(--ease-spring);
+  }
+  .card-link:hover .icon-chip,
+  .card:hover .icon-chip {
+    transform: scale(1.08) rotate(-4deg);
   }
   /* Tile for a skill-category icon. The category's own colour is applied
      inline as a soft wash behind a full-strength glyph. */
   .icon-tile {
-    @apply inline-flex h-11 w-11 items-center justify-center rounded-xl;
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full;
   }
   .badge {
-    @apply inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ring-white/[0.06];
+    @apply inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ring-tint/[0.08];
   }
   .badge-waiting   { @apply bg-amber-100 text-amber-800; }
   .badge-in_progress { @apply bg-blue-100 text-blue-800; }
@@ -337,27 +439,305 @@
   .status-dot-awaiting_return { @apply bg-violet-500; }
 }
 
-/* Paper stays paper: print the light palette. */
+/* ── Motion ──────────────────────────────────────────────────────────────
+   Everything below is progressive: with no JavaScript, or with reduced motion
+   asked for, the page simply appears. */
+
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+@keyframes grid-in {
+  from { opacity: 0; }
+}
+/* Hero motion uses only opacity and transform (plus a small blur on the
+   short text), which the browser can run on the GPU without re-laying out the
+   page. Nothing here animates size, spacing or position properties. */
+@keyframes hero-title {
+  from { opacity: 0; transform: translate3d(0, 34px, 0) scale(0.97); filter: blur(10px); }
+  60% { filter: blur(0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
+}
+@keyframes hero-rise {
+  from { opacity: 0; transform: translate3d(0, 22px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes ticket-in {
+  from { opacity: 0; transform: perspective(1400px) translate3d(0, 56px, 0) rotateX(7deg) scale(0.97); }
+  to { opacity: 1; transform: perspective(1400px) translate3d(0, 0, 0) rotateX(0deg) scale(1); }
+}
+@keyframes progress-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes drift-up {
+  to { transform: translate3d(0, -48px, 0); }
+}
+
+/* Hero: the headline resolves first, then the lines under it follow in a
+   tight cascade, and the ticket is dealt in last. `backwards` fill means each
+   element is released to normal styles the moment it lands. */
+.hero-bg .animate-fade-up {
+  animation: hero-rise 1.1s var(--ease-out) 0s backwards;
+}
+.hero-bg h1 {
+  animation: hero-title 1.5s var(--ease-out) 0.08s backwards;
+}
+.hero-bg h1 + * {
+  animation: hero-rise 1.2s var(--ease-out) 0.28s backwards;
+}
+.hero-bg h1 + * + * {
+  animation: hero-rise 1.2s var(--ease-out) 0.38s backwards;
+}
+.hero-bg h1 + * + * + * {
+  animation: hero-rise 1.2s var(--ease-out) 0.5s backwards;
+}
+.hero-ticket {
+  animation: ticket-in 1.6s var(--ease-out) 0.3s backwards;
+}
+
+/* Scroll-linked effects, where the browser supports them. */
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 60;
+    height: 2px;
+    background: rgb(var(--accent-500));
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    animation: progress-grow linear both;
+    animation-timeline: scroll(root);
+    pointer-events: none;
+  }
+  .hero-parallax {
+    will-change: transform;
+    animation: drift-up linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 90vh;
+  }
+}
+
+/* Scroll reveal. motion.ts adds .rv to things that are below the fold, then
+   .rv-in as they arrive, so nothing is ever hidden before the script runs. */
+.rv {
+  opacity: 0;
+  transform: translateY(32px) scale(0.985);
+  filter: blur(8px);
+  transition:
+    opacity 1s var(--ease-apple) var(--rv-delay, 0ms),
+    transform 1s var(--ease-apple) var(--rv-delay, 0ms),
+    filter 1s var(--ease-apple) var(--rv-delay, 0ms);
+  will-change: opacity, transform, filter;
+}
+.rv.rv-in {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+/* Pointer tilt on cards that opt in with use:tilt. */
+[data-tilt] {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.6s var(--ease-apple);
+}
+[data-tilt].tilting {
+  transition: transform 0.12s linear;
+}
+
+/* Header gets a hairline once the page has scrolled. */
+header.sticky {
+  transition: background-color 0.4s var(--ease-apple), box-shadow 0.4s var(--ease-apple);
+}
+html[data-scrolled] header.sticky {
+  box-shadow: 0 1px 0 0 rgb(var(--tint) / 0.08);
+}
+
+/* Page-to-page transitions (SvelteKit onNavigate + View Transitions). */
+::view-transition-old(root) {
+  animation: 0.3s var(--ease-apple) both vt-out;
+}
+::view-transition-new(root) {
+  animation: 0.55s var(--ease-apple) both vt-in;
+}
+@keyframes vt-out {
+  to { opacity: 0; transform: translateY(-8px); filter: blur(4px); }
+}
+@keyframes vt-in {
+  from { opacity: 0; transform: translateY(14px); filter: blur(6px); }
+}
+
+
+
+/* ── Admin and repairer pages ────────────────────────────────────────────
+   Beyond the top-level cascade above: the things inside a page settle in
+   too. Lists, grids of tiles and tables arrive row by row. These run when the
+   elements are first drawn, so data that loads a moment later still gets its
+   entrance, and a row that is already on screen is never replayed. */
+@keyframes row-in {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes row-fade {
+  from { opacity: 0; }
+}
+@keyframes bar-wipe {
+  from { clip-path: inset(0 100% 0 0 round 9999px); }
+  to { clip-path: inset(0 0 0 0 round 9999px); }
+}
+@keyframes scrim-in {
+  from { opacity: 0; }
+}
+@keyframes drawer-in {
+  from { transform: translate3d(100%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+@keyframes pop-in {
+  from { opacity: 0; transform: translate3d(0, -6px, 0) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+.staff :is(ul, ol, dl, .grid) > :nth-child(-n + 14):not(.no-stagger) {
+  animation: row-in 0.7s var(--ease-out) backwards;
+  animation-delay: calc(120ms + var(--n, 0) * 1ms);
+}
+.staff tbody > tr:nth-child(-n + 20) {
+  animation: row-fade 0.6s var(--ease-out) backwards;
+}
+.staff :is(ul, ol, dl, .grid) > :nth-child(1) { --n: 0; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(2) { --n: 50; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(3) { --n: 100; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(4) { --n: 150; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(5) { --n: 200; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(6) { --n: 250; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(7) { --n: 300; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(8) { --n: 340; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(9) { --n: 380; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(10) { --n: 420; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(11) { --n: 450; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(12) { --n: 480; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(13) { --n: 510; }
+.staff :is(ul, ol, dl, .grid) > :nth-child(14) { --n: 540; }
+.staff tbody > tr:nth-child(1) { animation-delay: 120ms; }
+.staff tbody > tr:nth-child(2) { animation-delay: 160ms; }
+.staff tbody > tr:nth-child(3) { animation-delay: 200ms; }
+.staff tbody > tr:nth-child(4) { animation-delay: 240ms; }
+.staff tbody > tr:nth-child(5) { animation-delay: 280ms; }
+.staff tbody > tr:nth-child(6) { animation-delay: 310ms; }
+.staff tbody > tr:nth-child(7) { animation-delay: 340ms; }
+.staff tbody > tr:nth-child(8) { animation-delay: 370ms; }
+.staff tbody > tr:nth-child(n + 9) { animation-delay: 400ms; }
+
+/* Tables and rows warm up under the pointer. */
+.staff tbody > tr,
+.staff :is(ul, ol) > li > a {
+  transition: background-color 0.3s var(--ease-apple);
+}
+
+/* The day-so-far bar draws itself left to right. */
+.bar-grow {
+  animation: bar-wipe 1.2s var(--ease-out) 0.35s backwards;
+}
+
+/* The highlight behind the current sidebar item. */
+.nav-glider {
+  opacity: 0;
+  will-change: transform, height;
+}
+.nav-glider-on {
+  opacity: 1;
+}
+.nav-glider-ready {
+  transition:
+    transform 0.55s var(--ease-out),
+    height 0.55s var(--ease-out),
+    opacity 0.3s ease;
+}
+
+/* The phone menu slides in over a fading scrim. */
+.scrim-in { animation: scrim-in 0.4s ease backwards; }
+.drawer-in { animation: drawer-in 0.5s var(--ease-out) backwards; }
+
+/* Phone tab bar: the current tab's icon rises a touch. */
+.tab-link:active .tab-icon { transform: scale(0.88); }
+
+/* Menus and popovers pop in. */
+[role='menu'], [role='listbox'] { animation: pop-in 0.3s var(--ease-out) backwards; transform-origin: top; }
+
+/* Sign-in: the card rises in, then the demo accounts follow one by one. */
+.login-card { animation: ticket-in 1.2s var(--ease-out) backwards; }
+.demo-row { animation: row-in 0.7s var(--ease-out) backwards; }
+.demo-row:nth-child(1) { animation-delay: 0.45s; }
+.demo-row:nth-child(2) { animation-delay: 0.52s; }
+.demo-row:nth-child(3) { animation-delay: 0.59s; }
+.demo-row:nth-child(n + 4) { animation-delay: 0.66s; }
+
+/* Theme switch: a plain cross-fade of the whole page, no slide. */
+html.theme-vt::view-transition-old(root) {
+  animation: 0.55s ease both vt-fade-out;
+}
+html.theme-vt::view-transition-new(root) {
+  animation: 0.55s ease both vt-fade-in;
+}
+@keyframes vt-fade-out { to { opacity: 0; } }
+@keyframes vt-fade-in { from { opacity: 0; } }
+
+/* ── Inner pages ─────────────────────────────────────────────────────────
+   Pure CSS, so there is no flash: the top of every page rises in as a short
+   cascade, the way the hero does. Whatever is further down is handled by the
+   scroll reveal in $lib/motion. */
+@keyframes page-rise {
+  from { opacity: 0; transform: translate3d(0, 20px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+/* The tinted header band every inner page opens with. */
+main > .band:first-child > div > * {
+  animation: page-rise 1s var(--ease-out) backwards;
+}
+main > .band:first-child > div > *:nth-child(2) { animation-delay: 70ms; }
+main > .band:first-child > div > *:nth-child(3) { animation-delay: 140ms; }
+main > .band:first-child > div > *:nth-child(4) { animation-delay: 210ms; }
+main > .band:first-child > div > *:nth-child(n + 5) { animation-delay: 280ms; }
+/* The content that follows it, and pages that open straight into content. */
+main > :is(section, div):is(:first-child, :nth-child(2)):not(.hero-bg, .band) :is(.section, [class*='max-w']) > * {
+  animation: page-rise 1s var(--ease-out) 160ms backwards;
+}
+main > :is(section, div):is(:first-child, :nth-child(2)):not(.hero-bg, .band) :is(.section, [class*='max-w']) > *:nth-child(2) { animation-delay: 230ms; }
+main > :is(section, div):is(:first-child, :nth-child(2)):not(.hero-bg, .band) :is(.section, [class*='max-w']) > *:nth-child(3) { animation-delay: 300ms; }
+main > :is(section, div):is(:first-child, :nth-child(2)):not(.hero-bg, .band) :is(.section, [class*='max-w']) > *:nth-child(n + 4) { animation-delay: 370ms; }
+/* The staff area: its page content cascades in. */
+.staff > * {
+  animation: page-rise 0.9s var(--ease-out) backwards;
+}
+.staff > *:nth-child(2) { animation-delay: 60ms; }
+.staff > *:nth-child(3) { animation-delay: 120ms; }
+.staff > *:nth-child(4) { animation-delay: 180ms; }
+.staff > *:nth-child(n + 5) { animation-delay: 240ms; }
+/* Dialogs and menus that open over a page. */
+.modal-panel { animation-duration: 0.6s; }
+/* Small things settle instead of snapping. */
+.badge, .icon-chip, .status-dot {
+  transition: background-color 0.4s var(--ease-apple), color 0.4s var(--ease-apple), transform 0.5s var(--ease-spring);
+}
+/* The page itself fades gently between themes for anyone without view transitions. */
+body { transition: background-color 0.4s var(--ease-apple), color 0.4s var(--ease-apple); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
+  }
+  .rv { opacity: 1; transform: none; filter: none; }
+  .scroll-progress { display: none; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+}
+
 @media print {
   .no-print { display: none !important; }
-  :root {
-    --canvas: 255 255 255;
-    --surface: 255 255 255;
-    --raised: 255 255 255;
-    --fg: 28 38 34;
-    --fg-strong: 15 23 20;
-    --s-50: 248 250 252;
-    --s-100: 241 245 249;
-    --s-200: 226 232 240;
-    --s-300: 203 213 225;
-    --s-400: 148 163 184;
-    --s-500: 100 116 139;
-    --s-600: 71 85 105;
-    --s-700: 51 65 85;
-    --s-800: 30 41 59;
-    --s-900: 15 23 42;
-    --s-950: 2 6 23;
-  }
+  .rv { opacity: 1 !important; transform: none !important; filter: none !important; }
   body { background: white; background-image: none; }
-  .text-gradient { background: none; color: #000; }
 }
