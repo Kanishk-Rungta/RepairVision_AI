@@ -262,7 +262,7 @@ Optional demo data: `python3 demo/seed.py --base-url http://localhost:8787`.
 
 ### License
 
-_No licence has been chosen yet._ The upstream Circularity Repair Café Hub licence still needs to be confirmed before one is added, so none has been invented here. Vendored third-party files keep their own licences (MIT for Things and three.js).
+Released under the [MIT License](LICENSE). Vendored third-party files keep their own licences (MIT for Things and three.js).
 
 ## Submission Checklist
 
@@ -285,5 +285,5 @@ _No licence has been chosen yet._ The upstream Circularity Repair Café Hub lice
 - [ ] Dev .to submission completed
 - [ ] Dev.to link added
 - [x] Credits added
-- [ ] License added
+- [x] License added
 - [ ] Repository is organized and complete
