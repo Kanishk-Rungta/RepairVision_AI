@@ -8,6 +8,8 @@ export default defineConfig({
     cloudflareTest({
       main: './test/entry.ts',
       wrangler: { configPath: './wrangler.test.jsonc' },
+      // Tests use fake model responses and must not inherit a developer's key.
+      miniflare: { bindings: { GEMINI_API_KEY: '' } },
     }),
   ],
   test: {
