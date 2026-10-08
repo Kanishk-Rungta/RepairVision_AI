@@ -11,6 +11,7 @@ import { demoModeHook } from './plugins/demoMode.js';
 import { healthRoutes } from './routes/health.js';
 import { setupRoutes } from './routes/setup.js';
 import { authRoutes } from './routes/auth.js';
+import { demoAccountRoutes } from './routes/demoAccounts.js';
 import { publicRoutes } from './routes/public.js';
 import { pwaRoutes } from './routes/pwa.js';
 import { ogRoutes } from './routes/og.js';
@@ -36,6 +37,7 @@ const registered = (async () => {
   await app.register(setupRoutes);
   await app.register(setupImportRoutes);
   await app.register(authRoutes);
+  await app.register(demoAccountRoutes);
   await app.register(publicRoutes);
   await app.register(pwaRoutes);
   await app.register(ogRoutes);
