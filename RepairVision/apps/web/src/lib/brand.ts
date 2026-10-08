@@ -21,23 +21,38 @@ const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900] as const;
 const WHITE: RGB = [255, 255, 255];
 const BLACK: RGB = [0, 0, 0];
 
-// Tint fractions (mix toward white) for the light end and shade fractions (mix
-// toward black) for the dark end. 500 is the chosen base colour. These match the
-// teal defaults baked into app.css so an explicit teal and the default render
-// identically.
+// The interface is dark, so the scale runs the other way from a light theme:
+// 50–300 are the base colour mixed into black (soft tinted surfaces and
+// rings), 400 is a lift for hover and small accent text, 500 is the chosen
+// colour, 600 is a touch deeper (icon fills) and 700–900 are pale tints for
+// text that sits on those surfaces. These match the coral defaults in app.css.
 const TINTS: ReadonlyArray<readonly [number, number]> = [
-  [50, 0.92],
-  [100, 0.84],
-  [200, 0.7],
-  [300, 0.54],
-  [400, 0.32],
+  [50, 0.08],
+  [100, 0.14],
+  [200, 0.26],
+  [300, 0.45],
 ];
-const SHADES: ReadonlyArray<readonly [number, number]> = [
-  [600, 0.18],
-  [700, 0.36],
-  [800, 0.55],
-  [900, 0.72],
+const LIGHTS: ReadonlyArray<readonly [number, number]> = [
+  [700, 0.38],
+  [800, 0.6],
+  [900, 0.8],
 ];
+const CANVAS: RGB = [4, 5, 6];
+
+function luminance([r, g, b]: RGB): number {
+  const lin = (v: number) => {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+
+/** Text colour (as space-separated channels) that reads on a solid fill of `hex`. */
+export function onColor(hex: string): string | null {
+  const base = parseHex(hex);
+  if (!base) return null;
+  return luminance(base) > 0.3 ? '7 8 10' : '255 255 255';
+}
 
 function parseHex(hex: string): RGB | null {
   const m = /^#?([0-9a-fA-F]{6})$/.exec(hex.trim());
@@ -59,8 +74,11 @@ export function brandScale(hex: string): Record<number, RGB> | null {
   const base = parseHex(hex);
   if (!base) return null;
   const scale: Record<number, RGB> = { 500: base };
-  for (const [step, t] of TINTS) scale[step] = mix(base, WHITE, t);
-  for (const [step, t] of SHADES) scale[step] = mix(base, BLACK, t);
+  for (const [step, t] of TINTS) scale[step] = mix(CANVAS, base, t);
+  // A dark brand colour would vanish as text on black, so lift it further.
+  scale[400] = mix(base, WHITE, luminance(base) < 0.25 ? 0.45 : 0.15);
+  scale[600] = mix(base, BLACK, 0.12);
+  for (const [step, t] of LIGHTS) scale[step] = mix(base, WHITE, t);
   return scale;
 }
 
@@ -96,12 +114,15 @@ export function applyAccentColor(
   const scale = (hex ? brandScale(hex) : null) ?? (fallback ? brandScale(fallback) : null);
   if (!scale) {
     for (const step of STEPS) root.style.removeProperty(`--accent-${step}`);
+    root.style.removeProperty('--on-accent');
     return;
   }
   for (const step of STEPS) {
     const [r, g, b] = scale[step];
     root.style.setProperty(`--accent-${step}`, `${r} ${g} ${b}`);
   }
+  const on = onColor(hex && brandScale(hex) ? hex : (fallback as string));
+  if (on) root.style.setProperty('--on-accent', on);
 }
 
 function fontStack(choice: string | null | undefined): string | null {
@@ -131,9 +152,21 @@ export interface BrandingSource {
 }
 
 /** Apply every per-cafe branding override (colours + fonts) at once. */
+/**
+ * Colours older versions of the setup wizard saved for every cafe whether the
+ * admin chose them or not (Circularity teal and orange). They mean "not
+ * customised", so they fall through to the default coral theme.
+ */
+const LEGACY_DEFAULTS = new Set(['#1b6b5a', '#ed6a42']);
+
+function chosen(hex: string | null | undefined): string | null {
+  const v = (hex ?? '').trim();
+  return v && !LEGACY_DEFAULTS.has(v.toLowerCase()) ? v : null;
+}
+
 export function applyBranding(cafe: BrandingSource | null | undefined): void {
-  applyBrandColor(cafe?.primaryColor ?? null);
-  applyAccentColor(cafe?.accentColor ?? null, cafe?.primaryColor ?? null);
+  applyBrandColor(chosen(cafe?.primaryColor));
+  applyAccentColor(chosen(cafe?.accentColor), chosen(cafe?.primaryColor));
   applyFonts(cafe?.headingFont ?? null, cafe?.bodyFont ?? null);
 }
 
@@ -143,7 +176,10 @@ export function applyBranding(cafe: BrandingSource | null | undefined): void {
  * default Circularity palette before hydration). Returns '' when nothing is
  * customised.
  */
-export function brandingCss(cafe: BrandingSource | null | undefined): string {
+export function brandingCss(source: BrandingSource | null | undefined): string {
+  const cafe = source
+    ? { ...source, primaryColor: chosen(source.primaryColor), accentColor: chosen(source.accentColor) }
+    : source;
   const decls: string[] = [];
   const primary = cafe?.primaryColor ? brandScale(cafe.primaryColor) : null;
   if (primary) for (const s of STEPS) decls.push(`--brand-${s}:${primary[s].join(' ')}`);
@@ -151,6 +187,9 @@ export function brandingCss(cafe: BrandingSource | null | undefined): string {
     (cafe?.accentColor ? brandScale(cafe.accentColor) : null) ??
     (cafe?.primaryColor ? brandScale(cafe.primaryColor) : null);
   if (accent) for (const s of STEPS) decls.push(`--accent-${s}:${accent[s].join(' ')}`);
+  const accentHex = cafe?.accentColor && brandScale(cafe.accentColor) ? cafe.accentColor : cafe?.primaryColor;
+  const on = accentHex ? onColor(accentHex) : null;
+  if (accent && on) decls.push(`--on-accent:${on}`);
   const display = fontStack(cafe?.headingFont);
   if (display) decls.push(`--font-display:${display}`);
   const body = fontStack(cafe?.bodyFont);

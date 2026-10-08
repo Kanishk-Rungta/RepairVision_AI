@@ -108,23 +108,23 @@ export function categoryIcon(icon: string | null | undefined, categoryName?: str
  * own hue. Returns a plain rgba() string, or a neutral tint if the colour is
  * missing or not a 6-digit hex.
  */
-export function categoryTint(hex: string | null | undefined, alpha = 0.14): string {
+export function categoryTint(hex: string | null | undefined, alpha = 0.16): string {
   const rgb = parseHex(hex);
-  if (!rgb) return `rgb(100 116 139 / ${alpha})`;
+  if (!rgb) return `rgb(156 156 157 / ${alpha})`;
   return `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]} / ${alpha})`;
 }
 
 /**
- * The glyph colour to draw on top of `categoryTint`. Light category colours
- * (yellows, limes) have too little contrast against their own wash, so we
- * darken every colour by the same amount. That keeps each category's hue and
- * still clears the 3:1 contrast floor for meaningful graphics.
+ * The glyph colour to draw on top of `categoryTint`. On the dark interface a
+ * category colour needs lifting, not darkening: every colour is mixed toward
+ * white by the same amount, which keeps its hue and clears the 3:1 contrast
+ * floor for meaningful graphics even for deep blues and purples.
  */
-export function categoryInk(hex: string | null | undefined, darken = 0.35): string {
+export function categoryInk(hex: string | null | undefined, lighten = 0.35): string {
   const rgb = parseHex(hex);
-  if (!rgb) return 'rgb(51 65 85)';
-  const k = 1 - darken;
-  return `rgb(${Math.round(rgb[0] * k)} ${Math.round(rgb[1] * k)} ${Math.round(rgb[2] * k)})`;
+  if (!rgb) return 'rgb(182 182 184)';
+  const mixUp = (v: number) => Math.round(v + (255 - v) * lighten);
+  return `rgb(${mixUp(rgb[0])} ${mixUp(rgb[1])} ${mixUp(rgb[2])})`;
 }
 
 function parseHex(hex: string | null | undefined): [number, number, number] | null {
