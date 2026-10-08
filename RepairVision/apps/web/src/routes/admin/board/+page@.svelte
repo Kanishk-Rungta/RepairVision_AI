@@ -188,36 +188,36 @@
 {/if}
 
 <style>
-  .page { min-height: 100dvh; background: #fbf7ef; }
+  .page { min-height: 100dvh; background: #040506; }
   .page.idle { cursor: none; }
   .bar {
     height: 3.25rem; display: flex; align-items: center; gap: 0.5rem; padding: 0 0.75rem;
-    background: white; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; color: #334155;
+    background: #07080a; border-bottom: 1px solid #1f2022; font-size: 0.9rem; color: #b5b5b7;
   }
-  .bar-title { font-weight: 700; margin: 0 0.5rem 0 0.25rem; color: #0f172a; }
+  .bar-title { font-weight: 700; margin: 0 0.5rem 0 0.25rem; color: #fff; }
   .bar-btn {
     display: inline-flex; align-items: center; gap: 0.35rem; height: 2.25rem; padding: 0 0.7rem;
     border-radius: 0.6rem; border: 0; background: transparent; color: inherit; cursor: pointer; text-decoration: none; font: inherit;
   }
-  .bar-btn:hover { background: #f1f5f9; }
-  .bar-select { height: 2.25rem; border-radius: 0.6rem; border: 1px solid #cbd5e1; padding: 0 0.5rem; font: inherit; background: white; }
-  .bar-error { color: #b45309; font-size: 0.85rem; }
-  .seg { display: inline-flex; background: #f1f5f9; border-radius: 0.7rem; padding: 0.2rem; }
+  .bar-btn:hover { background: rgb(255 255 255 / 0.07); color: #fff; }
+  .bar-select { height: 2.25rem; border-radius: 0.6rem; border: 1px solid #2f3031; padding: 0 0.5rem; font: inherit; background: #040506; color: #e6e6e6; }
+  .bar-error { color: #ffbc33; font-size: 0.85rem; }
+  .seg { display: inline-flex; background: #111214; border-radius: 0.7rem; padding: 0.2rem; }
   .seg button {
     display: inline-flex; align-items: center; gap: 0.35rem; height: 1.9rem; padding: 0 0.65rem;
-    border: 0; border-radius: 0.5rem; background: transparent; color: #475569; cursor: pointer; font: inherit;
+    border: 0; border-radius: 0.5rem; background: transparent; color: #9c9c9d; cursor: pointer; font: inherit;
   }
-  .seg button.on { background: white; color: #0f172a; font-weight: 600; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); }
+  .seg button.on { background: #1f2022; color: #fff; font-weight: 600; box-shadow: 0 1px 0 rgb(255 255 255 / 0.08) inset; }
   .spacer { flex: 1; }
   .float {
     position: fixed; right: 1rem; bottom: 4.5rem; z-index: 10; display: flex; gap: 0.35rem;
-    background: rgba(28, 38, 34, 0.88); border-radius: 999px; padding: 0.35rem;
+    background: rgba(17, 18, 20, 0.9); box-shadow: 0 0 0 1px #2f3031; border-radius: 999px; padding: 0.35rem;
   }
   .float button {
     display: inline-flex; align-items: center; gap: 0.35rem; height: 2.2rem; min-width: 2.2rem; padding: 0 0.7rem;
     border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.12); color: white; cursor: pointer; font: inherit; font-size: 0.85rem;
   }
   .float button:hover { background: rgba(255, 255, 255, 0.25); }
-  .loading { min-height: 100dvh; display: grid; place-items: center; color: #64748b; background: #fbf7ef; }
+  .loading { min-height: 100dvh; display: grid; place-items: center; color: #9c9c9d; background: #040506; }
   @media (max-width: 900px) { .hide-sm { display: none; } }
 </style>

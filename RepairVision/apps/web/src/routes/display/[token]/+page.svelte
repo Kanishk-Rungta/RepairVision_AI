@@ -124,13 +124,13 @@
 </div>
 
 <style>
-  .screen { position: fixed; inset: 0; background: #fbf7ef; }
+  .screen { position: fixed; inset: 0; background: #040506; }
   .screen.idle { cursor: none; }
   .controls {
     position: fixed; right: 1rem; bottom: 4.5rem; z-index: 10;
     display: flex; align-items: center; gap: 0.4rem;
-    background: rgba(28, 38, 34, 0.88); color: white; border-radius: 999px; padding: 0.35rem 0.5rem;
-    font-size: 0.85rem; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+    background: rgba(17, 18, 20, 0.9); color: white; box-shadow: 0 0 0 1px #2f3031; backdrop-filter: blur(12px); border-radius: 999px; padding: 0.35rem 0.5rem;
+    font-size: 0.85rem; /* shadow above */
   }
   .controls button {
     width: 2.25rem; height: 2.25rem; border-radius: 999px; border: 0; background: rgba(255, 255, 255, 0.12); color: white;
@@ -141,8 +141,8 @@
   .offline {
     position: fixed; left: 1rem; bottom: 4.5rem; z-index: 10; margin: 0;
     display: inline-flex; align-items: center; gap: 0.4rem;
-    background: #fef3c7; color: #78350f; border-radius: 999px; padding: 0.4rem 0.8rem; font-size: 0.9rem;
+    background: rgb(255 188 51 / 0.14); color: #ffbc33; border-radius: 999px; padding: 0.4rem 0.8rem; font-size: 0.9rem;
   }
-  .message { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; color: #1c2622; }
+  .message { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; color: #f4f4f5; }
   .message .big { font-size: clamp(1.6rem, 3vw, 3rem); font-weight: 700; margin: 0 0 0.5rem; }
 </style>
