@@ -672,6 +672,11 @@ html[data-scrolled] header.sticky {
 .demo-row:nth-child(3) { animation-delay: 0.59s; }
 .demo-row:nth-child(n + 4) { animation-delay: 0.66s; }
 
+/* Repair vs. replace: the answer card rises in and its bars draw out. */
+.advisor-card { animation: ticket-in 0.9s var(--ease-out) backwards; }
+.advisor-bar { transform-origin: left; animation: bar-draw 1s var(--ease-out) 0.3s backwards; }
+@keyframes bar-draw { from { transform: scaleX(0); } }
+
 /* Theme switch: a plain cross-fade of the whole page, no slide. */
 html.theme-vt::view-transition-old(root) {
   animation: 0.55s ease both vt-fade-out;
