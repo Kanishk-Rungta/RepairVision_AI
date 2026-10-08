@@ -24,6 +24,7 @@ import { displayRoutes } from './routes/display.js';
 import { demoRoutes } from './routes/demo.js';
 import { importRoutes, setupImportRoutes } from './routes/admin/backup.js';
 import { fileRoutes } from './routes/files.js';
+import { knowledgeRoutes } from './routes/knowledge.js';
 
 const router = createRouter();
 
@@ -44,6 +45,7 @@ const registered = (async () => {
   await app.register(checkInRoutes);
   await app.register(repairerRoutes);
   await app.register(repairVisionRoutes);
+  await app.register(knowledgeRoutes);
   await app.register(eventGalleryRoutes);
   await app.register(displayRoutes);
   await app.register(demoRoutes);
