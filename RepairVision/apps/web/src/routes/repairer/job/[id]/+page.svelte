@@ -17,7 +17,7 @@
   import { auth } from '$lib/stores/auth';
   import CameraCapture from '$lib/components/CameraCapture.svelte';
   import { clockTime, firstName, formatMinutes, minutesBetween, statusLabel } from '$lib/staff/queue';
-  import { ArrowLeft, Camera as CameraIcon, CheckCircle2, ChevronDown, Package, User, XCircle } from 'lucide-svelte';
+  import { ArrowLeft, Camera as CameraIcon, CheckCircle2, ChevronDown, Package, ScanSearch, User, XCircle } from 'lucide-svelte';
 
   $: id = $page.params.id;
 
@@ -228,6 +228,9 @@
       <section class="card p-5">
         <h2 class="font-semibold">What is wrong</h2>
         <p class="mt-2 text-slate-700 whitespace-pre-line">{detail.job.faultDescription}</p>
+        <!-- Opens RepairVision AI with this repair's details filled in. It
+             only reads the repair; nothing here is saved back to it. -->
+        <a href={`/repairer/diagnosis?job=${encodeURIComponent(detail.job.id)}`} class="btn-secondary btn-sm mt-3"><ScanSearch size={16} /> Analyze with RepairVision AI</a>
       </section>
 
       <section class="card p-5">

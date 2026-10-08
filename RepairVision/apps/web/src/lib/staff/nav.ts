@@ -23,6 +23,7 @@ import {
   LayoutDashboard,
   MapPin,
   MonitorPlay,
+  ScanSearch,
   Settings,
   Tags,
   UserCircle2,
@@ -61,6 +62,7 @@ export function navFor(user: AuthUser | null | undefined, options: { linuxEnable
       { href: '/repairer', label: 'Repair queue', icon: ClipboardList, also: ['/repairer/job'] },
       { href: '/repairer/checkin', label: 'Check in a visitor', icon: UserPlus },
       { href: '/repairer/photos', label: 'Session photos', icon: Camera },
+      { href: '/repairer/diagnosis', label: 'AI Diagnosis', icon: ScanSearch },
     ],
   };
   const mine: NavGroup = {
