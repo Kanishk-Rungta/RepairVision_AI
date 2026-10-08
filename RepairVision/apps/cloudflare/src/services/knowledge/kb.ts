@@ -109,4 +109,84 @@ export const KB: KbEntry[] = [
     ],
     technicianOnly: ['Open the case and clean or replace the encoder.'],
   },
+  {
+    id: 'kb-keys-liquid',
+    deviceType: 'keyboard',
+    fault: 'Liquid or sticky residue under the keys',
+    keywords: [
+      'spill', 'spilled', 'coffee', 'tea', 'water', 'liquid', 'sticky', 'stuck',
+      'drink', 'wet', 'residue', 'keys stick', 'repeating', 'not registering',
+    ],
+    explanation:
+      'A sugary drink dries to a film that holds keys down or lets neighbouring contacts touch. Several unrelated keys fail together, or a key types repeatedly.',
+    checks: [
+      'Unplug the keyboard before anything else.',
+      'Turn it upside down over a table and tap gently to let loose liquid and crumbs out.',
+      'Check whether the failing keys are close together, which suggests a spill in one area.',
+      'Leave it unplugged to dry for at least a day before testing again.',
+    ],
+    technicianOnly: [
+      'Remove keycaps and clean the switches or membrane with isopropyl alcohol.',
+      'Open the case and clean the circuit board.',
+    ],
+  },
+  {
+    id: 'kb-single-key',
+    deviceType: 'keyboard',
+    fault: 'One key or one small group of keys not working',
+    keywords: [
+      'one key', 'single key', 'some keys', 'letter', 'space bar', 'enter', 'shift',
+      'dead key', 'not typing', 'wont type', 'missing', 'crumbs', 'dust', 'dirt',
+    ],
+    explanation:
+      'A single dead key usually means dirt under that key, a worn switch or contact, or a broken trace on the board. When the whole row or column fails, the fault is further back along the same line.',
+    checks: [
+      'Press the key firmly and note whether it feels different from its neighbours.',
+      'Open a text editor or a keyboard tester page and see which keys register.',
+      'Check whether the dead keys share a row or column.',
+      'Look for crumbs or debris around the key and blow it clear.',
+    ],
+    technicianOnly: [
+      'Lift the keycap and clean or replace the switch.',
+      'Trace and repair a broken track on the board.',
+    ],
+  },
+  {
+    id: 'kb-no-power',
+    deviceType: 'keyboard',
+    fault: 'No connection: dead USB port, cable or controller',
+    keywords: [
+      'dead', 'nothing', 'no lights', 'not detected', 'not recognised', 'not recognized',
+      'no power', 'caps lock', 'num lock', 'light', 'led', 'unplugged',
+    ],
+    explanation:
+      'If no light comes on and the computer does not notice the keyboard, power is not reaching it. A bad port is the commonest cause, then a damaged cable, then the keyboard controller.',
+    checks: [
+      'Plug the keyboard into a different USB port, ideally directly on the computer rather than a hub.',
+      'Try it on a second computer.',
+      'Watch the Caps Lock light when the keyboard is plugged in.',
+      'Inspect the cable and plug for damage.',
+    ],
+    technicianOnly: [
+      'Open the case and test the cable for continuity with a multimeter.',
+      'Check the controller and its solder joints.',
+    ],
+  },
+  {
+    id: 'kb-cable-break',
+    deviceType: 'keyboard',
+    fault: 'Damaged keyboard cable or connector',
+    keywords: [
+      'cable', 'cord', 'frayed', 'bent', 'intermittent', 'disconnects', 'beeps',
+      'connects and disconnects', 'wiggle', 'sometimes works', 'moves', 'plug',
+    ],
+    explanation:
+      'A keyboard that drops out when the desk or cable is moved has a break in a wire or a loose connector. The sound of the computer connecting and disconnecting is a strong sign.',
+    checks: [
+      'Listen for the connect and disconnect sound while gently moving the cable.',
+      'Inspect the whole cable and the plug for cuts, kinks and bent pins.',
+      'If the cable is detachable, try a different cable.',
+    ],
+    technicianOnly: ['Open the case and re-solder or replace the cable at the board.'],
+  },
 ];
