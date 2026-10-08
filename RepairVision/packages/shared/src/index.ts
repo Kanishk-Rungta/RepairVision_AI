@@ -4,3 +4,4 @@ export * from './seo.js';
 export * from './pwa.js';
 export * from './backup.js';
 export * from './repairvision.js';
+export * from './advisor.js';
