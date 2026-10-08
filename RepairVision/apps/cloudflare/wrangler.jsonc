@@ -33,6 +33,16 @@
   // also reachable at <name>.<your-subdomain>.workers.dev.
   "workers_dev": true,
 
+  // Where the Worker runs. By default a request runs in the Cloudflare data
+  // centre nearest the visitor, and the Gemini API then sees that location.
+  // Google refuses Gemini calls from some places (Hong Kong among them), and
+  // Cloudflare routes many Indian ISPs through Hong Kong, so AI Diagnosis and
+  // the site assistant failed for those visitors with "User location is not
+  // supported for the API use". Pinning the Worker near Google Cloud's Mumbai
+  // region keeps every call in a supported location and close to the cafe's
+  // visitors. Static files are still served from the nearest data centre.
+  "placement": { "region": "gcp:asia-south1" },
+
   // The database and the uploads store, pinned by id to the ones already on
   // RepairVision's Cloudflare account, so every deploy (even after renaming
   // the Worker) reuses them rather than creating empty ones. A fresh account
