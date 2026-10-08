@@ -255,7 +255,7 @@
   {#if queue.length > 0}
     <ul class="mt-3 space-y-2">
       {#each queue as item (item.key)}
-        <li class="flex items-center gap-3 rounded-xl bg-white ring-1 ring-slate-200 p-2">
+        <li class="flex items-center gap-3 rounded-xl bg-surface ring-1 ring-slate-200 p-2">
           <img src={item.previewUrl} alt="" class="h-10 w-10 rounded-lg object-cover bg-slate-100" />
           <div class="min-w-0 flex-1">
             <p class="truncate text-sm text-slate-700">{item.name}</p>

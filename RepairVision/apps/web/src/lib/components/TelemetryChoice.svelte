@@ -116,7 +116,7 @@
       See exactly what would be sent
     </button>
     {#if showPayload}
-      <pre class="mt-2 max-h-72 overflow-auto rounded-xl bg-slate-900 p-3 text-xs text-slate-100 leading-relaxed">{JSON.stringify(shown, null, 2)}</pre>
+      <pre class="mt-2 max-h-72 overflow-auto rounded-xl bg-canvas p-3 text-xs text-slate-100 leading-relaxed">{JSON.stringify(shown, null, 2)}</pre>
       {#if !payload}
         <p class="mt-1 text-xs text-slate-500">
           An example, because this cafe has no numbers yet. The real thing is the same shape.

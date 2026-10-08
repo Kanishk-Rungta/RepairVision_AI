@@ -20,7 +20,7 @@
      global rule would repaint every page visited after this one. Printing is
      already covered: app.css forces a white body inside media print. -->
 {#if detail}
-  <div class="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center">
+  <div class="min-h-screen bg-surface flex flex-col items-center justify-center p-8 text-center">
     <h1 class="text-4xl font-bold">{cafe?.name ?? ''}</h1>
     <h2 class="text-2xl mt-2">{detail.event.name}</h2>
     <p class="text-lg mt-1">{detail.event.date} · {detail.event.startTime?.slice(0,5)}–{detail.event.endTime?.slice(0,5)} · {detail.venue.name}</p>

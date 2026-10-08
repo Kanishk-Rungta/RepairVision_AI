@@ -157,7 +157,7 @@
 <!-- Period selector. Applies to summary cards and the events table.
      The heatmap below always shows the last 12 months so the rhythm of
      events stays comparable between visits. -->
-<div class="mt-4 inline-flex rounded-lg ring-1 ring-slate-200 bg-white overflow-hidden text-sm">
+<div class="mt-4 inline-flex rounded-lg ring-1 ring-slate-200 bg-surface overflow-hidden text-sm">
   {#each (['3m','6m','12m','all'] as Range[]) as r}
     <button
       class="px-3 py-1.5 {range === r ? 'bg-brand-600 text-white' : 'text-slate-700 hover:bg-slate-50'}"

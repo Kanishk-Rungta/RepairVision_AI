@@ -232,7 +232,7 @@
   <ul class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
     {#each photos as photo, i (photo.id)}
       <li
-        class="group relative rounded-xl bg-white ring-1 ring-slate-200 overflow-hidden transition-shadow
+        class="group relative rounded-xl bg-surface ring-1 ring-slate-200 overflow-hidden transition-shadow
           {dragIndex === i ? 'opacity-40' : ''}
           {overIndex === i && dragIndex !== null && dragIndex !== i ? 'ring-2 ring-brand-500' : ''}"
         draggable={onReorder ? true : undefined}
@@ -263,7 +263,7 @@
             </button>
           {/if}
           {#if onToggle && photo.isPublished === false}
-            <span class="rounded-lg bg-slate-900/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
+            <span class="rounded-lg bg-black/65 backdrop-blur-sm px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
               Hidden
             </span>
           {/if}
@@ -348,7 +348,7 @@
 <!-- ─────────────────── Description editor ─────────────────── -->
 {#if editing}
   <div
-    class="fixed inset-0 z-50 bg-slate-900/70 flex items-center justify-center p-0 sm:p-6"
+    class="fixed inset-0 z-50 bg-black/65 backdrop-blur-sm flex items-center justify-center p-0 sm:p-6"
     role="dialog"
     aria-modal="true"
     aria-label="Photo description"
@@ -358,7 +358,7 @@
     <!-- Clicking outside the panel saves and closes it. -->
     <button type="button" class="absolute inset-0 cursor-default" aria-label="Close" on:click={closeEditor}></button>
 
-    <div class="relative z-10 bg-white w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-4xl sm:rounded-2xl shadow-xl flex flex-col overflow-hidden">
+    <div class="relative z-10 bg-surface w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-4xl sm:rounded-2xl shadow-xl flex flex-col overflow-hidden">
       <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
         <p class="text-sm text-slate-500 font-mono tabular-nums">
           {(editingIndex ?? 0) + 1} / {photos.length}
@@ -394,7 +394,7 @@
       </div>
 
       <div class="flex-1 min-h-0 grid md:grid-cols-2 overflow-y-auto">
-        <div class="bg-slate-900 flex items-center justify-center p-3 min-h-[40vh] md:min-h-0">
+        <div class="bg-canvas flex items-center justify-center p-3 min-h-[40vh] md:min-h-0">
           <img src={editing.url} alt={editing.caption ?? ''} class="max-h-[60vh] max-w-full object-contain rounded-lg" />
         </div>
 

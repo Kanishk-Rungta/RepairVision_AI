@@ -123,7 +123,7 @@
 
 {#if open}
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <button class="absolute inset-0 bg-slate-900/50" aria-label="Close" on:click={closeMenu}></button>
+    <button class="absolute inset-0 bg-black/65 backdrop-blur-sm" aria-label="Close" on:click={closeMenu}></button>
     <div
       role="dialog"
       aria-modal="true"

@@ -187,7 +187,7 @@
 {#if askTelemetry}
   <!-- Quiet by design: a card in the flow of the page, not a dialog over it. -->
   <section class="card p-5 mb-5 ring-brand-200 bg-brand-50/40 relative">
-    <button class="absolute top-3 right-3 p-1.5 rounded-lg text-slate-400 hover:bg-white hover:text-slate-700" type="button" aria-label="Not now" on:click={dismissTelemetry}>
+    <button class="absolute top-3 right-3 p-1.5 rounded-lg text-slate-400 hover:bg-surface hover:text-slate-700" type="button" aria-label="Not now" on:click={dismissTelemetry}>
       <X size={16} />
     </button>
     {#if telemetryDone}

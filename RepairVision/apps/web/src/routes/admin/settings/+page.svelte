@@ -232,7 +232,7 @@
   // Brand colour — <input type="color"> requires #rrggbb. We normalise on load
   // and via the change handler so an empty/legacy value never reaches the
   // native control (which otherwise logs a console error).
-  const DEFAULT_PRIMARY = '#1B6B5A';
+  const DEFAULT_PRIMARY = '#FF6363';
   const HEX_RE = /^#[0-9a-fA-F]{6}$/;
   function normaliseHex(v: unknown): string {
     return typeof v === 'string' && HEX_RE.test(v) ? v : DEFAULT_PRIMARY;
@@ -508,7 +508,7 @@
             class="input w-32 font-mono"
             type="text"
             maxlength="7"
-            placeholder="#1B6B5A"
+            placeholder="#FF6363"
             value={primaryColorInput}
             on:change={(e) => (primaryColorInput = normaliseHex((e.currentTarget as HTMLInputElement).value))}
           />
@@ -535,7 +535,7 @@
               class="input w-32 font-mono"
               type="text"
               maxlength="7"
-              placeholder="#ED6A42"
+              placeholder="#FFBC33"
               value={accentColorInput}
               on:change={(e) => (accentColorInput = normaliseHex((e.currentTarget as HTMLInputElement).value))}
             />
@@ -933,7 +933,7 @@
                   <span class="text-xs text-slate-500">{formatDistance(cafe.distanceKm)}</span>
                 {/if}
                 <button
-                  class="p-1 rounded-full text-slate-500 hover:bg-white hover:text-rose-700"
+                  class="p-1 rounded-full text-slate-500 hover:bg-surface hover:text-rose-700"
                   type="button"
                   aria-label={`Remove ${cafe.name}`}
                   on:click={() => toggleLocalCafe(cafe, false)}
@@ -961,7 +961,7 @@
             {#each localResults as cafe (cafe.slug)}
               {@const isOn = !!cafe.slug && localSelected.includes(cafe.slug)}
               {@const isFull = localSelected.length >= localMax && !isOn}
-              <li class="flex items-start gap-3 p-3 {isOn ? 'bg-brand-50' : 'bg-white'}">
+              <li class="flex items-start gap-3 p-3 {isOn ? 'bg-brand-50' : 'bg-surface'}">
                 <input
                   type="checkbox"
                   class="mt-1 h-4 w-4 rounded border-slate-300 text-brand-600 disabled:opacity-40"

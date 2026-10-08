@@ -293,7 +293,7 @@
 
   <!-- Period selector, for the figures below. The records list always shows
        everything, because a volunteer looking for one row wants all of them. -->
-  <div class="mt-4 inline-flex rounded-lg ring-1 ring-slate-200 bg-white overflow-hidden text-sm">
+  <div class="mt-4 inline-flex rounded-lg ring-1 ring-slate-200 bg-surface overflow-hidden text-sm">
     {#each (['3m','6m','12m','all'] as Range[]) as r}
       <button
         class="px-3 py-1.5 {range === r ? 'bg-brand-600 text-white' : 'text-slate-700 hover:bg-slate-50'}"
@@ -488,8 +488,8 @@
 
 <!-- ── Write-up form ────────────────────────────────────────────────── -->
 {#if formOpen}
-  <div class="fixed inset-0 z-50 bg-slate-900/50 overflow-y-auto p-4">
-    <div class="card max-w-2xl mx-auto my-8 p-6 space-y-4 bg-white">
+  <div class="fixed inset-0 z-50 bg-black/65 backdrop-blur-sm overflow-y-auto p-4">
+    <div class="card max-w-2xl mx-auto my-8 p-6 space-y-4 bg-surface">
       <div class="flex items-start justify-between gap-4">
         <div>
           <h2 class="text-lg font-semibold">{editing ? 'Correct this record' : 'Record an install'}</h2>
