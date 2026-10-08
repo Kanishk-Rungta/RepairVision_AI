@@ -7,11 +7,13 @@
   import '@fontsource-variable/mulish/index.css';
   import '@fontsource-variable/hanken-grotesk/index.css';
   // The interface faces: Inter for text, Geist Mono for small technical labels.
-  import '@fontsource-variable/inter/index.css';
+  import '@fontsource-variable/inter/opsz.css';
   import '@fontsource-variable/geist-mono/index.css';
   import { onMount } from 'svelte';
   import { browser, dev } from '$app/environment';
   import { page } from '$app/stores';
+  import { afterNavigate, onNavigate } from '$app/navigation';
+  import { initReveal, viewTransition, watchScroll } from '$lib/motion';
   import { cafe, setupCompleted } from '$lib/stores/cafe';
   import { applyBranding, brandingCss } from '$lib/brand';
   import { restoreSession } from '$lib/api';
@@ -41,7 +43,17 @@
   $: if (browser) applyBranding(data.cafe);
   $: brandStyle = brandingCss(data.cafe);
 
+  // Pages cross-fade, and whatever is below the fold is armed to fade in as
+  // it arrives. See $lib/motion.
+  onNavigate(viewTransition);
+  afterNavigate(() => {
+    requestAnimationFrame(initReveal);
+    // Lists that fill in after the first paint get a second look.
+    setTimeout(initReveal, 500);
+  });
+
   onMount(() => {
+    const stopScroll = watchScroll();
     // Restore the session, client-only (see note above about the auth store).
     // Protected layouts await the same promise before they redirect to
     // /login, so a page refresh no longer bounces signed-in users there.
@@ -58,6 +70,8 @@
 
     // Some Plausible scripts wait to be told to start. See startPlausible.
     if (plausibleEnabled) startPlausible();
+
+    return stopScroll;
   });
 
   // ── SEO/meta — centralised here so every route emits exactly one of each ──
@@ -127,7 +141,6 @@
   // The manifest and the icons are built per cafe by the server. The icon
   // filename carries a hash of the branding, so it changes whenever the logo
   // or the colour does.
-  $: themeColor = '#040506';
   $: appleTouchIcon = c?.pwaIconVersion ? `/icons/any-${c.pwaIconVersion}-192.png` : null;
   // Same helper the server uses to build the manifest, so iOS and Android
   // never end up labelling the same install differently.
@@ -145,12 +158,13 @@
   {#if noindex}<meta name="robots" content="noindex, nofollow" />{/if}
   <link rel="icon" href={faviconHref} />
   <!-- Progressive web app: installable, themed with the cafe's own colour. -->
-  <meta name="theme-color" content={themeColor} />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#040506" />
   <link rel="manifest" href="/manifest.webmanifest" />
   <meta name="mobile-web-app-capable" content="yes" />
   <!-- iOS reads its own tags rather than the manifest. -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content={appShortName} />
   {#if appleTouchIcon}<link rel="apple-touch-icon" href={appleTouchIcon} />{/if}
   <!-- Open Graph / Twitter -->
@@ -174,6 +188,10 @@
 {#if !screenPage}
   <DemoBanner show={c?.demoMode === true} />
 {/if}
+
+<!-- A hairline that fills as the page is read. Only where the browser can
+     tie it to scroll; see app.css. -->
+<div class="scroll-progress no-print" aria-hidden="true"></div>
 
 <slot />
 

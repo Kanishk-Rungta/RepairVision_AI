@@ -1,4 +1,4 @@
-import type { HandleFetch } from '@sveltejs/kit';
+import type { Handle, HandleFetch } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 
 // The whole site runs under the strict Content Security Policy set in
@@ -31,4 +31,16 @@ export const handleFetch: HandleFetch = async ({ request, fetch, event }) => {
     return fetch(new Request(url, request));
   }
   return fetch(request);
+};
+
+// The visitor's theme choice lives in a `theme` cookie. Reading it here lets
+// the very first byte of HTML already say which theme to draw, so a dark-mode
+// visitor never sees a white flash. With no cookie the page follows the
+// system through `prefers-color-scheme` in CSS.
+export const handle: Handle = async ({ event, resolve }) => {
+  const choice = event.cookies.get('theme');
+  const theme = choice === 'dark' || choice === 'light' ? choice : null;
+  return resolve(event, {
+    transformPageChunk: ({ html }) => (theme ? html.replace('<html lang="en">', `<html lang="en" data-theme="${theme}">`) : html),
+  });
 };
