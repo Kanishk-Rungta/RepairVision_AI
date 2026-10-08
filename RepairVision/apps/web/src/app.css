@@ -4,58 +4,122 @@
 
 @layer base {
   :root {
-    /* Default brand palette — Circularity teal (#1B6B5A at 500). Stored as
-       space-separated R G B channels so Tailwind's `brand` utilities can apply
-       opacity. src/lib/brand.ts overrides these per-cafe at runtime. */
-    --brand-50: 237 243 242;
-    --brand-100: 219 231 229;
-    --brand-200: 187 211 206;
-    --brand-300: 150 187 179;
-    --brand-400: 100 154 143;
-    --brand-500: 27 107 90;
-    --brand-600: 22 88 74;
-    --brand-700: 17 68 58;
-    --brand-800: 12 48 41;
-    --brand-900: 8 30 25;
-    /* Accent (call-to-action) palette. Defaults to the same teal as the brand
-       so a cafe that sets only a brand colour gets matching buttons; a cafe
-       that sets its own `accentColor` (e.g. Woodville orange) overrides these
-       via src/lib/brand.ts while the brand colour stays for links/headings. */
-    --accent-50: 237 243 242;
-    --accent-100: 219 231 229;
-    --accent-200: 187 211 206;
-    --accent-300: 150 187 179;
-    --accent-400: 100 154 143;
-    --accent-500: 27 107 90;
-    --accent-600: 22 88 74;
-    --accent-700: 17 68 58;
-    --accent-800: 12 48 41;
-    --accent-900: 8 30 25;
-    /* Typefaces. Default to Circularity's Fraunces (display) + Mulish (body);
-       a cafe can repoint these to another bundled family via its font choice. */
-    --font-display: 'Fraunces Variable', Fraunces, Georgia, 'Times New Roman', serif;
-    --font-sans: 'Mulish Variable', Mulish, ui-sans-serif, system-ui, sans-serif;
+    /* ── Surfaces and text (DESIGN.md: Void Black, Ink, Obsidian, Mist) ──────
+       Space-separated R G B channels so Tailwind can apply opacity. The slate
+       scale is INVERTED: slate-50 is the darkest surface, slate-900 the
+       brightest text. See tailwind.config.js. */
+    --canvas: 4 5 6;
+    --surface: 10 11 13;
+    --raised: 17 18 20;
+    --fg: 230 230 230;
+    --fg-strong: 255 255 255;
+    --s-50: 13 14 16;
+    --s-100: 21 22 24;
+    --s-200: 33 34 36;
+    --s-300: 52 53 55;
+    --s-400: 106 107 108;
+    --s-500: 156 156 157;
+    --s-600: 182 182 184;
+    --s-700: 208 208 210;
+    --s-800: 230 230 230;
+    --s-900: 250 250 250;
+    --s-950: 255 255 255;
+
+    /* Default brand palette: Raycast coral (#ff6363 at 500). 50–300 are tints
+       over black, 400 is the hover/text lift, 700–900 are pale tints for text.
+       src/lib/brand.ts overrides these per cafe at runtime. */
+    --brand-50: 24 13 13;
+    --brand-100: 39 18 19;
+    --brand-200: 69 29 30;
+    --brand-300: 117 47 48;
+    --brand-400: 255 122 122;
+    --brand-500: 255 99 99;
+    --brand-600: 224 87 87;
+    --brand-700: 255 158 158;
+    --brand-800: 255 192 192;
+    --brand-900: 255 224 224;
+    /* Accent (call-to-action) palette. Follows the brand unless the cafe sets
+       its own accent colour. */
+    --accent-50: 24 13 13;
+    --accent-100: 39 18 19;
+    --accent-200: 69 29 30;
+    --accent-300: 117 47 48;
+    --accent-400: 255 122 122;
+    --accent-500: 255 99 99;
+    --accent-600: 224 87 87;
+    --accent-700: 255 158 158;
+    --accent-800: 255 192 192;
+    --accent-900: 255 224 224;
+    /* Text colour that sits on a solid accent fill (dark on coral). */
+    --on-accent: 7 8 10;
+
+    /* Typefaces. Inter for everything, Geist Mono for small technical labels.
+       A cafe can still repoint --font-sans / --font-display. */
+    --font-display: 'Inter Variable', Inter, 'Hanken Grotesk Variable', ui-sans-serif, system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    --font-sans: 'Inter Variable', Inter, 'Hanken Grotesk Variable', ui-sans-serif, system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
   }
   html {
-    /* See app.html: opt out of the browser darkening this page for us. */
-    color-scheme: only light;
+    /* The site is a dark interface. Tell the browser, so scrollbars, form
+       controls and the default canvas match. */
+    color-scheme: dark;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    /* Stop the grey flash mobile browsers paint on tapped links and cards.
-       Buttons and links show their own hover and focus styles instead. */
     -webkit-tap-highlight-color: transparent;
+    background: rgb(var(--canvas));
   }
   body {
-    @apply bg-paper text-ink antialiased font-sans;
+    @apply bg-canvas text-ink antialiased font-sans;
+    font-feature-settings: 'calt', 'kern', 'liga', 'ss03';
+    /* A faint coral glow at the top of every page, the only atmosphere. */
+    background-image:
+      radial-gradient(60rem 28rem at 50% -10rem, rgb(var(--accent-500) / 0.10), transparent 70%);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+  }
+  ::selection {
+    background: rgb(var(--accent-500) / 0.35);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent-500) / 0.8);
+    outline-offset: 2px;
+  }
+  /* Quiet dark scrollbars. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--s-300)) transparent;
   }
   h1 {
-    @apply text-3xl md:text-4xl font-bold font-display;
+    @apply text-3xl md:text-5xl font-semibold font-display tracking-[-0.03em] text-pine;
+    line-height: 1.08;
   }
   h2 {
-    @apply text-2xl md:text-3xl font-semibold font-display;
+    @apply text-2xl md:text-4xl font-semibold font-display tracking-[-0.025em] text-pine;
+    line-height: 1.12;
   }
   h3 {
-    @apply text-xl md:text-2xl font-semibold font-display;
+    @apply text-xl md:text-2xl font-semibold font-display tracking-[-0.02em] text-pine;
+    line-height: 1.2;
+  }
+  a {
+    @apply transition-colors;
+  }
+  hr {
+    @apply border-slate-200;
+  }
+  /* Browser form controls: dark and consistent. */
+  input[type='checkbox'],
+  input[type='radio'] {
+    accent-color: rgb(var(--accent-500));
+  }
+  input[type='date'],
+  input[type='time'],
+  input[type='datetime-local'] {
+    color-scheme: dark;
+  }
+  code, kbd, samp, pre {
+    font-family: var(--font-mono);
   }
   /* Customer-facing larger type */
   .customer-ui {
@@ -71,107 +135,187 @@
 
 @layer components {
   /* The staff area (StaffShell) is a working tool, not a brochure: section
-     headings there are compact and in the body typeface. Page titles keep
-     the display face. Utilities such as text-xl still win, because this
-     sits in the components layer. */
+     headings there are compact. Utilities such as text-xl still win, because
+     this sits in the components layer. */
   .staff :where(h2) {
-    @apply text-lg font-semibold font-sans;
+    @apply text-base font-semibold font-sans tracking-tight;
   }
   .staff :where(h3) {
-    @apply text-base font-semibold font-sans;
+    @apply text-sm font-semibold font-sans tracking-tight;
   }
+
+  /* ── Buttons ─────────────────────────────────────────────────────────────
+     Compact, 8px radius, with a 1px top highlight so they read as pressed
+     keys rather than flat rectangles. */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-500 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-[15px] font-medium leading-none transition-[background-color,box-shadow,color,transform] duration-150 active:translate-y-px focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas disabled:opacity-40 disabled:cursor-not-allowed disabled:active:translate-y-0;
   }
   .btn-primary {
-    @apply btn bg-accent-600 text-white hover:bg-accent-700;
+    @apply btn bg-accent-500 text-on-accent hover:bg-accent-400;
+    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.35) inset, 0 0 0 1px rgb(0 0 0 / 0.25), 0 6px 20px -6px rgb(var(--accent-500) / 0.55);
   }
   .btn-secondary {
-    @apply btn bg-white text-slate-800 ring-1 ring-slate-300 hover:bg-slate-50;
+    @apply btn bg-white/[0.05] text-slate-800 hover:bg-white/[0.09] hover:text-slate-950;
+    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.08) inset, 0 0 0 1px rgb(255 255 255 / 0.09), 0 2px 4px rgb(0 0 0 / 0.35);
   }
   .btn-ghost {
-    @apply btn bg-transparent text-slate-700 hover:bg-slate-100;
+    @apply btn bg-transparent text-slate-600 hover:bg-white/[0.06] hover:text-slate-900;
   }
   .btn-danger {
-    @apply btn bg-red-600 text-white hover:bg-red-700;
+    @apply btn bg-[#e5373d] text-white hover:bg-[#f04349];
+    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.25) inset, 0 0 0 1px rgb(0 0 0 / 0.3);
   }
   /* Quiet destructive action. Use where a solid red button would draw too
      much attention, for example on a dashboard the user sees every day. */
   .btn-danger-outline {
-    @apply btn bg-white text-red-700 ring-1 ring-red-200 hover:bg-red-50;
+    @apply btn bg-transparent text-red-700 hover:bg-red-500/10;
+    box-shadow: 0 0 0 1px rgb(255 90 95 / 0.3);
   }
   .btn-lg {
-    @apply px-7 py-4 text-lg;
+    @apply px-6 py-3.5 text-base;
   }
   /* Compact button for toolbars, card actions and dense rows. */
   .btn-sm {
-    @apply px-4 py-2 text-sm;
+    @apply px-3.5 py-2 text-sm;
   }
-  /* For actions that sit inside a table row. Even btn-sm is 36px tall, which
-     makes a row of plain text half as tall again wherever one appears. The
-     smaller radius matters too: btn's rounded-xl looks like a lozenge at this
-     size. */
+  /* For actions that sit inside a table row. */
   .btn-xs {
-    @apply px-2.5 py-1 text-xs gap-1 rounded-lg font-medium;
+    @apply px-2.5 py-1 text-xs gap-1 rounded-md font-medium;
   }
+
+  /* ── Forms ───────────────────────────────────────────────────────────────
+     Inputs are recessed wells: darker than the card they sit on. */
   .input {
-    @apply block w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-base shadow-sm focus:border-brand-500 focus:ring-brand-500 focus:outline-none focus:ring-1;
+    @apply block w-full rounded-lg border border-white/[0.11] bg-canvas px-3.5 py-2.5 text-[15px] text-slate-900 placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 hover:border-white/20 focus:border-accent-500/70 focus:outline-none focus:ring-2 focus:ring-accent-500/25;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.5) inset;
+  }
+  .input:disabled {
+    @apply opacity-50 cursor-not-allowed;
   }
   .label {
-    @apply block text-sm font-medium text-slate-700 mb-1;
+    @apply block text-[13px] font-medium text-slate-600 mb-1.5;
   }
+
+  /* ── Surfaces ──────────────────────────────────────────────────────────── */
   .card {
-    @apply bg-white rounded-2xl shadow-sm ring-1 ring-slate-200;
+    @apply bg-surface rounded-2xl ring-1 ring-slate-200;
+    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.05) inset, 0 8px 24px -12px rgb(0 0 0 / 0.7);
   }
-  /* A card that is a link or a button. Only the border tint changes on
-     hover; the shadow and position never change, so nothing jumps or
-     flashes. */
+  /* A card that is a link or a button. Only the border tint and the surface
+     change on hover; nothing moves. */
   .card-link {
-    @apply card block transition-shadow hover:ring-brand-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500;
+    @apply card block transition-[background-color,box-shadow] duration-150 hover:bg-raised hover:ring-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/70;
   }
   /* A dialog panel that floats above the page. Dialogs are the only
      surface that uses a large shadow. */
   .modal-panel {
-    @apply w-full rounded-2xl bg-white p-6 shadow-xl ring-1 ring-slate-200;
+    @apply w-full rounded-2xl bg-raised p-6 shadow-xl ring-1 ring-slate-300;
   }
-  /* Small uppercase line above a page or section title. */
+  /* Small mono line above a page or section title. */
   .eyebrow {
-    @apply text-xs font-bold uppercase tracking-[0.18em] text-clay;
+    @apply font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-clay;
   }
-  /* Small uppercase label at the top of a card. */
+  /* Small label at the top of a card. */
   .kicker {
-    @apply text-xs font-semibold uppercase tracking-wider text-slate-500;
+    @apply font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-slate-500;
   }
-  /* Public site section title. Sits centred above a section or band. */
+  /* Public site section title. */
   .section-title {
-    @apply font-display text-3xl md:text-4xl font-semibold tracking-tight text-pine;
+    @apply font-display text-3xl md:text-[44px] font-semibold tracking-[-0.03em] text-pine;
+    line-height: 1.08;
   }
   /* One line of supporting text under a section title. */
   .section-lede {
-    @apply mt-4 text-lg leading-relaxed text-slate-600;
+    @apply mt-4 text-lg leading-relaxed text-slate-500;
+  }
+  /* Headline with a soft white-to-grey fade, for hero titles. */
+  .text-gradient {
+    background: linear-gradient(180deg, #fff 30%, rgb(255 255 255 / 0.62));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   /* Public page rhythm. Every section on the public site uses `.section` so
-     the gaps down the page are always the same size, and every section lines
-     up on the same left and right edges. A `.band` is a section on a tinted
-     background; it holds a `.section` inside it. */
+     the gaps down the page are always the same size. A `.band` is a section
+     on a slightly lifted background; it holds a `.section` inside it. */
   .section {
     @apply max-w-6xl mx-auto px-4 py-16 md:py-24;
   }
   .band {
-    @apply bg-brand-50 border-y border-brand-100;
+    @apply bg-surface/70 border-y border-slate-200;
   }
-  /* Square brand tile that holds one icon (render the icon at size 22). */
+  /* Hero backdrop: the one place with atmosphere. Coral and blue light on a
+     black field, over a faint grid that fades out toward the edges. */
+  .hero-bg {
+    @apply relative isolate overflow-hidden border-b border-slate-200;
+    background:
+      radial-gradient(42rem 22rem at 18% -6rem, rgb(var(--accent-500) / 0.30), transparent 70%),
+      radial-gradient(38rem 24rem at 88% 0%, rgb(99 161 255 / 0.20), transparent 70%),
+      radial-gradient(30rem 16rem at 50% 115%, rgb(var(--accent-500) / 0.12), transparent 70%),
+      rgb(var(--canvas));
+  }
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 80% at 50% 0%, #000 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 80% at 50% 0%, #000 30%, transparent 75%);
+  }
+  /* The home page session ticket: two halves with a perforation between
+     them. Each half has two half-circle bites out of the edge it shares with
+     the other, done with a mask so the page shows through them. */
+  .ticket-top,
+  .ticket-bottom {
+    --bite: 11px;
+    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.06) inset;
+  }
+  .ticket-top {
+    -webkit-mask:
+      radial-gradient(circle var(--bite) at 0 100%, #0000 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--bite) at 100% 100%, #0000 98%, #000) right / 51% 100% no-repeat;
+    mask:
+      radial-gradient(circle var(--bite) at 0 100%, #0000 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--bite) at 100% 100%, #0000 98%, #000) right / 51% 100% no-repeat;
+  }
+  .ticket-bottom {
+    position: relative;
+    -webkit-mask:
+      radial-gradient(circle var(--bite) at 0 0, #0000 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--bite) at 100% 0, #0000 98%, #000) right / 51% 100% no-repeat;
+    mask:
+      radial-gradient(circle var(--bite) at 0 0, #0000 98%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--bite) at 100% 0, #0000 98%, #000) right / 51% 100% no-repeat;
+  }
+  .ticket-bottom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(var(--bite) + 10px);
+    right: calc(var(--bite) + 10px);
+    border-top: 1.5px dashed rgb(255 255 255 / 0.12);
+  }
+  /* Keyboard-key chip, for shortcuts and small technical values. */
+  .kbd {
+    @apply inline-flex items-center justify-center rounded-md bg-raised px-1.5 py-0.5 font-mono text-[11px] text-slate-600;
+    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.1) inset, 0 0 0 1px rgb(255 255 255 / 0.08), 0 1px 2px rgb(0 0 0 / 0.5);
+  }
+  /* Tile that holds one icon (render the icon at size 22). */
   .icon-chip {
-    @apply inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-600 text-white;
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-500/10 text-brand-400 ring-1 ring-brand-500/25;
+    box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.08) inset;
   }
   /* Tile for a skill-category icon. The category's own colour is applied
-     inline as a soft wash behind a full-strength glyph, so a row of tiles
-     shares one lightness and reads as a set instead of a box of sweets. */
+     inline as a soft wash behind a full-strength glyph. */
   .icon-tile {
-    @apply inline-flex h-12 w-12 items-center justify-center rounded-2xl;
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-xl;
   }
   .badge {
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+    @apply inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ring-white/[0.06];
   }
   .badge-waiting   { @apply bg-amber-100 text-amber-800; }
   .badge-in_progress { @apply bg-blue-100 text-blue-800; }
@@ -179,8 +323,8 @@
   .badge-cannot_repair { @apply bg-rose-100 text-rose-800; }
   /* Paused: the visitor is coming back with a part at a later session. */
   .badge-awaiting_return { @apply bg-violet-100 text-violet-800; }
-  .badge-returned { @apply bg-slate-100 text-slate-800; }
-  .badge-scheduled { @apply bg-slate-100 text-slate-800; }
+  .badge-returned { @apply bg-slate-100 text-slate-700; }
+  .badge-scheduled { @apply bg-slate-100 text-slate-700; }
   .badge-active { @apply bg-brand-100 text-brand-800; }
   .badge-cancelled { @apply bg-rose-100 text-rose-800; }
   /* Small colour dots that mark a repair status next to its label. Colour is
@@ -193,7 +337,27 @@
   .status-dot-awaiting_return { @apply bg-violet-500; }
 }
 
+/* Paper stays paper: print the light palette. */
 @media print {
   .no-print { display: none !important; }
-  body { background: white; }
+  :root {
+    --canvas: 255 255 255;
+    --surface: 255 255 255;
+    --raised: 255 255 255;
+    --fg: 28 38 34;
+    --fg-strong: 15 23 20;
+    --s-50: 248 250 252;
+    --s-100: 241 245 249;
+    --s-200: 226 232 240;
+    --s-300: 203 213 225;
+    --s-400: 148 163 184;
+    --s-500: 100 116 139;
+    --s-600: 71 85 105;
+    --s-700: 51 65 85;
+    --s-800: 30 41 59;
+    --s-900: 15 23 42;
+    --s-950: 2 6 23;
+  }
+  body { background: white; background-image: none; }
+  .text-gradient { background: none; color: #000; }
 }
