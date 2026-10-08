@@ -290,4 +290,4 @@ Released under the [MIT License](LICENSE). Vendored third-party files keep their
 - [x] Dev.to link added
 - [x] Credits added
 - [x] License added
-- [ ] Repository is organized and complete
+- [x] Repository is organized and complete
