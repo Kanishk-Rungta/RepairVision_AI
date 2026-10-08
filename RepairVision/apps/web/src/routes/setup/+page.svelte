@@ -24,9 +24,9 @@
     return typeof v === 'string' && HEX_RE.test(v) ? v : fallback;
   }
   let brand = {
-    primaryColor: '#1B6B5A',
+    primaryColor: '#FF6363',
     accentEnabled: false,
-    accentColor: '#ED6A42',
+    accentColor: '#FFBC33',
     headingFont: '',
     bodyFont: '',
   };
@@ -69,8 +69,14 @@
     return null;
   }
 
+  // Stricter than "has an @ and a dot": the server rejects things like
+  // "a@b..com" or "a@b.", so catch them here, on the step where they were typed.
+  function isEmail(value: string): boolean {
+    return /^[^\s@.][^\s@]*@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)+$/.test(value.trim()) && !value.includes('..');
+  }
+
   function emailValid(): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(admin.email);
+    return isEmail(admin.email);
   }
 
   function next() {
@@ -83,6 +89,7 @@
     }
     if (step === 3) {
       if (!cafe.name.trim()) return (error = 'Please enter the cafe name');
+      if (cafe.contactEmail?.trim() && !isEmail(cafe.contactEmail)) return (error = 'The contact email is not a valid address');
     }
     if (step === 4) {
       if (!venue.name.trim()) return (error = 'Please enter your venue name');
@@ -132,8 +139,8 @@
           contactEmail: cafe.contactEmail.trim() || null,
           websiteUrl: cafe.websiteUrl.trim() || null,
           description: cafe.description.trim() || null,
-          primaryColor: normaliseHex(brand.primaryColor, '#1B6B5A'),
-          accentColor: brand.accentEnabled ? normaliseHex(brand.accentColor, '#ED6A42') : null,
+          primaryColor: normaliseHex(brand.primaryColor, '#FF6363'),
+          accentColor: brand.accentEnabled ? normaliseHex(brand.accentColor, '#FFBC33') : null,
           headingFont: brand.headingFont || null,
           bodyFont: brand.bodyFont || null,
         },
@@ -156,14 +163,17 @@
       await loadCafe();
       goto('/admin/dashboard');
     } catch (err: any) {
-      error = err?.message || 'Setup failed';
+      // The server says which fields failed; show them instead of just "Validation failed".
+      const fields = err?.details?.fieldErrors ?? {};
+      const nested = Object.entries(fields as Record<string, string[]>).map(([k, v]) => `${k}: ${v.join(', ')}`);
+      error = nested.length ? `${err.message}: ${nested.join('; ')}` : err?.message || 'Setup failed';
     } finally {
       busy = false;
     }
   }
 </script>
 
-<main class="min-h-screen bg-slate-100 py-10 px-4">
+<main class="min-h-screen bg-canvas py-10 px-4">
   <div class="max-w-xl mx-auto">
     <div class="mb-8">
       <span class="font-semibold text-lg text-pine">Repair Cafe Hub</span>

@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { api } from '$lib/api';
   import Icon from '@iconify/svelte';
-  import { categoryIcon } from '$lib/categoryIcon';
+  import { categoryIcon, categoryTint, categoryInk } from '$lib/categoryIcon';
   import CameraCapture from '$lib/components/CameraCapture.svelte';
   import { UserPlus, CheckCircle2, Plus, ArrowLeft, CalendarOff, X } from 'lucide-svelte';
 
@@ -171,7 +171,7 @@
                 class="card p-3 text-center transition-shadow {itemCategoryId === cat.id ? 'ring-2 ring-brand-600 bg-brand-50' : 'hover:ring-brand-400'}"
                 on:click={() => (itemCategoryId = itemCategoryId === cat.id ? null : cat.id)}
               >
-                <span class="icon-chip" style="background-color: {cat.colour}">
+                <span class="icon-tile" style="background-color: {categoryTint(cat.colour)}; color: {categoryInk(cat.colour)}">
                   <Icon icon={categoryIcon(cat.icon, cat.name)} width="24" height="24" />
                 </span>
                 <span class="block mt-1.5 font-medium text-sm">{cat.name}</span>

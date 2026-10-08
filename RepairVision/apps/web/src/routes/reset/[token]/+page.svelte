@@ -28,7 +28,7 @@
   }
 </script>
 
-<main class="min-h-screen grid place-items-center bg-slate-100 px-4 py-12">
+<main class="min-h-screen grid place-items-center bg-canvas px-4 py-12">
   <div class="card p-8 w-full max-w-sm">
     <h1 class="text-2xl font-semibold">Set your password</h1>
     <p class="mt-1 text-sm text-slate-600">Use at least 10 characters, with upper and lower case letters and a number.</p>

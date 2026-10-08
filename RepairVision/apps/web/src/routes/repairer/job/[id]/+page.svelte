@@ -299,7 +299,7 @@
                 type="button"
                 role="radio"
                 aria-checked={outcome === o.value}
-                class="rounded-xl p-3 text-center ring-1 transition {outcome === o.value ? `ring-2 ${TONE[o.tone]}` : 'ring-slate-200 bg-white hover:bg-slate-50 text-slate-700'}"
+                class="rounded-xl p-3 text-center ring-1 transition {outcome === o.value ? `ring-2 ${TONE[o.tone]}` : 'ring-slate-200 bg-surface hover:bg-slate-50 text-slate-700'}"
                 on:click={() => (outcome = o.value)}
               >
                 <svelte:component this={o.icon} size={24} class="mx-auto" />

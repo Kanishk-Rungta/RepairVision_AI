@@ -7,7 +7,7 @@
   import CameraCapture from '$lib/components/CameraCapture.svelte';
   import { Wrench, ArrowRight, ArrowLeft, Sparkles, CheckCircle2, Plus, ExternalLink, Copy, Heart } from 'lucide-svelte';
   import Icon from '@iconify/svelte';
-  import { categoryIcon } from '$lib/categoryIcon';
+  import { categoryIcon, categoryTint, categoryInk } from '$lib/categoryIcon';
 
   $: token = $page.params.token;
 
@@ -295,7 +295,7 @@
   }
 </script>
 
-<main class="min-h-screen bg-slate-100 customer-ui">
+<main class="min-h-screen bg-canvas customer-ui">
   <div class="max-w-md mx-auto px-4 py-8">
     {#if loadError}
       <div class="card p-6 text-center">
@@ -319,7 +319,7 @@
       {#if step === 1}
         <div class="card p-8 text-center">
           {#if info.cafe.logoUrl}
-            <img src={info.cafe.logoUrl} alt={`${info.cafe.name} logo`} class="h-16 w-16 mx-auto rounded-2xl bg-white object-contain p-2 ring-1 ring-slate-200" />
+            <img src={info.cafe.logoUrl} alt={`${info.cafe.name} logo`} class="h-16 w-16 mx-auto rounded-2xl bg-surface object-contain p-2 ring-1 ring-slate-200" />
           {:else}
             <span class="h-14 w-14 mx-auto rounded-2xl bg-brand-600 text-white flex items-center justify-center"><Wrench size={24} /></span>
           {/if}
@@ -392,7 +392,7 @@
                     class="card p-4 text-center transition-shadow {itemCategoryId === cat.id ? 'ring-2 ring-brand-600 bg-brand-50' : 'hover:ring-brand-400'}"
                     on:click={() => (itemCategoryId = cat.id)}
                   >
-                    <span class="icon-chip" style="background-color: {cat.colour}">
+                    <span class="icon-tile" style="background-color: {categoryTint(cat.colour)}; color: {categoryInk(cat.colour)}">
                       <Icon icon={categoryIcon(cat.icon, cat.name)} width="24" height="24" />
                     </span>
                     <span class="block mt-2 font-medium text-base">{cat.name}</span>
@@ -480,7 +480,7 @@
                     type="text"
                     readonly
                     value={trackingUrl}
-                    class="input flex-1 text-xs bg-white"
+                    class="input flex-1 text-xs bg-surface"
                     on:focus={(e) => (e.currentTarget as HTMLInputElement).select()}
                   />
                   <button type="button" class="btn-secondary !px-3" on:click={copyTrackingUrl}>
@@ -503,7 +503,7 @@
                   href={info.cafe.donateUrl}
                   target="_blank"
                   rel="noopener"
-                  class="btn-primary mt-4 w-full justify-center !bg-rose-600 hover:!bg-rose-700"
+                  class="btn-danger mt-4 w-full justify-center"
                 >
                   <Heart size={16} /> Make a donation
                 </a>
@@ -540,10 +540,10 @@
   .type-chip {
     padding: 0.55rem 0.9rem;
     border-radius: 9999px;
-    background: #fff;
-    border: 1px solid rgb(203 213 225);
+    background: rgb(var(--surface));
+    border: 1px solid rgb(var(--s-300));
     font-size: 0.95rem;
-    color: rgb(51 65 85);
+    color: rgb(var(--s-700));
     transition:
       border-color 0.12s ease,
       background-color 0.12s ease;

@@ -122,7 +122,7 @@
   <meta name="robots" content="noindex" />
 </svelte:head>
 
-<main class="min-h-screen bg-slate-100 customer-ui">
+<main class="min-h-screen bg-canvas customer-ui">
   <div class="max-w-md mx-auto px-4 py-8">
     {#if loadError && !data}
       <div class="card p-6 text-center">
@@ -137,7 +137,7 @@
       <!-- Header -->
       <div class="card p-6 text-center">
         {#if data.cafe.logoUrl}
-          <img src={data.cafe.logoUrl} alt={`${data.cafe.name} logo`} class="h-16 w-16 mx-auto rounded-2xl bg-white object-contain p-2 ring-1 ring-slate-200" />
+          <img src={data.cafe.logoUrl} alt={`${data.cafe.name} logo`} class="h-16 w-16 mx-auto rounded-2xl bg-surface object-contain p-2 ring-1 ring-slate-200" />
         {:else}
           <span class="h-14 w-14 mx-auto rounded-2xl bg-brand-600 text-white flex items-center justify-center"><Wrench size={24} /></span>
         {/if}

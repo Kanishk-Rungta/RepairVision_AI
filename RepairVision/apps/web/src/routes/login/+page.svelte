@@ -45,7 +45,7 @@
   }
 </script>
 
-<main class="min-h-screen grid place-items-center bg-slate-100 px-4 py-12">
+<main class="min-h-screen grid place-items-center bg-canvas px-4 py-12">
   <form on:submit={submit} class="card p-8 w-full max-w-sm">
     <h1 class="text-2xl font-semibold">Sign in</h1>
     <p class="mt-1 text-sm text-slate-600">For repairers and admins.</p>
