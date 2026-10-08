@@ -23,6 +23,7 @@
 //  checks that every column here exists there.
 // =============================================================================
 import { sql } from 'drizzle-orm';
+import type { SavedAdvisorEstimate } from '@circularity/shared';
 import {
   customType,
   index,
@@ -147,6 +148,9 @@ export const cafes = sqliteTable('cafes', {
   telemetryVerifyReason: text('telemetry_verify_reason'),
   co2DisplacementRate: numeric('co2_displacement_rate', 3).notNull().default('0.5'),
   co2Enabled: bool('co2_enabled').notNull().default(true),
+  advisorCurrency: text('advisor_currency').notNull().default('GBP'),
+  advisorRepairShare: numeric('advisor_repair_share', 3).notNull().default('0.5'),
+  advisorReplaceShare: numeric('advisor_replace_share', 3).notNull().default('0.9'),
   linuxEnabled: bool('linux_enabled').notNull().default(false),
   linuxPage: json('linux_page').notNull().default({}),
   setupCompleted: bool('setup_completed').notNull().default(false),
@@ -340,6 +344,8 @@ export const repairJobs = sqliteTable(
     completedAt: timestamp('completed_at'),
     outcomeNotes: text('outcome_notes'),
     partsUsed: text('parts_used'),
+    /** The last repair vs. replace estimate saved against this job. */
+    advisorEstimate: json<SavedAdvisorEstimate>('advisor_estimate'),
     environmentalSavingKg: numeric('environmental_saving_kg', 3),
     co2FactorId: uuid('co2_factor_id'),
     co2SavingKg: numeric('co2_saving_kg', 3),
