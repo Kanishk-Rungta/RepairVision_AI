@@ -264,7 +264,7 @@
             class="px-3 py-1.5 rounded-lg text-sm whitespace-nowrap {tab === t.key ? 'bg-surface shadow-sm font-semibold text-slate-900' : 'text-slate-600 hover:text-slate-900'}"
             on:click={() => (tab = t.key)}
           >
-            {t.label} <span class="ml-1 text-xs rounded-full px-1.5 py-0.5 {tab === t.key ? 'bg-slate-100' : 'bg-white/60'}">{t.count}</span>
+            {t.label} <span class="ml-1 text-xs rounded-full px-1.5 py-0.5 {tab === t.key ? 'bg-slate-100' : 'bg-white'}">{t.count}</span>
           </button>
         {/each}
       </div>

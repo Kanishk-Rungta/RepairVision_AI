@@ -488,7 +488,7 @@
 
 <!-- ── Write-up form ────────────────────────────────────────────────── -->
 {#if formOpen}
-  <div class="fixed inset-0 z-50 bg-black/65 backdrop-blur-sm overflow-y-auto p-4">
+  <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm overflow-y-auto p-4">
     <div class="card max-w-2xl mx-auto my-8 p-6 space-y-4 bg-surface">
       <div class="flex items-start justify-between gap-4">
         <div>

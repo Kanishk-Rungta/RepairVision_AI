@@ -123,7 +123,7 @@
 </ul>
 
 {#if editing}
-  <div class="fixed inset-0 bg-black/65 backdrop-blur-sm z-50 overflow-y-auto">
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 overflow-y-auto">
     <div class="min-h-full flex items-start sm:items-center justify-center p-4">
       <div class="modal-panel max-w-2xl my-8 space-y-4">
         <h2 class="text-lg font-semibold">{editing.id ? 'Edit venue' : 'New venue'}</h2>

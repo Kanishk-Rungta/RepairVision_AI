@@ -82,7 +82,7 @@
       </button>
       <button
         type="button"
-        class="shrink-0 rounded-lg p-2 text-slate-500 hover:bg-white/10 hover:text-slate-900"
+        class="shrink-0 rounded-lg p-2 text-slate-500 hover:bg-tint/[0.06] hover:text-slate-900"
         aria-label="Not now"
         on:click={() => hide(true)}
       >

@@ -52,7 +52,7 @@
 </script>
 
 <div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="screen-link-title">
-  <button type="button" class="absolute inset-0 bg-black/65 backdrop-blur-sm" aria-label="Close" on:click={() => dispatch('close')}></button>
+  <button type="button" class="absolute inset-0 bg-black/40 backdrop-blur-sm" aria-label="Close" on:click={() => dispatch('close')}></button>
   <div class="modal-panel relative max-w-lg">
     <button type="button" class="absolute top-3 right-3 p-2 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700" aria-label="Close" on:click={() => dispatch('close')}><X size={18} /></button>
     <span class="h-11 w-11 rounded-xl bg-brand-50 text-brand-700 flex items-center justify-center"><MonitorPlay size={22} /></span>

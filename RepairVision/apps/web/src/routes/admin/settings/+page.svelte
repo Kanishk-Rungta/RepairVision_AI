@@ -1126,7 +1126,7 @@
             <p class="mt-1">{telemetry.verifyReason ?? 'The project could not check your site.'}</p>
             <p class="mt-1">
               Your public web address is
-              <code class="bg-white/70 rounded px-1">{cafe?.publicUrl || 'not set'}</code>.
+              <code class="bg-tint/[0.04] rounded px-1">{cafe?.publicUrl || 'not set'}</code>.
               It has to be the address visitors use, over https, and reachable from outside your
               network. Change it under
               <button class="underline underline-offset-2 font-medium" type="button" on:click={() => (tab = 'profile')}>Cafe profile</button>,
