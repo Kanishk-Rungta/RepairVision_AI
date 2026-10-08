@@ -33,8 +33,11 @@
 </script>
 
 <header class="bg-canvas/70 backdrop-blur-xl border-b border-slate-200/80 no-print sticky top-0 z-30">
-  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-    <div class="flex items-center gap-3 min-w-0">
+  <!-- Wider than the page sections on large screens, because the full menu
+       needs the room. The brand side may shrink (the name truncates) but never
+       below the logo, so the logo can never slide under the menu. -->
+  <div class="max-w-6xl xl:max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3 min-w-[2.5rem] flex-1">
       <!-- Only the cafe's own name and logo here. The Circularity credit
            lives in the footer. Most cafe logos are wide wordmarks, so we give
            the image its own width and cap it, rather than squashing it into a
@@ -50,7 +53,7 @@
     </div>
 
     <!-- Desktop nav -->
-    <nav class="hidden xl:flex items-center gap-2 text-sm">
+    <nav class="hidden xl:flex shrink-0 items-center gap-1 text-sm">
       {#if variant === 'public'}
         <a href="/" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">Home</a>
         <a href="/events" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">Events</a>
