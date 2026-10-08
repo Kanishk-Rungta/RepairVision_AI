@@ -266,7 +266,7 @@
           <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
             <div class="min-w-0">
               <p class="font-semibold text-slate-900 truncate">{user.displayName}</p>
-              <p class="text-xs text-slate-500">{admin ? 'Admin' : user.role === 'user' ? 'Device owner' : user.role === 'user' ? 'Device owner' : 'Repairer'}</p>
+              <p class="text-xs text-slate-500">{admin ? 'Admin' : user.role === 'user' ? 'Device owner' : 'Repairer'}</p>
             </div>
             <button type="button" class="h-10 w-10 inline-flex items-center justify-center rounded-lg hover:bg-slate-100" aria-label="Close the menu" on:click={() => (drawerOpen = false)}><X size={22} /></button>
           </div>
