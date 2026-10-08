@@ -33,7 +33,10 @@ const PRIVATE_PAGE = /^\/(admin|repairer|checkin|track|login|reset|setup)(\/|$)/
 
 // Hashed build assets plus everything in static/ (which includes the offline
 // page). Both lists are generated at build time by SvelteKit.
-const PRECACHE = [...build, ...files];
+// The chat character's 3D engine (static/things, about 730 KB) is left out:
+// it is only needed on the public pages, and the browser caches it on first
+// use like any other file.
+const PRECACHE = [...build, ...files.filter((f) => !f.startsWith('/things/'))];
 
 sw.addEventListener('install', (event) => {
   event.waitUntil(

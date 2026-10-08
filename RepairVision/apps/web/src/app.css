@@ -741,6 +741,12 @@ body { transition: background-color 0.4s var(--ease-apple), color 0.4s var(--eas
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 }
 
+/* The chat character (Things) would cover the staff area's bottom tab bar on
+   a phone. Its host element is the only part outside its shadow root. */
+@media (max-width: 767px) {
+  body[data-staff] [data-things-chat] { display: none; }
+}
+
 @media print {
   .no-print { display: none !important; }
   .rv { opacity: 1 !important; transform: none !important; filter: none !important; }

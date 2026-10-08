@@ -22,11 +22,20 @@
   import { serializeJsonLd, shortAppName, type PageSeo } from '@circularity/shared';
   import type { LayoutData } from './$types';
   import DemoBanner from '$lib/components/DemoBanner.svelte';
+  import ThingsChat from '$lib/components/ThingsChat.svelte';
 
   export let data: LayoutData;
 
   $: screenPage = $page.url.pathname.startsWith('/display/') || $page.url.pathname === '/admin/board';
   $: staffPage = $page.url.pathname.startsWith('/admin') || $page.url.pathname.startsWith('/repairer');
+  // The chat character shows on the public site and in the staff area. It
+  // stays off the full-screen live board and waiting-room display, and off
+  // the visitor's check-in, tracking, setup and sign-in forms, where it would
+  // sit on top of the buttons people need to press.
+  $: chatPage = !screenPage && !/^\/(display|checkin|track|setup|login|reset)(\/|$)/.test($page.url.pathname);
+  // On a phone the staff area has a tab bar along the bottom, right where the
+  // character sits, so it is hidden there (see app.css).
+  $: if (browser) document.body.toggleAttribute('data-staff', staffPage);
 
   // Keep the module-level stores in sync with the (server-)loaded data so the
   // many child components that read $cafe keep working. The cafe is a
@@ -201,6 +210,10 @@
 <div class="scroll-progress no-print" aria-hidden="true"></div>
 
 <slot />
+
+{#if browser && chatPage}
+  <ThingsChat />
+{/if}
 
 {#if !screenPage}
   <InstallPrompt raised={staffPage} />
