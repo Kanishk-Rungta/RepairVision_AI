@@ -4,6 +4,8 @@
 
 **Live application:** https://repair-cafe-hub.circularity-cloudflare.workers.dev
 
+**Dev.to post:** https://dev.to/priyansh_narang_c1b96ab75/repairvision-an-intelligent-repair-cafe-platform-for-multimodal-fault-diagnosis-and-sustainable-4jm2
+
 ## Team
 
 **Team Name:** The Blacklisted
@@ -282,8 +284,8 @@ Released under the [MIT License](LICENSE). Vendored third-party files keep their
 - [x] AI and open-source components documented
 - [x] Setup and usage instructions tested
 - [x] Challenges and learnings documented
-- [ ] Dev .to submission completed
-- [ ] Dev.to link added
+- [x] Dev .to submission completed
+- [x] Dev.to link added
 - [x] Credits added
 - [x] License added
 - [ ] Repository is organized and complete
