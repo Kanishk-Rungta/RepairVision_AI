@@ -6,6 +6,7 @@
   import { auth, type AuthUser } from '$lib/stores/auth';
   import { safeNext } from '$lib/staff/nav';
   import { LogIn } from 'lucide-svelte';
+  import DemoAccounts from '$lib/components/DemoAccounts.svelte';
 
   let email = '';
   let password = '';
@@ -66,6 +67,7 @@
         <LogIn size={18} /> Sign in
       </button>
     </div>
+    <DemoAccounts />
     <p class="mt-6 text-center text-sm text-slate-600">New to RepairVision? <a href={'/register?next=' + encodeURIComponent($page.url.searchParams.get('next') || '/diagnosis')} class="text-brand-500 hover:underline">Create an account</a></p>
     <a href="/" class="block text-center mt-6 text-sm text-slate-500 hover:underline">Back to home</a>
   </form>

@@ -7,6 +7,7 @@
   import { auth, type AuthState } from '$lib/stores/auth';
   import { safeNext } from '$lib/staff/nav';
   import { UserPlus } from 'lucide-svelte';
+  import DemoAccounts from '$lib/components/DemoAccounts.svelte';
 
   let displayName = '';
   let email = '';
@@ -49,6 +50,7 @@
       {#if error}<p role="alert" class="text-sm text-rose-600">{error}</p>{/if}
       <button class="btn-primary w-full" disabled={busy} type="submit"><UserPlus size={18} /> {busy ? 'Creating account…' : 'Create account'}</button>
     </div>
+    <DemoAccounts />
     <p class="mt-6 text-center text-sm text-slate-600">Already have an account? <a href={'/login?next=' + encodeURIComponent($page.url.searchParams.get('next') || '/dashboard')} class="text-brand-500 hover:underline">Sign in</a></p>
     <a href="/" class="block text-center mt-4 text-sm text-slate-500 hover:underline">Back to home</a>
   </form>
