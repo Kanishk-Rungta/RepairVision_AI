@@ -261,4 +261,76 @@ export const KB: KbEntry[] = [
     ],
     technicianOnly: ['Open the case and check the switch and solder joints.'],
   },
+  {
+    id: 'mouse-no-power',
+    deviceType: 'mouse',
+    fault: 'Mouse is dead: no light and not detected',
+    keywords: [
+      'dead', 'nothing', 'no light', 'light off', 'not detected', 'not recognised',
+      'not recognized', 'unresponsive', 'does not work', 'completely', 'power', 'plugged in',
+    ],
+    explanation:
+      'An optical mouse lights its sensor as soon as it has power. No light means power is not arriving: a bad port, a broken cable or a failed board.',
+    checks: [
+      'Look under the mouse. The sensor should glow red or blue when it is plugged in.',
+      'Try a different USB port, directly on the computer rather than a hub.',
+      'Try the mouse on a second computer.',
+      'Inspect the cable and plug for damage.',
+    ],
+    technicianOnly: [
+      'Open the case and test the cable for continuity with a multimeter.',
+      'Check the board for a lifted track or a cracked joint.',
+    ],
+  },
+  {
+    id: 'mouse-feet-worn',
+    deviceType: 'mouse',
+    fault: 'Worn or missing mouse feet',
+    keywords: [
+      'drag', 'drags', 'scratchy', 'rough', 'sticks to desk', 'uneven', 'wobble', 'rocks',
+      'feet', 'glide', 'friction', 'scratching', 'noisy', 'wont glide',
+    ],
+    explanation:
+      'The small pads under the mouse let it glide and keep the sensor at the right height. Worn or missing pads make it drag, scratch the surface and hold the sensor too close or too far from the desk.',
+    checks: [
+      'Turn the mouse over and look for missing, curled or flattened pads.',
+      'Wipe the pads and the surface clean.',
+      'Check for dried glue or grit stuck to the pads.',
+    ],
+    technicianOnly: ['Fit new adhesive PTFE feet after cleaning off old glue.'],
+  },
+  {
+    id: 'mouse-speed-setting',
+    deviceType: 'mouse',
+    fault: 'Pointer speed or DPI setting changed',
+    keywords: [
+      'too fast', 'too slow', 'speed', 'dpi', 'sensitivity', 'sluggish', 'flies', 'acceleration',
+      'suddenly', 'changed', 'slow pointer', 'fast pointer', 'overshoots',
+    ],
+    explanation:
+      'Many mice have a button that cycles the sensor resolution, and the operating system has its own pointer speed setting. A sudden change in speed with no sign of damage is usually a setting, not a fault.',
+    checks: [
+      'Look for a DPI button, usually behind the wheel, and press it a few times.',
+      'Open the pointer speed setting in the computer and move the slider.',
+      'Try the mouse on another computer to see whether the speed follows the mouse.',
+    ],
+    technicianOnly: [],
+  },
+  {
+    id: 'mouse-middle-click',
+    deviceType: 'mouse',
+    fault: 'Wheel click or side button not registering',
+    keywords: [
+      'middle click', 'wheel click', 'wheel press', 'side button', 'back button', 'forward button',
+      'thumb button', 'extra button', 'not clicking', 'wheel button', 'press wheel', 'stuck',
+    ],
+    explanation:
+      'The wheel and side buttons use their own small switches, which wear and collect dirt like the main buttons. A worn wheel switch is common because the wheel is both turned and pressed.',
+    checks: [
+      'Press the wheel straight down and then at an angle. Notice whether the click changes.',
+      'Test the button in a different program, since some buttons do nothing in some programs.',
+      'Test on another computer.',
+    ],
+    technicianOnly: ['Open the case and clean or replace the switch.'],
+  },
 ];
