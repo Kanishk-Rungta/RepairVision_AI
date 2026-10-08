@@ -1,0 +1,11 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Allowed install scripts. pnpm 11 refuses to run native module postinstalls
+# unless they're explicitly approved. These need it:
+#   esbuild: downloads its native binary
+#   workerd: downloads the Cloudflare Workers runtime
+allowBuilds:
+  esbuild: true
+  workerd: true

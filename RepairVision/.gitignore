@@ -1,0 +1,17 @@
+node_modules/
+.svelte-kit/
+.wrangler/
+dist/
+build/
+coverage/
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.log
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+Thumbs.db

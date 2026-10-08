@@ -1,0 +1,138 @@
+{
+  "_readme": [
+    "Photographs for the public demo site only. Nothing here is published to a",
+    "real cafe. demo/seed.py downloads them while seeding, so the repository",
+    "stays small.",
+    "",
+    "There are deliberately no photographs of people used as volunteer profile",
+    "pictures. The demo draws its avatars instead, in demo/seed.py."
+  ],
+  "images": [
+    {
+      "role": "banner",
+      "caption": "The textiles and sewing table",
+      "url": "https://live.staticflickr.com/3950/15387521798_31caf36c5d_b.jpg",
+      "title": "Reading Repair Cafe - textiles and sewing repairs"
+    },
+    {
+      "role": "gallery",
+      "caption": "A bike getting some attention",
+      "url": "https://live.staticflickr.com/608/21754673322_ba7998ceb6_b.jpg",
+      "title": "Bike repairing"
+    },
+    {
+      "role": "gallery",
+      "caption": "Bikes waiting their turn",
+      "url": "https://live.staticflickr.com/65535/51310642606_c49393c7b0_b.jpg",
+      "title": "Bike Workshop - Bicycle Repair Shop"
+    },
+    {
+      "role": "gallery",
+      "caption": "Boards out, notes taken",
+      "url": "https://live.staticflickr.com/7022/6486560219_846251e8d2_b.jpg",
+      "title": "PC fixing"
+    },
+    {
+      "role": "gallery",
+      "caption": "Bringing an old food mixer back to life",
+      "url": "https://live.staticflickr.com/5600/15550025956_0a43af4b6d_b.jpg",
+      "title": "Reading Repair Cafe - maintenance on a Sunbeam Mixmaster"
+    },
+    {
+      "role": "gallery",
+      "caption": "Checking the frame over before it goes back",
+      "url": "https://live.staticflickr.com/7446/10057500083_4863295ed7_b.jpg",
+      "title": "Final check of the downtube assembly"
+    },
+    {
+      "role": "gallery",
+      "caption": "Computer repairs underway",
+      "url": "https://live.staticflickr.com/8621/16473176888_b06c01e06e_b.jpg",
+      "title": "Computer repairs at Reading Repair Cafe"
+    },
+    {
+      "role": "gallery",
+      "caption": "Darning a favourite jumper",
+      "url": "https://live.staticflickr.com/3065/2297430008_b9b9a444f4_b.jpg",
+      "title": "mending"
+    },
+    {
+      "role": "gallery",
+      "caption": "Everything within reach",
+      "url": "https://live.staticflickr.com/3290/2514975647_4bc9c276fd_b.jpg",
+      "title": "Workbench"
+    },
+    {
+      "role": "gallery",
+      "caption": "Glue, clamps and patience",
+      "url": "https://live.staticflickr.com/3204/2962459752_f8615f5882_b.jpg",
+      "title": "Melodeon Makers"
+    },
+    {
+      "role": "gallery",
+      "caption": "Inside the machine, where the trouble usually is",
+      "url": "https://live.staticflickr.com/2115/1907845344_a4698c9634_b.jpg",
+      "title": "IMG_5368"
+    },
+    {
+      "role": "gallery",
+      "caption": "Setting up before the doors open",
+      "url": "https://live.staticflickr.com/2922/14539091227_2c53bf848f_b.jpg",
+      "title": "July 20th, Reading Repair Cafe"
+    },
+    {
+      "role": "gallery",
+      "caption": "Sharpening tools at the bench",
+      "url": "https://live.staticflickr.com/3868/14538893549_05d333ed5f_b.jpg",
+      "title": "Reading Repair Cafe, July 2014 - Tool sharpening desk"
+    },
+    {
+      "role": "gallery",
+      "caption": "The book swap table",
+      "url": "https://live.staticflickr.com/3956/15573668885_f6e6fd592d_b.jpg",
+      "title": "Book swap at Reading Repair Cafe"
+    },
+    {
+      "role": "gallery",
+      "caption": "The soldering bench, ready to go",
+      "url": "https://live.staticflickr.com/4052/4439774205_0fe0cbe38e_b.jpg",
+      "title": "Soldering bench"
+    },
+    {
+      "role": "gallery",
+      "caption": "The tool library and electrical bench",
+      "url": "https://live.staticflickr.com/5611/15387654727_47c630877e_b.jpg",
+      "title": "reading Repair Cafe - tool library and electrics"
+    },
+    {
+      "role": "gallery",
+      "caption": "The upcycling desk",
+      "url": "https://live.staticflickr.com/7252/13192833275_40e865dcc5_b.jpg",
+      "title": "Reading Repair Cafe - the upcycling desk"
+    },
+    {
+      "role": "gallery",
+      "caption": "Two of our repairers puzzling over a fault",
+      "url": "https://live.staticflickr.com/3698/10403675514_c47bdb317c_b.jpg",
+      "title": "October 20th, 2013 Reading Repair Cafe - tool and knife sharpening tab"
+    },
+    {
+      "role": "gallery",
+      "caption": "We are open, come on in",
+      "url": "https://live.staticflickr.com/2810/12033274335_5a856f926b_b.jpg",
+      "title": "Reading Repair Cafe open!"
+    },
+    {
+      "role": "gallery",
+      "caption": "Wheels off, sleeves up",
+      "url": "https://live.staticflickr.com/65535/47942200317_23647d4534_b.jpg",
+      "title": "Village Wrench"
+    },
+    {
+      "role": "gallery",
+      "caption": "Working on a sewing machine",
+      "url": "https://live.staticflickr.com/5672/23436324721_7335bc3f84_b.jpg",
+      "title": "Repairing the Sewing Machine"
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Default brand palette — Circularity teal (#1B6B5A at 500). Stored as
+       space-separated R G B channels so Tailwind's `brand` utilities can apply
+       opacity. src/lib/brand.ts overrides these per-cafe at runtime. */
+    --brand-50: 237 243 242;
+    --brand-100: 219 231 229;
+    --brand-200: 187 211 206;
+    --brand-300: 150 187 179;
+    --brand-400: 100 154 143;
+    --brand-500: 27 107 90;
+    --brand-600: 22 88 74;
+    --brand-700: 17 68 58;
+    --brand-800: 12 48 41;
+    --brand-900: 8 30 25;
+    /* Accent (call-to-action) palette. Defaults to the same teal as the brand
+       so a cafe that sets only a brand colour gets matching buttons; a cafe
+       that sets its own `accentColor` (e.g. Woodville orange) overrides these
+       via src/lib/brand.ts while the brand colour stays for links/headings. */
+    --accent-50: 237 243 242;
+    --accent-100: 219 231 229;
+    --accent-200: 187 211 206;
+    --accent-300: 150 187 179;
+    --accent-400: 100 154 143;
+    --accent-500: 27 107 90;
+    --accent-600: 22 88 74;
+    --accent-700: 17 68 58;
+    --accent-800: 12 48 41;
+    --accent-900: 8 30 25;
+    /* Typefaces. Default to Circularity's Fraunces (display) + Mulish (body);
+       a cafe can repoint these to another bundled family via its font choice. */
+    --font-display: 'Fraunces Variable', Fraunces, Georgia, 'Times New Roman', serif;
+    --font-sans: 'Mulish Variable', Mulish, ui-sans-serif, system-ui, sans-serif;
+  }
+  html {
+    /* See app.html: opt out of the browser darkening this page for us. */
+    color-scheme: only light;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Stop the grey flash mobile browsers paint on tapped links and cards.
+       Buttons and links show their own hover and focus styles instead. */
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-paper text-ink antialiased font-sans;
+  }
+  h1 {
+    @apply text-3xl md:text-4xl font-bold font-display;
+  }
+  h2 {
+    @apply text-2xl md:text-3xl font-semibold font-display;
+  }
+  h3 {
+    @apply text-xl md:text-2xl font-semibold font-display;
+  }
+  /* Customer-facing larger type */
+  .customer-ui {
+    @apply text-lg leading-relaxed;
+  }
+  .customer-ui h1 {
+    @apply text-3xl md:text-5xl;
+  }
+  .customer-ui h2 {
+    @apply text-2xl md:text-3xl;
+  }
+}
+
+@layer components {
+  /* The staff area (StaffShell) is a working tool, not a brochure: section
+     headings there are compact and in the body typeface. Page titles keep
+     the display face. Utilities such as text-xl still win, because this
+     sits in the components layer. */
+  .staff :where(h2) {
+    @apply text-lg font-semibold font-sans;
+  }
+  .staff :where(h3) {
+    @apply text-base font-semibold font-sans;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-500 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-accent-600 text-white hover:bg-accent-700;
+  }
+  .btn-secondary {
+    @apply btn bg-white text-slate-800 ring-1 ring-slate-300 hover:bg-slate-50;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent text-slate-700 hover:bg-slate-100;
+  }
+  .btn-danger {
+    @apply btn bg-red-600 text-white hover:bg-red-700;
+  }
+  /* Quiet destructive action. Use where a solid red button would draw too
+     much attention, for example on a dashboard the user sees every day. */
+  .btn-danger-outline {
+    @apply btn bg-white text-red-700 ring-1 ring-red-200 hover:bg-red-50;
+  }
+  .btn-lg {
+    @apply px-7 py-4 text-lg;
+  }
+  /* Compact button for toolbars, card actions and dense rows. */
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+  /* For actions that sit inside a table row. Even btn-sm is 36px tall, which
+     makes a row of plain text half as tall again wherever one appears. The
+     smaller radius matters too: btn's rounded-xl looks like a lozenge at this
+     size. */
+  .btn-xs {
+    @apply px-2.5 py-1 text-xs gap-1 rounded-lg font-medium;
+  }
+  .input {
+    @apply block w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-base shadow-sm focus:border-brand-500 focus:ring-brand-500 focus:outline-none focus:ring-1;
+  }
+  .label {
+    @apply block text-sm font-medium text-slate-700 mb-1;
+  }
+  .card {
+    @apply bg-white rounded-2xl shadow-sm ring-1 ring-slate-200;
+  }
+  /* A card that is a link or a button. Only the border tint changes on
+     hover; the shadow and position never change, so nothing jumps or
+     flashes. */
+  .card-link {
+    @apply card block transition-shadow hover:ring-brand-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500;
+  }
+  /* A dialog panel that floats above the page. Dialogs are the only
+     surface that uses a large shadow. */
+  .modal-panel {
+    @apply w-full rounded-2xl bg-white p-6 shadow-xl ring-1 ring-slate-200;
+  }
+  /* Small uppercase line above a page or section title. */
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.18em] text-clay;
+  }
+  /* Small uppercase label at the top of a card. */
+  .kicker {
+    @apply text-xs font-semibold uppercase tracking-wider text-slate-500;
+  }
+  /* Public site section title. Sits centred above a section or band. */
+  .section-title {
+    @apply font-display text-3xl md:text-4xl font-semibold tracking-tight text-pine;
+  }
+  /* One line of supporting text under a section title. */
+  .section-lede {
+    @apply mt-4 text-lg leading-relaxed text-slate-600;
+  }
+  /* Public page rhythm. Every section on the public site uses `.section` so
+     the gaps down the page are always the same size, and every section lines
+     up on the same left and right edges. A `.band` is a section on a tinted
+     background; it holds a `.section` inside it. */
+  .section {
+    @apply max-w-6xl mx-auto px-4 py-16 md:py-24;
+  }
+  .band {
+    @apply bg-brand-50 border-y border-brand-100;
+  }
+  /* Square brand tile that holds one icon (render the icon at size 22). */
+  .icon-chip {
+    @apply inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-600 text-white;
+  }
+  /* Tile for a skill-category icon. The category's own colour is applied
+     inline as a soft wash behind a full-strength glyph, so a row of tiles
+     shares one lightness and reads as a set instead of a box of sweets. */
+  .icon-tile {
+    @apply inline-flex h-12 w-12 items-center justify-center rounded-2xl;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+  .badge-waiting   { @apply bg-amber-100 text-amber-800; }
+  .badge-in_progress { @apply bg-blue-100 text-blue-800; }
+  .badge-completed { @apply bg-emerald-100 text-emerald-800; }
+  .badge-cannot_repair { @apply bg-rose-100 text-rose-800; }
+  /* Paused: the visitor is coming back with a part at a later session. */
+  .badge-awaiting_return { @apply bg-violet-100 text-violet-800; }
+  .badge-returned { @apply bg-slate-100 text-slate-800; }
+  .badge-scheduled { @apply bg-slate-100 text-slate-800; }
+  .badge-active { @apply bg-brand-100 text-brand-800; }
+  .badge-cancelled { @apply bg-rose-100 text-rose-800; }
+  /* Small colour dots that mark a repair status next to its label. Colour is
+     never the only signal: a text label always sits beside the dot. */
+  .status-dot { @apply inline-block h-2 w-2 rounded-full; }
+  .status-dot-waiting { @apply bg-amber-500; }
+  .status-dot-in_progress { @apply bg-blue-500; }
+  .status-dot-completed { @apply bg-emerald-500; }
+  .status-dot-cannot_repair { @apply bg-rose-500; }
+  .status-dot-awaiting_return { @apply bg-violet-500; }
+}
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; }
+}
