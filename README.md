@@ -23,7 +23,7 @@ Stack: SvelteKit, Tailwind CSS, Cloudflare Workers, D1, R2, Drizzle ORM and shar
 
 ## RepairVision AI Diagnosis (added after the import)
 
-A new feature for the Hack Day, separate from the imported Repair Cafe Hub functionality. It provides multimodal fault diagnosis and guided troubleshooting with Google Gemma 4 (`gemma-4-26b-a4b-it`) through the Gemini API. Signed-in staff can open it from **AI Diagnosis** in the menu, or with **Analyze with RepairVision AI** on a repair.
+A new feature for the Hack Day, separate from the imported Repair Cafe Hub functionality. It provides multimodal fault diagnosis and guided troubleshooting with Google Gemma 4 (`gemma-4-26b-a4b-it`) through the Gemini API. Device owners can create an account at `/register` and use `/dashboard` ? `/diagnosis`. Signed-in staff can also open it from **AI Diagnosis** in the menu, or with **Analyze with RepairVision AI** on a repair.
 
 It requires a `GEMINI_API_KEY` Worker secret. For local development, copy `RepairVision/apps/cloudflare/.dev.vars.example` to `.dev.vars`. Setup, API, architecture, safety limits and testing are documented in [RepairVision/docs/repairvision-ai.md](RepairVision/docs/repairvision-ai.md).
 

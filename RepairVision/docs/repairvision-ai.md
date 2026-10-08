@@ -20,7 +20,7 @@ This feature was added for Hacktoberfest Hack Day Coimbatore 2026. It is separat
 
 ```mermaid
 flowchart LR
-  subgraph Browser["Browser: /repairer/diagnosis (SvelteKit)"]
+  subgraph Browser["Browser: /diagnosis or /repairer/diagnosis (SvelteKit)"]
     F[Device form + photo] -->|shrink to 1536px, re-encode| A
     A[analyze] --> R[DiagnosisReport cards]
     Q[Guided question] -->|answer + case so far| U[followup]
@@ -56,7 +56,7 @@ flowchart LR
 | `apps/cloudflare/src/db/migrations/0003_ai_diagnosis_usage.ts` | The usage table used by the rate limit. It is not included in backups. |
 | `apps/web/src/lib/repairvision.ts` | The browser client, photo preparation and error messages. |
 | `apps/web/src/lib/components/DiagnosisReport.svelte` | The result cards. |
-| `apps/web/src/routes/repairer/diagnosis/+page.svelte` | The page and the guided session. |
+| `apps/web/src/routes/repairer/diagnosis/+page.svelte` | Staff entry point; the guided session is shared in `lib/components/DeviceDiagnosis.svelte`. |
 | `apps/cloudflare/test/repairvision.test.ts` | Automated tests. All network calls are faked. |
 
 Small edits to existing files: `env.ts` (new optional settings), `app.ts` (registers the routes), `db/migrate.ts` and `db/schema.ts` (usage table), `lib/staff/nav.ts` (the **AI Diagnosis** menu item), `routes/repairer/job/[id]/+page.svelte` (the **Analyze with RepairVision AI** button), `packages/shared/src/index.ts` (export) and `.gitignore` (allows `.dev.vars.example`).
@@ -138,7 +138,7 @@ The key is used only in the Worker. It is sent in the `x-goog-api-key` header an
 
 ## API
 
-All routes require a signed-in volunteer or admin (`Authorization: Bearer <access token>`, the same as the rest of `/api/repairer`).
+All routes require a signed-in device owner, volunteer or admin (`Authorization: Bearer <access token>`, the same as the rest of `/api/repairer`).
 
 ### `GET /api/repairvision/status`
 
@@ -290,3 +290,11 @@ pnpm cf:test
 - Allow a new photo during follow-ups ("photograph the connector").
 - Use a model-level response schema if Gemma on the Gemini API documents support for it.
 - Add moderation and evaluation sets of real repair café cases to measure diagnostic quality.
+
+## Public onboarding
+
+After the owner completes the one-time `/setup`, anyone can create an account at `/register`. The homepage has **Diagnose my device**, and the header and sign-in page link to registration. Registration signs the user in immediately and opens `/dashboard`, with a direct link to `/diagnosis`. Opening diagnosis while signed out preserves the destination through sign-in or registration.
+
+Public accounts use the `user` role. They can access diagnosis and follow-up endpoints, but cannot access staff repair records, session photos or admin endpoints. They are excluded from public team listings and volunteer counts. Registration validates name, email and password, normalizes emails, handles duplicates, hashes passwords and limits attempts per address. Existing login, refresh cookies and logout also work for these accounts.
+
+The SQLite role column is already plain text, so no database migration is required. Diagnosis sessions remain in the current tab and are not saved. The `GEMINI_API_KEY` secret is still required for model requests; account creation works independently of it.

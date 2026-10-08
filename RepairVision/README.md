@@ -197,3 +197,6 @@ For production, run `pnpm --filter @circularity/cloudflare exec wrangler secret 
 - [ ] Credits added
 - [ ] License added
 - [ ] Repository is organized and complete
+### Device-owner accounts
+
+Once the application owner finishes `/setup`, device owners can register at `/register`, sign in at `/login`, and use `/dashboard` ? `/diagnosis`. The homepage includes **Diagnose my device**. Public accounts have diagnosis access without staff or admin permissions. Diagnosis sessions are not saved.
