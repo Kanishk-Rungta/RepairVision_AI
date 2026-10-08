@@ -146,6 +146,12 @@ AI_DIAGNOSIS_HOURLY_LIMIT=30     # optional
 
 For production, run `pnpm --filter @circularity/cloudflare exec wrangler secret put GEMINI_API_KEY`. The full list of settings is in [docs/repairvision-ai.md](docs/repairvision-ai.md#setup).
 
+To try the hub with one-click demo accounts on the sign-in page, seed it with `python3 demo/seed.py --base-url http://localhost:8787` (it needs an empty database) and add `DEMO_ACCOUNTS=true` to `apps/cloudflare/.dev.vars`. Never set this on a real cafe's hub.
+
+### Theme and motion
+
+The interface has a light and a dark theme. The toggle in the header (and in the staff sidebar) switches between them; the choice is kept in a `theme` cookie so the server can draw the right theme on the first paint, and with no choice the site follows the system setting. Each cafe's brand and accent colours are built into both themes. Animations (hero entrance, scroll reveals, page transitions, count-ups) live in `apps/web/src/lib/motion.ts` and the motion section of `apps/web/src/app.css`, and all of them stand down for visitors who ask for reduced motion.
+
 
 
 ### Running the Project
