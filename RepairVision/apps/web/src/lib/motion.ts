@@ -5,6 +5,8 @@
 //  • countUp        an action that counts a figure up the first time it shows.
 //  • viewTransition wraps SvelteKit navigation in the View Transitions API.
 //
+//  • smoothScroll   eased, inertial page scrolling (Lenis) on the public pages.
+//
 // Everything is progressive. Content is only hidden once this script has run
 // and only if it is below the fold, so a slow script or a crawler never sees
 // an empty page, and every effect stands down for `prefers-reduced-motion`.
@@ -176,4 +178,49 @@ export function countUp(node: HTMLElement, _watch?: unknown) {
       io.disconnect();
     },
   };
+}
+
+// ── Smooth scrolling ────────────────────────────────────────────────────────
+// Lenis wraps the browser's own scroll, so sticky headers, in-page links and
+// screen readers keep working, and the scroll-driven CSS (progress line, hero
+// drift) still follows the real scroll position. It switches itself off for
+// people who ask for reduced motion.
+
+type LenisInstance = import('lenis').default;
+let lenis: LenisInstance | null = null;
+let starting = false;
+
+// Places that scroll on their own or take over the wheel: maps, dialogs, the
+// phone menu, the photo lightbox (all `.fixed` overlays) and form fields.
+const OWN_SCROLL = '.leaflet-container, [data-lenis-prevent], [role="dialog"], [role="listbox"], [role="menu"], .fixed, textarea, select';
+
+/** Turn smooth scrolling on or off. Safe to call on every navigation. */
+export async function smoothScroll(enabled: boolean): Promise<void> {
+  if (typeof document === 'undefined') return;
+  if (!enabled) {
+    lenis?.destroy();
+    lenis = null;
+    return;
+  }
+  if (lenis || starting || reduced()) return;
+  starting = true;
+  try {
+    const { default: Lenis } = await import('lenis');
+    // The page may have moved on to somewhere that does not want it.
+    lenis = new Lenis({
+      autoRaf: true,
+      // Anchor links glide there too, stopping below the sticky header.
+      anchors: { offset: -80 },
+      stopInertiaOnNavigate: true,
+      prevent: (node: HTMLElement) => !!node.closest?.(OWN_SCROLL),
+    });
+  } finally {
+    starting = false;
+  }
+}
+
+/** After moving to a new page: start at the top, unless the link pointed at a section. */
+export function resetScroll(hash: string): void {
+  if (hash || !lenis) return;
+  lenis.scrollTo(0, { immediate: true, force: true });
 }

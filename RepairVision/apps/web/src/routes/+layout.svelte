@@ -13,7 +13,8 @@
   import { browser, dev } from '$app/environment';
   import { page } from '$app/stores';
   import { afterNavigate, onNavigate } from '$app/navigation';
-  import { initReveal, viewTransition, watchScroll } from '$lib/motion';
+  import 'lenis/dist/lenis.css';
+  import { initReveal, resetScroll, smoothScroll, viewTransition, watchScroll } from '$lib/motion';
   import { cafe, setupCompleted } from '$lib/stores/cafe';
   import { applyBranding, brandingCss } from '$lib/brand';
   import { restoreSession } from '$lib/api';
@@ -46,7 +47,13 @@
   // Pages cross-fade, and whatever is below the fold is armed to fade in as
   // it arrives. See $lib/motion.
   onNavigate(viewTransition);
-  afterNavigate(() => {
+  // Smooth scrolling is for the public site. The staff area (and the screens
+  // that fill a display) are working tools, where it would only add lag.
+  $: smooth = !/^\/(admin|repairer|dashboard|diagnosis|advisor|display)(\/|$)/.test($page.url.pathname);
+  $: if (browser) smoothScroll(smooth);
+
+  afterNavigate((nav) => {
+    if (nav.type !== 'popstate') resetScroll($page.url.hash);
     requestAnimationFrame(initReveal);
     // Lists that fill in after the first paint get a second look.
     setTimeout(initReveal, 500);
