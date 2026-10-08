@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ThemeToggle from './ThemeToggle.svelte';
   import Logo from './Logo.svelte';
   // The frame round every page staff see after signing in: the admin area and
   // the repairer area alike. See $lib/staff/nav.ts for why it is one frame.
@@ -12,7 +13,7 @@
   //     queue, rather than being bounced to the sign-in page
   import { goto, afterNavigate } from '$app/navigation';
   import { page } from '$app/stores';
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { api, restoreSession } from '$lib/api';
   import { auth } from '$lib/stores/auth';
   import { cafe } from '$lib/stores/cafe';
@@ -61,6 +62,42 @@
   // Anything fixed to the page (the install banner) lines up with the sidebar.
   $: if (typeof document !== 'undefined') {
     document.documentElement.style.setProperty('--staff-sidebar', collapsed ? '4.5rem' : '16rem');
+  }
+
+  // The highlight behind the current menu item glides to the next one when
+  // you move between pages, instead of jumping.
+  let navEl: HTMLElement | null = null;
+  let gliderX = 0;
+  let gliderY = 0;
+  let gliderW = 0;
+  let gliderH = 0;
+  let gliderOn = false;
+  let gliderReady = false;
+  async function placeGlider() {
+    await tick();
+    const cur = navEl?.querySelector<HTMLElement>('a[aria-current="page"]');
+    if (!navEl || !cur) {
+      gliderOn = false;
+      return;
+    }
+    gliderX = cur.offsetLeft;
+    gliderY = cur.offsetTop;
+    gliderW = cur.offsetWidth;
+    gliderH = cur.offsetHeight;
+    gliderOn = true;
+    // Don't animate the first placement, only the moves after it.
+    requestAnimationFrame(() => (gliderReady = true));
+  }
+  $: if (navEl) {
+    pathname;
+    groups;
+    placeGlider();
+  }
+  // The sidebar's width eases over 200ms when it collapses; place the
+  // highlight again once it has settled.
+  $: if (navEl) {
+    collapsed;
+    setTimeout(placeGlider, 260);
   }
 
   $: user = $auth?.user ?? null;
@@ -174,7 +211,14 @@
         {/if}
       </a>
 
-      <nav class="flex-1 overflow-y-auto overflow-x-hidden py-4 text-sm {collapsed ? 'px-3 space-y-3' : 'px-3 space-y-5'}" aria-label="Main">
+      <nav bind:this={navEl} class="relative flex-1 overflow-y-auto overflow-x-hidden py-4 text-sm {collapsed ? 'px-3 space-y-3' : 'px-3 space-y-5'}" aria-label="Main">
+        <span
+          aria-hidden="true"
+          class="nav-glider pointer-events-none absolute left-0 top-0 rounded-lg bg-tint/[0.07]"
+          class:nav-glider-on={gliderOn}
+          class:nav-glider-ready={gliderReady}
+          style="width:{gliderW}px;height:{gliderH}px;transform:translate3d({gliderX}px,{gliderY}px,0)"
+        ></span>
         {#each groups as group, gi}
           <div>
             {#if collapsed}
@@ -187,7 +231,7 @@
               {@const current = isCurrent(item, pathname)}
               <a
                 href={item.href}
-                class="side-item relative flex items-center rounded-lg transition-colors {collapsed ? 'justify-center h-10 w-10 mx-auto mb-1' : 'gap-3 px-3 py-2'} {current ? 'bg-white/[0.07] text-slate-950 font-medium shadow-[0_1px_0_0_rgb(255_255_255/0.06)_inset]' : 'text-slate-500 hover:text-slate-900 hover:bg-white/[0.05]'}"
+                class="side-item relative flex items-center rounded-lg transition-colors duration-300 {collapsed ? 'justify-center h-10 w-10 mx-auto mb-1' : 'gap-3 px-3 py-2'} {current ? 'text-slate-950 font-medium' : 'text-slate-500 hover:text-slate-900 hover:bg-tint/[0.05]'}"
                 aria-current={current ? 'page' : undefined}
                 aria-label={collapsed ? item.label : undefined}
                 data-tip={collapsed ? item.label : undefined}
@@ -206,12 +250,13 @@
           <div class="side-item relative mx-auto mb-1 grid h-9 w-9 place-items-center rounded-full bg-brand-500/15 text-[12px] font-semibold text-brand-400 ring-1 ring-brand-500/25" tabindex="0" role="img" aria-label={user.displayName} data-tip={`${user.displayName} · ${admin ? (user.role === 'super_admin' ? 'Super admin' : 'Admin') : user.role === 'user' ? 'Device owner' : 'Repairer'}`}>
             {initials(user.displayName)}
           </div>
-          <a href="/" class="side-item relative mx-auto grid h-10 w-10 place-items-center rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/[0.05]" aria-label="View the website" data-tip="View the website">
+          <a href="/" class="side-item relative mx-auto grid h-10 w-10 place-items-center rounded-lg text-slate-500 hover:text-slate-900 hover:bg-tint/[0.05]" aria-label="View the website" data-tip="View the website">
             <Globe size={18} class="text-slate-400" />
           </a>
-          <button type="button" on:click={signOut} class="side-item relative mx-auto grid h-10 w-10 place-items-center rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/[0.05]" aria-label="Sign out" data-tip="Sign out">
+          <button type="button" on:click={signOut} class="side-item relative mx-auto grid h-10 w-10 place-items-center rounded-lg text-slate-500 hover:text-slate-900 hover:bg-tint/[0.05]" aria-label="Sign out" data-tip="Sign out">
             <LogOut size={18} class="text-slate-400" />
           </button>
+          <div class="mx-auto grid h-10 w-10 place-items-center"><ThemeToggle /></div>
         {:else}
           <div class="flex items-center gap-3 px-3 py-2 min-w-0">
             <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-500/15 text-[11px] font-semibold text-brand-400 ring-1 ring-brand-500/25">{initials(user.displayName)}</span>
@@ -220,8 +265,9 @@
               <p class="text-xs text-slate-500">{admin ? (user.role === 'super_admin' ? 'Super admin' : 'Admin') : user.role === 'user' ? 'Device owner' : 'Repairer'}</p>
             </div>
           </div>
-          <a href="/" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/[0.05]"><Globe size={18} class="text-slate-400" /> View the website</a>
-          <button type="button" on:click={signOut} class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/[0.05]"><LogOut size={18} class="text-slate-400" /> Sign out</button>
+          <a href="/" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-tint/[0.05]"><Globe size={18} class="text-slate-400" /> View the website</a>
+          <button type="button" on:click={signOut} class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-tint/[0.05]"><LogOut size={18} class="text-slate-400" /> Sign out</button>
+          <div class="flex items-center justify-between px-3 pt-1 text-xs text-slate-500">Theme <ThemeToggle /></div>
           {#if admin}
             <a href="/admin/settings?tab=about" class="block px-3 pt-2 text-xs text-slate-400 hover:text-slate-600" title="Version">
               RepairVision {$cafe?.appVersion ?? ''}
@@ -248,6 +294,8 @@
         {/if}
         <span class="font-semibold text-slate-900 truncate">{$cafe?.name || 'Repair Cafe'}</span>
       </a>
+      <div class="flex items-center gap-1">
+      <ThemeToggle />
       <button
         type="button"
         class="inline-flex items-center justify-center h-10 w-10 rounded-lg text-slate-700 hover:bg-slate-100"
@@ -257,12 +305,13 @@
       >
         <Menu size={22} />
       </button>
+      </div>
     </div>
 
     {#if drawerOpen}
       <div class="md:hidden fixed inset-0 z-50 flex no-print" role="dialog" aria-modal="true" aria-label="Menu">
-        <button type="button" class="absolute inset-0 bg-black/65 backdrop-blur-sm" aria-label="Close the menu" on:click={() => (drawerOpen = false)}></button>
-        <div class="relative ml-auto w-80 max-w-[85vw] h-full bg-surface flex flex-col shadow-xl">
+        <button type="button" class="scrim-in absolute inset-0 bg-black/40 backdrop-blur-sm" aria-label="Close the menu" on:click={() => (drawerOpen = false)}></button>
+        <div class="drawer-in relative ml-auto w-80 max-w-[85vw] h-full bg-surface flex flex-col shadow-xl">
           <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
             <div class="min-w-0">
               <p class="font-semibold text-slate-900 truncate">{user.displayName}</p>
@@ -276,7 +325,7 @@
                 <p class="px-3 mb-1 text-xs font-semibold uppercase tracking-wider text-slate-400">{group.title}</p>
                 {#each group.items as item}
                   {@const current = isCurrent(item, pathname)}
-                  <a href={item.href} class="flex items-center gap-3 px-3 py-3 rounded-lg {current ? 'bg-white/[0.07] text-slate-950 font-medium' : 'text-slate-700 hover:bg-white/[0.05]'}" aria-current={current ? 'page' : undefined}>
+                  <a href={item.href} class="flex items-center gap-3 px-3 py-3 rounded-lg {current ? 'bg-tint/[0.04] text-slate-950 font-medium' : 'text-slate-700 hover:bg-tint/[0.04]'}" aria-current={current ? 'page' : undefined}>
                     <svelte:component this={item.icon} size={20} class={current ? 'text-brand-400' : 'text-slate-400'} />
                     {item.label}
                   </a>
@@ -312,8 +361,8 @@
     <nav class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-surface border-t border-slate-200 grid no-print" style="grid-template-columns: repeat({tabs.length}, minmax(0, 1fr)); padding-bottom: env(safe-area-inset-bottom);" aria-label="Quick links">
       {#each tabs as tab}
         {@const current = isCurrent(tab, pathname)}
-        <a href={tab.href} class="flex flex-col items-center gap-0.5 py-2 text-xs {current ? 'text-brand-400 font-semibold' : 'text-slate-500'}" aria-current={current ? 'page' : undefined}>
-          <svelte:component this={tab.icon} size={22} />
+        <a href={tab.href} class="tab-link flex flex-col items-center gap-0.5 py-2 text-xs transition-colors duration-300 {current ? 'text-brand-400 font-semibold' : 'text-slate-500'}" aria-current={current ? 'page' : undefined}>
+          <span class="tab-icon block transition-transform duration-500 ease-spring {current ? '-translate-y-0.5 scale-110' : ''}"><svelte:component this={tab.icon} size={22} /></span>
           {tab.label}
         </a>
       {/each}

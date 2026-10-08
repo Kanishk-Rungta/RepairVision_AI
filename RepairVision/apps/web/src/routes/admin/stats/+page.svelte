@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { countUp } from '$lib/motion';
   import { onMount } from 'svelte';
   import { api } from '$lib/api';
   import { CalendarDays, Wrench, Users, Leaf, Clock, CheckCircle2 } from 'lucide-svelte';
@@ -173,22 +174,22 @@
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mt-4">
     <div class="card p-4">
       <div class="flex items-center gap-2 text-slate-500 text-xs"><CalendarDays size={14} /> Events</div>
-      <p class="text-2xl font-bold mt-1">{overview.eventCount}</p>
+      <p class="text-2xl font-bold mt-1 tabular-nums" use:countUp={overview.eventCount}>{overview.eventCount}</p>
       <p class="text-xs text-slate-400 mt-0.5">{overview.avgRepairsPerEvent} avg per event</p>
     </div>
     <div class="card p-4">
       <div class="flex items-center gap-2 text-slate-500 text-xs"><Wrench size={14} /> Items in</div>
-      <p class="text-2xl font-bold mt-1">{overview.repairCount}</p>
+      <p class="text-2xl font-bold mt-1 tabular-nums" use:countUp={overview.repairCount}>{overview.repairCount}</p>
       <p class="text-xs text-slate-400 mt-0.5">{overview.completedCount} fixed</p>
     </div>
     <div class="card p-4">
       <div class="flex items-center gap-2 text-slate-500 text-xs"><CheckCircle2 size={14} /> Success rate</div>
-      <p class="text-2xl font-bold mt-1">{overview.successRate}%</p>
+      <p class="text-2xl font-bold mt-1 tabular-nums" use:countUp={overview.successRate}>{overview.successRate}%</p>
       <p class="text-xs text-slate-400 mt-0.5">{overview.cannotRepairCount} couldn't fix</p>
     </div>
     <div class="card p-4">
       <div class="flex items-center gap-2 text-slate-500 text-xs"><Users size={14} /> Volunteers</div>
-      <p class="text-2xl font-bold mt-1">{overview.repairerCount}</p>
+      <p class="text-2xl font-bold mt-1 tabular-nums" use:countUp={overview.repairerCount}>{overview.repairerCount}</p>
       <p class="text-xs text-slate-400 mt-0.5">took on a repair</p>
     </div>
     <div class="card p-4">

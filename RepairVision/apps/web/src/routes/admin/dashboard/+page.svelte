@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { countUp } from '$lib/motion';
   // The admin's home page, built around the question an organiser actually
   // has: "what needs me right now?"
   //
@@ -222,16 +223,16 @@
           </div>
 
           <!-- The day so far, as one bar. -->
-          <div class="mt-5 h-3 rounded-full bg-slate-100 overflow-hidden flex" aria-hidden="true">
+          <div class="bar-grow mt-5 h-3 rounded-full bg-slate-100 overflow-hidden flex" aria-hidden="true">
             {#each segments as s}
               {#if s.n}<div class={s.cls} style="width: {(s.n / segmentTotal) * 100}%"></div>{/if}
             {/each}
           </div>
           <dl class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div><dt class="text-xs text-slate-500 flex items-center gap-1.5"><span class="status-dot status-dot-waiting"></span> Waiting</dt><dd class="text-2xl font-bold">{waiting.length}</dd></div>
-            <div><dt class="text-xs text-slate-500 flex items-center gap-1.5"><span class="status-dot status-dot-in_progress"></span> Being repaired</dt><dd class="text-2xl font-bold">{inProgress.length}</dd></div>
-            <div><dt class="text-xs text-slate-500 flex items-center gap-1.5"><span class="status-dot status-dot-completed"></span> Fixed</dt><dd class="text-2xl font-bold">{fixed.length}</dd></div>
-            <div><dt class="text-xs text-slate-500 flex items-center gap-1.5"><span class="status-dot status-dot-cannot_repair"></span> Could not fix</dt><dd class="text-2xl font-bold">{notFixed.length}</dd></div>
+            <div><dt class="text-xs text-slate-500 flex items-center gap-1.5"><span class="status-dot status-dot-waiting"></span> Waiting</dt><dd class="text-2xl font-bold tabular-nums" use:countUp={waiting.length}>{waiting.length}</dd></div>
+            <div><dt class="text-xs text-slate-500 flex items-center gap-1.5"><span class="status-dot status-dot-in_progress"></span> Being repaired</dt><dd class="text-2xl font-bold tabular-nums" use:countUp={inProgress.length}>{inProgress.length}</dd></div>
+            <div><dt class="text-xs text-slate-500 flex items-center gap-1.5"><span class="status-dot status-dot-completed"></span> Fixed</dt><dd class="text-2xl font-bold tabular-nums" use:countUp={fixed.length}>{fixed.length}</dd></div>
+            <div><dt class="text-xs text-slate-500 flex items-center gap-1.5"><span class="status-dot status-dot-cannot_repair"></span> Could not fix</dt><dd class="text-2xl font-bold tabular-nums" use:countUp={notFixed.length}>{notFixed.length}</dd></div>
           </dl>
           {#if typicalWait !== null || typicalRepair !== null}
             <p class="mt-3 text-sm text-slate-600">
