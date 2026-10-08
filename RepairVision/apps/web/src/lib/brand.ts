@@ -21,12 +21,27 @@ const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900] as const;
 const WHITE: RGB = [255, 255, 255];
 const BLACK: RGB = [0, 0, 0];
 
-// The interface is dark, so the scale runs the other way from a light theme:
-// 50–300 are the base colour mixed into black (soft tinted surfaces and
-// rings), 400 is a lift for hover and small accent text, 500 is the chosen
-// colour, 600 is a touch deeper (icon fills) and 700–900 are pale tints for
-// text that sits on those surfaces. These match the coral defaults in app.css.
+// The interface has a light and a dark theme, so every cafe colour becomes two
+// scales, written to `--brand-l-*` (light) and `--brand-d-*` (dark). app.css
+// picks whichever matches the active theme.
+//
+// Light: 50–300 are the base mixed into white (soft tinted surfaces and
+// rings), 400 a slight lift, 500 the chosen colour, 600 a touch deeper (hover
+// on solid fills, small accent text) and 700–900 deep shades for text.
+// Dark: 50–300 are the base mixed into black, 400 lifts for hover and small
+// text, 600 is a touch deeper and 700–900 are pale tints for text.
 const TINTS: ReadonlyArray<readonly [number, number]> = [
+  [50, 0.06],
+  [100, 0.11],
+  [200, 0.2],
+  [300, 0.38],
+];
+const DARKS: ReadonlyArray<readonly [number, number]> = [
+  [700, 0.3],
+  [800, 0.5],
+  [900, 0.68],
+];
+const DARK_TINTS: ReadonlyArray<readonly [number, number]> = [
   [50, 0.08],
   [100, 0.14],
   [200, 0.26],
@@ -37,7 +52,7 @@ const LIGHTS: ReadonlyArray<readonly [number, number]> = [
   [800, 0.6],
   [900, 0.8],
 ];
-const CANVAS: RGB = [4, 5, 6];
+const DARK_CANVAS: RGB = [4, 5, 6];
 
 function luminance([r, g, b]: RGB): number {
   const lin = (v: number) => {
@@ -51,7 +66,7 @@ function luminance([r, g, b]: RGB): number {
 export function onColor(hex: string): string | null {
   const base = parseHex(hex);
   if (!base) return null;
-  return luminance(base) > 0.3 ? '7 8 10' : '255 255 255';
+  return luminance(base) > 0.5 ? '29 29 31' : '255 255 255';
 }
 
 function parseHex(hex: string): RGB | null {
@@ -70,16 +85,36 @@ function mix(a: RGB, b: RGB, t: number): RGB {
 }
 
 /** Build a 50–900 scale from a single base hex, or null if the hex is invalid. */
-export function brandScale(hex: string): Record<number, RGB> | null {
+export function brandScale(hex: string, dark = false): Record<number, RGB> | null {
   const base = parseHex(hex);
   if (!base) return null;
   const scale: Record<number, RGB> = { 500: base };
-  for (const [step, t] of TINTS) scale[step] = mix(CANVAS, base, t);
-  // A dark brand colour would vanish as text on black, so lift it further.
-  scale[400] = mix(base, WHITE, luminance(base) < 0.25 ? 0.45 : 0.15);
-  scale[600] = mix(base, BLACK, 0.12);
-  for (const [step, t] of LIGHTS) scale[step] = mix(base, WHITE, t);
+  if (dark) {
+    for (const [step, t] of DARK_TINTS) scale[step] = mix(DARK_CANVAS, base, t);
+    // A dark brand colour would vanish as text on black, so lift it further.
+    scale[400] = mix(base, WHITE, luminance(base) < 0.25 ? 0.45 : 0.15);
+    scale[600] = mix(base, BLACK, 0.12);
+    for (const [step, t] of LIGHTS) scale[step] = mix(base, WHITE, t);
+    return scale;
+  }
+  for (const [step, t] of TINTS) scale[step] = mix(WHITE, base, t);
+  scale[400] = mix(base, WHITE, 0.18);
+  scale[600] = mix(base, BLACK, 0.14);
+  for (const [step, t] of DARKS) scale[step] = mix(base, BLACK, t);
   return scale;
+}
+
+/** The CSS custom properties that carry a scale, for both themes. */
+function scaleDecls(prefix: 'brand' | 'accent', hex: string): string[] {
+  const light = brandScale(hex);
+  const dark = brandScale(hex, true);
+  if (!light || !dark) return [];
+  const out: string[] = [];
+  for (const s of STEPS) {
+    out.push(`--${prefix}-l-${s}:${light[s].join(' ')}`);
+    out.push(`--${prefix}-d-${s}:${dark[s].join(' ')}`);
+  }
+  return out;
 }
 
 /**
@@ -89,14 +124,17 @@ export function brandScale(hex: string): Record<number, RGB> | null {
 export function applyBrandColor(hex: string | null | undefined): void {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
-  const scale = hex ? brandScale(hex) : null;
-  if (!scale) {
-    for (const step of STEPS) root.style.removeProperty(`--brand-${step}`);
+  const decls = hex ? scaleDecls('brand', hex) : [];
+  if (decls.length === 0) {
+    for (const step of STEPS) {
+      root.style.removeProperty(`--brand-l-${step}`);
+      root.style.removeProperty(`--brand-d-${step}`);
+    }
     return;
   }
-  for (const step of STEPS) {
-    const [r, g, b] = scale[step];
-    root.style.setProperty(`--brand-${step}`, `${r} ${g} ${b}`);
+  for (const d of decls) {
+    const [name, value] = d.split(':') as [string, string];
+    root.style.setProperty(name, value);
   }
 }
 
@@ -111,18 +149,25 @@ export function applyAccentColor(
 ): void {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
-  const scale = (hex ? brandScale(hex) : null) ?? (fallback ? brandScale(fallback) : null);
-  if (!scale) {
-    for (const step of STEPS) root.style.removeProperty(`--accent-${step}`);
-    root.style.removeProperty('--on-accent');
+  const source = hex && brandScale(hex) ? hex : fallback && brandScale(fallback) ? fallback : null;
+  if (!source) {
+    for (const step of STEPS) {
+      root.style.removeProperty(`--accent-l-${step}`);
+      root.style.removeProperty(`--accent-d-${step}`);
+    }
+    root.style.removeProperty('--on-accent-l');
+    root.style.removeProperty('--on-accent-d');
     return;
   }
-  for (const step of STEPS) {
-    const [r, g, b] = scale[step];
-    root.style.setProperty(`--accent-${step}`, `${r} ${g} ${b}`);
+  for (const d of scaleDecls('accent', source)) {
+    const [name, value] = d.split(':') as [string, string];
+    root.style.setProperty(name, value);
   }
-  const on = onColor(hex && brandScale(hex) ? hex : (fallback as string));
-  if (on) root.style.setProperty('--on-accent', on);
+  const on = onColor(source);
+  if (on) {
+    root.style.setProperty('--on-accent-l', on);
+    root.style.setProperty('--on-accent-d', on);
+  }
 }
 
 function fontStack(choice: string | null | undefined): string | null {
@@ -181,15 +226,17 @@ export function brandingCss(source: BrandingSource | null | undefined): string {
     ? { ...source, primaryColor: chosen(source.primaryColor), accentColor: chosen(source.accentColor) }
     : source;
   const decls: string[] = [];
-  const primary = cafe?.primaryColor ? brandScale(cafe.primaryColor) : null;
-  if (primary) for (const s of STEPS) decls.push(`--brand-${s}:${primary[s].join(' ')}`);
-  const accent =
-    (cafe?.accentColor ? brandScale(cafe.accentColor) : null) ??
-    (cafe?.primaryColor ? brandScale(cafe.primaryColor) : null);
-  if (accent) for (const s of STEPS) decls.push(`--accent-${s}:${accent[s].join(' ')}`);
-  const accentHex = cafe?.accentColor && brandScale(cafe.accentColor) ? cafe.accentColor : cafe?.primaryColor;
-  const on = accentHex ? onColor(accentHex) : null;
-  if (accent && on) decls.push(`--on-accent:${on}`);
+  if (cafe?.primaryColor) decls.push(...scaleDecls('brand', cafe.primaryColor));
+  const accentSource =
+    cafe?.accentColor && brandScale(cafe.accentColor) ? cafe.accentColor : cafe?.primaryColor;
+  if (accentSource) {
+    const accent = scaleDecls('accent', accentSource);
+    if (accent.length) {
+      decls.push(...accent);
+      const on = onColor(accentSource);
+      if (on) decls.push(`--on-accent-l:${on}`, `--on-accent-d:${on}`);
+    }
+  }
   const display = fontStack(cafe?.headingFont);
   if (display) decls.push(`--font-display:${display}`);
   const body = fontStack(cafe?.bodyFont);

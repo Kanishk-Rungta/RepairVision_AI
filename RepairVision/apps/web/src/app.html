@@ -7,12 +7,12 @@
     <!-- theme-color is emitted by the root layout too, because it follows the
          cafe's own colour rather than a fixed one. -->
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <!-- The site is a dark interface. Declared here as well as in app.css so
-         scrollbars and form controls are dark before the stylesheet loads. -->
-    <meta name="color-scheme" content="dark" />
+    <!-- The site has a light and a dark theme (see app.css). Declared here as
+         well so scrollbars and form controls match before the stylesheet loads. -->
+    <meta name="color-scheme" content="light dark" />
     %sveltekit.head%
   </head>
-  <body style="background:#040506" data-sveltekit-preload-data="hover">
+  <body data-sveltekit-preload-data="hover">
     <div style="display: contents">%sveltekit.body%</div>
   </body>
 </html>

@@ -1,40 +1,57 @@
 /** @type {import('tailwindcss').Config} */
 
-// The UI is a dark, Raycast / Linear / Vercel style interface (see DESIGN.md at
-// the repo root). Rather than rewrite thousands of utility classes, the colour
-// scales that the markup already uses are INVERTED here: `slate-50` is now the
-// darkest surface and `slate-900` the brightest text, `emerald-50` is a faint
-// green tint on black and `emerald-900` a pale green for text. So
-// `bg-slate-50`, `text-slate-500`, `ring-slate-200`, `bg-rose-50 text-rose-700`
-// and the rest all keep their meaning ("quiet surface", "secondary text",
-// "hairline", "error banner") on the dark canvas.
+// The UI is a light, Apple-style gallery: white canvas, #f5f5f7 bands, ink text
+// and one blue for controls. The colour scales the markup already uses are
+// driven by CSS variables (see app.css), so `slate-50` is the palest surface
+// and `slate-900` the darkest text, `bg-rose-50 text-rose-700` is an error
+// banner, and so on. Cafes can still override the brand and accent colours.
+
+import plugin from 'tailwindcss/plugin';
 
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 const toHex = (rgb) => '#' + rgb.map((v) => Math.round(v).toString(16).padStart(2, '0')).join('');
 const mix = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
 
+const STATUS = {
+  amber: '#ff9f0a',
+  yellow: '#ffcc00',
+  orange: '#ff9500',
+  emerald: '#28a745',
+  green: '#28a745',
+  rose: '#ff3b30',
+  red: '#ff3b30',
+  blue: '#0071e3',
+  sky: '#32ade6',
+  violet: '#af52de',
+};
+const STATUS_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+
 /**
- * A status colour as an inverted scale: 50–300 are tints over the black canvas
- * (for banners and pills), 400–500 are the colour itself, 600–900 get lighter
- * (for text that sits on those tints).
+ * A status colour as a scale of channel triples. Light: 50–300 are tints over
+ * white (banners and pills), 400–500 the colour itself, 600–950 darker (text
+ * that sits on those tints). Dark is the mirror: tints over black, text lifted
+ * toward white. Written into CSS variables by the plugin below so the same
+ * `bg-rose-50 text-rose-700` works in both themes.
  */
-function status(base) {
+function statusScale(base, dark) {
   const c = hex(base);
-  const black = [4, 5, 6];
-  const white = [255, 255, 255];
-  return {
-    50: toHex(mix(black, c, 0.1)),
-    100: toHex(mix(black, c, 0.16)),
-    200: toHex(mix(black, c, 0.3)),
-    300: toHex(mix(black, c, 0.55)),
-    400: toHex(mix(black, c, 0.8)),
-    500: base,
-    600: toHex(mix(c, white, 0.12)),
-    700: toHex(mix(c, white, 0.28)),
-    800: toHex(mix(c, white, 0.45)),
-    900: toHex(mix(c, white, 0.62)),
-    950: toHex(mix(c, white, 0.78)),
-  };
+  const black = dark ? [4, 5, 6] : [255, 255, 255];
+  const text = dark ? [255, 255, 255] : [0, 0, 0];
+  const t = dark ? [0.1, 0.16, 0.3, 0.55, 0.8, 1, 0.12, 0.28, 0.45, 0.62, 0.78] : [0.07, 0.13, 0.26, 0.5, 0.8, 1, 0.18, 0.36, 0.52, 0.66, 0.8];
+  return STATUS_STEPS.map((step, i) =>
+    [step, (i < 5 ? mix(black, c, t[i]) : i === 5 ? c : mix(c, text, t[i])).map(Math.round).join(' ')],
+  );
+}
+
+const statusColor = (name) =>
+  Object.fromEntries(STATUS_STEPS.map((s) => [s, `rgb(var(--st-${name}-${s}) / <alpha-value>)`]));
+
+function statusVars(dark) {
+  const out = {};
+  for (const [name, base] of Object.entries(STATUS)) {
+    for (const [step, v] of statusScale(base, dark)) out[`--st-${name}-${step}`] = v;
+  }
+  return out;
 }
 
 const chan = (name) => `rgb(var(--${name}) / <alpha-value>)`;
@@ -46,36 +63,28 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Per-cafe colours (src/lib/brand.ts). Defaults are Raycast's coral.
+        // Per-cafe colours (src/lib/brand.ts). Defaults are Apple's blue.
         brand: scale('brand', STEPS),
         accent: scale('accent', STEPS),
 
-        // Neutrals, inverted and driven by variables so print can flip them
-        // back to paper and ink (see app.css).
+        // Neutrals, driven by variables (see app.css).
         slate: { ...scale('s', [50, 100, 200, 300, 400, 500, 600, 700, 800, 900]), 950: chan('s-950') },
 
         canvas: chan('canvas'), // page background
         'on-accent': chan('on-accent'), // text on a solid accent fill
         surface: chan('surface'), // cards, inputs, panels (what bg-white used to be)
-        raised: chan('raised'), // one step above a card: menus, hovered rows
+        raised: chan('raised'), // one step off a card: menus, hovered rows
         paper: chan('canvas'),
         ink: chan('fg'),
         pine: chan('fg-strong'), // headings
-        clay: chan('accent-400'), // small accent text: eyebrows, meta icons
+        clay: chan('accent-600'), // small accent text: eyebrows, meta icons
         sun: chan('accent-500'),
         sage: chan('brand-100'),
 
         // Status colours.
-        amber: status('#ffbc33'),
-        yellow: status('#ffd25e'),
-        orange: status('#ff9a52'),
-        emerald: status('#59d499'),
-        green: status('#59d499'),
-        rose: status('#ff6363'),
-        red: status('#ff5a5f'),
-        blue: status('#56c2ff'),
-        sky: status('#63a1ff'),
-        violet: status('#a78bfa'),
+        ...Object.fromEntries(Object.keys(STATUS).map((n) => [n, statusColor(n)])),
+        // Black in light, white in dark: for hairlines and hover tints.
+        tint: chan('tint'),
       },
       fontFamily: {
         sans: ['var(--font-sans)'],
@@ -83,26 +92,47 @@ export default {
         mono: ['var(--font-mono)'],
       },
       borderRadius: {
-        // DESIGN.md: buttons and inputs 8px, cards 16px, large cards 20px.
-        xl: '12px',
-        '2xl': '16px',
-        '3xl': '20px',
+        // Apple: cards and media 28px, controls are pills, small chips 10px.
+        lg: '10px',
+        xl: '14px',
+        '2xl': '28px',
+        '3xl': '32px',
       },
       boxShadow: {
-        // Pressed, tactile surfaces: a hairline ring plus a top inner highlight.
-        sm: '0 1px 0 0 rgb(255 255 255 / 0.05) inset, 0 1px 2px 0 rgb(0 0 0 / 0.4)',
-        DEFAULT: '0 1px 0 0 rgb(255 255 255 / 0.06) inset, 0 2px 6px 0 rgb(0 0 0 / 0.45)',
-        md: '0 1px 0 0 rgb(255 255 255 / 0.06) inset, 0 6px 16px -4px rgb(0 0 0 / 0.6)',
-        lg: '0 1px 0 0 rgb(255 255 255 / 0.07) inset, 0 12px 32px -8px rgb(0 0 0 / 0.7)',
-        xl: '0 1px 0 0 rgb(255 255 255 / 0.08) inset, 0 4px 40px 8px rgb(0 0 0 / 0.4), 0 24px 48px -12px rgb(0 0 0 / 0.8)',
-        '2xl': '0 1px 0 0 rgb(255 255 255 / 0.08) inset, 0 4px 40px 8px rgb(0 0 0 / 0.4), 0 32px 64px -16px rgb(0 0 0 / 0.85)',
-        glow: '0 0 0 1px rgb(255 99 99 / 0.35), 0 0 32px -4px rgb(255 99 99 / 0.35)',
+        // Nothing floats: separation comes from 1px hairlines, never blur.
+        sm: '0 0 0 1px rgb(0 0 0 / 0.05)',
+        DEFAULT: '0 0 0 1px rgb(0 0 0 / 0.06)',
+        md: '0 0 0 1px rgb(0 0 0 / 0.07)',
+        lg: '0 0 0 1px rgb(0 0 0 / 0.08)',
+        xl: '0 0 0 1px rgb(0 0 0 / 0.1)',
+        '2xl': '0 0 0 1px rgb(0 0 0 / 0.1)',
+        glow: '0 0 0 4px rgb(var(--accent-500) / 0.25)',
+      },
+      transitionTimingFunction: {
+        // Apple-style ease: quick start, long soft landing.
+        apple: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
       },
       keyframes: {
-        'fade-up': { '0%': { opacity: '0', transform: 'translateY(6px)' }, '100%': { opacity: '1', transform: 'none' } },
+        'fade-up': {
+          '0%': { opacity: '0', transform: 'translateY(18px)', filter: 'blur(10px)' },
+          '100%': { opacity: '1', transform: 'none', filter: 'blur(0)' },
+        },
       },
-      animation: { 'fade-up': 'fade-up .35s cubic-bezier(.2,.7,.2,1) both' },
+      animation: { 'fade-up': 'fade-up .9s cubic-bezier(.22,1,.36,1) both' },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addBase }) => {
+      addBase({
+        ':root': statusVars(false),
+        ":root[data-theme='dark']": statusVars(true),
+      });
+      addBase({
+        '@media (prefers-color-scheme: dark)': {
+          ":root:not([data-theme='light'])": statusVars(true),
+        },
+      });
+    }),
+  ],
 };
