@@ -137,7 +137,7 @@
           name: cafe.name.trim(),
           tagline: cafe.tagline.trim() || null,
           contactEmail: cafe.contactEmail.trim() || null,
-          websiteUrl: cafe.websiteUrl.trim() || null,
+          websiteUrl: cafe.websiteUrl.trim() ? (/^https?:\/\//i.test(cafe.websiteUrl.trim()) ? cafe.websiteUrl.trim() : 'https://' + cafe.websiteUrl.trim()) : null,
           description: cafe.description.trim() || null,
           primaryColor: normaliseHex(brand.primaryColor, '#FF6363'),
           accentColor: brand.accentEnabled ? normaliseHex(brand.accentColor, '#FFBC33') : null,
