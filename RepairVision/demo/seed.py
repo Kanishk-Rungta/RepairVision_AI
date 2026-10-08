@@ -18,6 +18,8 @@ Against a brand new hub that is not in demo mode, no key is needed:
 
     python3 demo/seed.py --base-url http://localhost:8787
 
+(On Windows the command is usually `python` rather than `python3`.)
+
 Only the Python standard library is used, so it runs anywhere Python 3.9 does.
 """
 from __future__ import annotations
@@ -49,6 +51,11 @@ CAFE_NAME = "Tinkerton Repair Café"
 ADMIN_EMAIL = "demo@example.com"
 ADMIN_PASSWORD = "DemoDemo123"
 REPAIRER_EMAIL = "repairer@example.com"
+# A member of the public using RepairVision AI Diagnosis on their own device.
+# Made through the public sign-up form, like any visitor's account. The three
+# addresses match DEMO_ACCOUNTS in apps/cloudflare/src/routes/demoAccounts.ts,
+# which puts a one-click button for each on the sign-in and sign-up pages.
+OWNER_EMAIL = "owner@example.com"
 
 # example.com is reserved by RFC 2606 and can never belong to anybody, so these
 # addresses cannot reach a real person.
@@ -406,6 +413,14 @@ def main() -> int:
        f"1 running today, "
        f"{sum(1 for c in created if c['when'] == 'future')} to come)")
 
+    # ── 3b. a device owner, signed up the way the public does ────────────────
+    step("Signing up a device owner")
+    owner = Api(args.base_url)
+    made_owner = owner.post("/api/auth/register", {
+        "displayName": "Demo Device Owner", "email": OWNER_EMAIL, "password": ADMIN_PASSWORD,
+    }, expect=(404, 409))
+    ok(f"{OWNER_EMAIL} signed up" if made_owner else "skipped: this hub has no public sign-up")
+
     # ── 4. a password for the published repairer login ───────────────────────
     # Accounts are created without one, and normally the person follows a reset
     # link. We do the same thing here, so visitors can sign in and see the
@@ -587,6 +602,10 @@ def main() -> int:
   Site       {args.public_url}
   Admin      {ADMIN_EMAIL} / {ADMIN_PASSWORD}
   Repairer   {REPAIRER_EMAIL} / {ADMIN_PASSWORD}
+  Owner      {OWNER_EMAIL} / {ADMIN_PASSWORD}
+
+  Set DEMO_ACCOUNTS=true on the hub to get one-click buttons for these
+  on the sign-in and sign-up pages.
 
   {len(created)} sessions, {total_jobs} items, {fixed} fixed, {added} photographs.
 """)
