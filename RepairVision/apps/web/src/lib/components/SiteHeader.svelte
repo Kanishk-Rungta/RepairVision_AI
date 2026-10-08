@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { homeFor } from '$lib/staff/nav';
   import Logo from './Logo.svelte';
   import { goto } from '$app/navigation';
   import { afterNavigate } from '$app/navigation';
@@ -53,6 +54,7 @@
         <a href="/" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Home</a>
         <a href="/events" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Events</a>
         <a href="/skills" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06] whitespace-nowrap">Skills &amp; Team</a>
+        <a href="/diagnosis" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900">AI Diagnosis</a>
         <a href="/guides" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06] whitespace-nowrap">Repair guides</a>
         <a href="/world" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Worldwide</a>
         <a href="/about" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">About</a>
@@ -69,13 +71,16 @@
           </a>
         {/if}
         {#if $auth}
-          {#if $auth.user.role === 'admin' || $auth.user.role === 'super_admin'}
+          {#if $auth.user.role === 'user'}
+            <a href={homeFor($auth.user)} class="btn-primary btn-sm">My dashboard</a>
+          {:else if $auth.user.role === 'admin' || $auth.user.role === 'super_admin'}
             <a href="/admin/dashboard" class="btn-primary btn-sm">Admin</a>
           {:else}
             <a href="/repairer" class="btn-primary btn-sm">Repairer</a>
           {/if}
         {:else}
           <a href="/login" class="btn-secondary btn-sm">Sign in</a>
+          <a href="/register" class="btn-primary btn-sm">Create account</a>
         {/if}
       {:else if user}
         {#if variant === 'repairer'}
@@ -133,13 +138,16 @@
           {/if}
           <div class="h-px bg-slate-200 my-2"></div>
           {#if $auth}
-            {#if $auth.user.role === 'admin' || $auth.user.role === 'super_admin'}
+            {#if $auth.user.role === 'user'}
+              <a href={homeFor($auth.user)} class="btn-primary !py-3 text-center">My dashboard</a>
+            {:else if $auth.user.role === 'admin' || $auth.user.role === 'super_admin'}
               <a href="/admin/dashboard" class="btn-primary !py-3 text-center">Admin</a>
             {:else}
               <a href="/repairer" class="btn-primary !py-3 text-center">Repairer</a>
             {/if}
           {:else}
             <a href="/login" class="btn-secondary !py-3 text-center">Sign in</a>
+            <a href="/register" class="btn-primary !py-3 text-center">Create account</a>
           {/if}
         {:else if user}
           {#if variant === 'repairer'}

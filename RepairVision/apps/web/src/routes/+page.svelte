@@ -217,6 +217,7 @@
         {/if}
 
         <div class="mt-9 flex flex-col sm:flex-row gap-3">
+          <a href="/diagnosis" class="btn-primary btn-lg"><Wrench size={18} /> Diagnose my device</a>
           <a href={upcomingEvents.length > 0 ? '#when' : '/events'} class="btn-primary btn-lg">
             <Calendar size={18} /> See upcoming sessions
           </a>
