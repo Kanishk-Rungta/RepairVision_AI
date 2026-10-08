@@ -33,6 +33,21 @@ export interface Bindings {
   REFRESH_TOKEN_DAYS?: string;
   DATA_RETENTION_DEFAULT_DAYS?: string;
   EVENT_GENERATION_MONTHS?: string;
+
+  // RepairVision AI Diagnosis (src/services/repairvision). All optional: the
+  // rest of the hub works without them, and the diagnosis page says plainly
+  // that it is not set up.
+  /** Google AI Studio key for the Gemini API. A secret, never a plain variable. */
+  GEMINI_API_KEY?: string;
+  /** Defaults to gemma-4-26b-a4b-it. */
+  GEMMA_MODEL?: string;
+  /** "high" (default) or "minimal". */
+  GEMMA_THINKING_LEVEL?: string;
+  /** "false" stops asking the API for JSON mode; the prompt still asks for JSON. */
+  GEMMA_JSON_MODE?: string;
+  GEMMA_TIMEOUT_MS?: string;
+  /** Diagnosis requests each signed-in person may make per hour. Defaults to 30. */
+  AI_DIAGNOSIS_HOURLY_LIMIT?: string;
 }
 
 export function bindings(): Bindings {
@@ -83,5 +98,8 @@ export const env = {
   },
   get EVENT_GENERATION_MONTHS(): number {
     return positiveInt(bindings().EVENT_GENERATION_MONTHS, 12);
+  },
+  get AI_DIAGNOSIS_HOURLY_LIMIT(): number {
+    return positiveInt(bindings().AI_DIAGNOSIS_HOURLY_LIMIT, 30);
   },
 };
