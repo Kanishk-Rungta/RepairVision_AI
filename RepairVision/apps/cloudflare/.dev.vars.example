@@ -15,3 +15,9 @@ GEMINI_API_KEY=
 # GEMMA_TIMEOUT_MS=90000
 # Diagnosis requests per signed-in person per hour. Default 30.
 # AI_DIAGNOSIS_HOURLY_LIMIT=30
+
+# Demo data: after `python demo/seed.py --base-url http://localhost:8787`
+# (python3 on macOS/Linux), "true" shows one-click buttons for the demo admin,
+# repairer and device owner on the sign-in and sign-up pages. Never set this
+# on a real cafe's hub.
+# DEMO_ACCOUNTS=true

@@ -26,6 +26,8 @@ export interface Bindings {
   DEMO_MODE?: string;
   /** On the public demo only: lets demo/seed.py wipe and refill it. A secret. */
   DEMO_RESET_KEY?: string;
+  /** "true" shows one-click demo account buttons (routes/demoAccounts.ts). Never on a real cafe. */
+  DEMO_ACCOUNTS?: string;
   TELEMETRY_DISABLED?: string;
   TELEMETRY_ENDPOINT?: string;
   MAX_UPLOAD_SIZE_MB?: string;
