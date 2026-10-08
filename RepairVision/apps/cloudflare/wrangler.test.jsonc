@@ -8,6 +8,8 @@
   "compatibility_flags": ["nodejs_compat"],
   "d1_databases": [{ "binding": "DB", "database_name": "test", "database_id": "00000000-0000-0000-0000-000000000000" }],
   "r2_buckets": [{ "binding": "UPLOADS", "bucket_name": "test-uploads" }],
+  // For test/kvUploads.test.ts: uploads kept in KV instead of R2.
+  "kv_namespaces": [{ "binding": "TEST_UPLOADS_KV", "id": "00000000000000000000000000000000" }],
   "vars": {
     "TZ": "Europe/London",
     "DEMO_MODE": "false",

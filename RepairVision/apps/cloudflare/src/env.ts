@@ -10,12 +10,18 @@
 //  is the documentation for the other.
 // =============================================================================
 import { env as workerEnv } from 'cloudflare:workers';
+import { KvUploadStore } from './lib/kvUploads.js';
 
 export interface Bindings {
   /** The database. */
   DB: D1Database;
   /** Photos, branding, QR codes and cached files. */
   UPLOADS: R2Bucket;
+  /**
+   * For an account without R2: a KV namespace that stands in for UPLOADS.
+   * Only used when no bucket is bound. See lib/kvUploads.ts.
+   */
+  UPLOADS_KV?: KVNamespace;
   /** The static files of the web app. */
   ASSETS: Fetcher;
 
@@ -62,8 +68,18 @@ export interface Bindings {
   AI_CHAT_HOURLY_LIMIT?: string;
 }
 
+let withKvUploads: { from: unknown; bindings: Bindings } | null = null;
+
 export function bindings(): Bindings {
-  return workerEnv as unknown as Bindings;
+  const raw = workerEnv as unknown as Bindings;
+  if (raw.UPLOADS || !raw.UPLOADS_KV) return raw;
+  // No R2 bucket, but a KV namespace: the rest of the hub sees the KV store
+  // through the same R2 interface, made once per Worker instance.
+  if (withKvUploads?.from !== raw) {
+    const uploads = new KvUploadStore(raw.UPLOADS_KV) as unknown as R2Bucket;
+    withKvUploads = { from: raw, bindings: Object.assign(Object.create(raw), { UPLOADS: uploads }) as Bindings };
+  }
+  return withKvUploads.bindings;
 }
 
 function flag(value: string | undefined): boolean {
