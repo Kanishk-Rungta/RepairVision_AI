@@ -16,6 +16,7 @@ import { pwaRoutes } from './routes/pwa.js';
 import { ogRoutes } from './routes/og.js';
 import { checkInRoutes } from './routes/checkin.js';
 import { repairerRoutes } from './routes/repairer.js';
+import { repairVisionRoutes } from './routes/repairvision.js';
 import { eventGalleryRoutes } from './routes/eventGallery.js';
 import { adminRoutes } from './routes/admin/index.js';
 import { displayRoutes } from './routes/display.js';
@@ -40,6 +41,7 @@ const registered = (async () => {
   await app.register(ogRoutes);
   await app.register(checkInRoutes);
   await app.register(repairerRoutes);
+  await app.register(repairVisionRoutes);
   await app.register(eventGalleryRoutes);
   await app.register(displayRoutes);
   await app.register(demoRoutes);
