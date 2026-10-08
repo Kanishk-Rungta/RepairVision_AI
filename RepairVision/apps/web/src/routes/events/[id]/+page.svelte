@@ -118,17 +118,17 @@
     {@const p = dateParts(event.date)}
     <article class="card overflow-hidden">
       <!-- Header band -->
-      <div class="relative bg-gradient-to-br from-brand-200 via-brand-100 to-surface text-white p-6 sm:p-8">
+      <div class="relative bg-brand-50 text-ink p-6 sm:p-8">
         {#if isPast}
-          <span class="inline-block mb-2 rounded-full bg-white/15 ring-1 ring-white/20 text-[10px] font-bold uppercase tracking-wide px-2 py-0.5">Past event</span>
+          <span class="inline-block mb-2 rounded-full bg-tint/[0.05] ring-1 ring-tint/[0.12] text-[10px] font-bold uppercase tracking-wide px-2 py-0.5">Past event</span>
         {/if}
         <div class="flex items-center gap-4">
-          <div class="shrink-0 w-16 rounded-2xl bg-white/15 ring-1 ring-white/20 text-center py-2">
+          <div class="shrink-0 w-16 rounded-2xl bg-tint/[0.05] ring-1 ring-tint/[0.12] text-center py-2">
             <div class="text-[11px] font-bold uppercase tracking-wider text-brand-100">{p.monthShort}</div>
             <div class="text-3xl font-bold font-display leading-none">{p.day}</div>
           </div>
           <div class="min-w-0">
-            <h1 class="text-white text-2xl sm:text-3xl font-bold font-display leading-tight">{event.name}</h1>
+            <h1 class="text-ink text-2xl sm:text-3xl font-bold font-display leading-tight">{event.name}</h1>
             <p class="mt-1 text-sm text-brand-100">{fullDate(event.date)}</p>
           </div>
         </div>

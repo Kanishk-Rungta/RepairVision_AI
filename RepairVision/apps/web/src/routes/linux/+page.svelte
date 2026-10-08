@@ -113,24 +113,24 @@
 
 <main>
   <!-- ───────────────────────── Hero ───────────────────────── -->
-  <section class="hero-bg text-white">
+  <section class="hero-bg text-ink">
     <div class="max-w-3xl mx-auto px-4 py-20 md:py-28 text-center">
-      <span class="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-white/10 ring-1 ring-white/20">
+      <span class="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-tint/[0.05] ring-1 ring-tint/[0.12]">
         <Laptop size={32} />
       </span>
       <h1 class="mt-6 text-gradient text-4xl md:text-6xl font-semibold tracking-[-0.04em]">{heroHeading}</h1>
       {#if heroTagline}
-        <p class="mt-4 text-xl md:text-2xl text-white/90">{heroTagline}</p>
+        <p class="mt-4 text-xl md:text-2xl text-slate-700">{heroTagline}</p>
       {/if}
 
       {#if nextEvent}
-        <div class="mt-10 inline-flex flex-col items-center gap-1 rounded-2xl bg-white/[0.04] ring-1 ring-white/10 px-6 py-4 shadow-sm backdrop-blur">
-          <span class="eyebrow text-white/70">Next session with Linux help</span>
+        <div class="mt-10 inline-flex flex-col items-center gap-1 rounded-2xl bg-tint/[0.05] ring-1 ring-tint/[0.12] px-6 py-4 shadow-sm backdrop-blur">
+          <span class="eyebrow text-slate-500">Next session with Linux help</span>
           <span class="text-lg font-semibold">
             {formatDateShort(nextEvent.date)}, {nextEvent.startTime.slice(0,5)}–{nextEvent.endTime.slice(0,5)}
           </span>
           {#if homeVenue}
-            <span class="flex items-start justify-center gap-1.5 text-sm text-white/75">
+            <span class="flex items-start justify-center gap-1.5 text-sm text-slate-500">
               <MapPin size={15} class="shrink-0 mt-0.5" />
               <span>{homeVenue.name}</span>
             </span>
@@ -193,7 +193,7 @@
 
   <!-- ──────────────────── What we have managed ─────────────────────── -->
   {#if showStats && statTiles.length > 0}
-    <section class="bg-surface border-y border-slate-200 text-white">
+    <section class="bg-surface border-y border-slate-200 text-ink">
       <div class="section">
         <SectionHeading
           tone="inverse"
@@ -207,7 +207,7 @@
               <dt class="sr-only">{tile.label}</dt>
               <dd>
                 <span class="block font-display text-4xl md:text-5xl font-bold leading-none">{tile.value}</span>
-                <span class="mt-3 block text-sm text-white/75">{tile.label}</span>
+                <span class="mt-3 block text-sm text-slate-500">{tile.label}</span>
               </dd>
             </div>
           {/each}
@@ -265,7 +265,7 @@
                 <span class="absolute top-2 right-2 z-10 rounded-full bg-accent-600 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5">Next</span>
               {/if}
               <div class="absolute top-2 left-2 z-10">
-                <AddToCalendar event={e} variant="compact" class="!bg-white/10 !text-white !ring-white/20 hover:!bg-white/20" />
+                <AddToCalendar event={e} variant="compact" class="!bg-tint/[0.05] !text-slate-900 !ring-tint/[0.12] hover:!bg-tint/[0.08]" />
               </div>
               <a href={`/events/${e.id}`} class="block">
                 <div class="text-xs font-bold uppercase tracking-wider py-1.5 {i === 0 ? 'bg-brand-600 text-white' : 'bg-brand-100 text-brand-800'}">{p.monthShort}</div>
