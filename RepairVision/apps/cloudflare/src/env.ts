@@ -58,6 +58,8 @@ export interface Bindings {
   GEMMA_TIMEOUT_MS?: string;
   /** Diagnosis requests each signed-in person may make per hour. Defaults to 30. */
   AI_DIAGNOSIS_HOURLY_LIMIT?: string;
+  /** Questions one visitor may ask the site assistant per hour. Defaults to 20. */
+  AI_CHAT_HOURLY_LIMIT?: string;
 }
 
 export function bindings(): Bindings {
@@ -111,5 +113,8 @@ export const env = {
   },
   get AI_DIAGNOSIS_HOURLY_LIMIT(): number {
     return positiveInt(bindings().AI_DIAGNOSIS_HOURLY_LIMIT, 30);
+  },
+  get AI_CHAT_HOURLY_LIMIT(): number {
+    return positiveInt(bindings().AI_CHAT_HOURLY_LIMIT, 20);
   },
 };

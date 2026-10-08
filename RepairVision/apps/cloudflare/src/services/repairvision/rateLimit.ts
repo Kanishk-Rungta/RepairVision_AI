@@ -31,3 +31,20 @@ export async function takeDiagnosisAllowance(userId: string): Promise<boolean> {
   ]);
   return true;
 }
+
+/**
+ * The same allowance for the public site assistant (services/chat), counted
+ * per visitor address because visitors are not signed in. Kept in the same
+ * table under a "chat:" key, so it cannot collide with a person's id.
+ */
+export async function takeChatAllowance(visitorKey: string): Promise<boolean> {
+  const key = `chat:${visitorKey}`;
+  const since = new Date(Date.now() - WINDOW_MS);
+  const [row] = await db
+    .select({ n: count() })
+    .from(aiDiagnosisUsage)
+    .where(and(eq(aiDiagnosisUsage.userId, key), gt(aiDiagnosisUsage.createdAt, since)));
+  if (Number(row?.n ?? 0) >= env.AI_CHAT_HOURLY_LIMIT) return false;
+  await db.insert(aiDiagnosisUsage).values({ userId: key });
+  return true;
+}
