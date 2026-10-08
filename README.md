@@ -2,6 +2,8 @@
 
 > An AI-assisted platform for community repair cafés: it runs the café day to day, helps volunteers and owners work out what is wrong with a broken device, and tells people whether it is worth repairing or replacing.
 
+**Live application:** https://repair-cafe-hub.circularity-cloudflare.workers.dev
+
 ## Team
 
 **Team Name:** The Blacklisted
