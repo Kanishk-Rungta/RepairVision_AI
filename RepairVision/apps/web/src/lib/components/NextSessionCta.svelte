@@ -27,17 +27,17 @@
   }
 </script>
 
-<section class="relative isolate overflow-hidden bg-brand-900 text-white">
+<section class="relative isolate overflow-hidden hero-bg text-white">
   {#if image}
     <div aria-hidden="true" class="absolute inset-0 -z-20 bg-cover bg-center" style={`background-image: url('${image}')`}></div>
-    <div aria-hidden="true" class="absolute inset-0 -z-10 bg-brand-900/90"></div>
+    <div aria-hidden="true" class="absolute inset-0 -z-10 bg-canvas/85"></div>
   {:else}
-    <div aria-hidden="true" class="absolute inset-0 -z-10 bg-gradient-to-br from-brand-800 to-brand-600"></div>
+    <div aria-hidden="true" class="absolute inset-0 -z-10 bg-gradient-to-b from-transparent to-canvas/60"></div>
   {/if}
 
   <div class="section text-center">
-    <h2 class="section-title !text-white">{heading}</h2>
-    <p class="section-lede !text-white/85 max-w-2xl mx-auto">{body}</p>
+    <h2 class="section-title">{heading}</h2>
+    <p class="section-lede !text-slate-500 max-w-2xl mx-auto">{body}</p>
     {#if event}
       <p class="mt-6 text-lg font-semibold">
         {formatDate(event.date)}, {event.startTime.slice(0, 5)}–{event.endTime.slice(0, 5)}
@@ -47,7 +47,7 @@
       {/if}
     {/if}
     <div class="mt-8 flex flex-col sm:flex-row flex-wrap gap-3 sm:justify-center">
-      <a href={ctaHref} class="btn-primary !bg-white !text-brand-800 hover:!bg-slate-100">
+      <a href={ctaHref} class="btn-primary">
         <Calendar size={18} /> {ctaLabel}
       </a>
       {#if event}

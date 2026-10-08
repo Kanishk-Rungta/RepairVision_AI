@@ -2,14 +2,13 @@
   import { cafe } from '$lib/stores/cafe';
   import SiteHeader from '$lib/components/SiteHeader.svelte';
   import SiteFooter from '$lib/components/SiteFooter.svelte';
-  import SectionHeading from '$lib/components/SectionHeading.svelte';
   import VolunteerCard from '$lib/components/VolunteerCard.svelte';
   import NextSessionCta from '$lib/components/NextSessionCta.svelte';
   import AddToCalendar from '$lib/components/AddToCalendar.svelte';
   import PhotoGrid from '$lib/components/PhotoGrid.svelte';
   import LocalCafeMap from '$lib/components/LocalCafeMap.svelte';
   import { formatDistance, repairCafeOrgUrl, type LocalCafe } from '$lib/localCafes';
-  import { Calendar, Clock, MapPin, ChevronDown, CheckCircle2, Laptop, ArrowRight } from 'lucide-svelte';
+  import { Calendar, Clock, MapPin, ChevronDown, CheckCircle2, Laptop, ArrowRight, QrCode, Wrench, PackageCheck } from 'lucide-svelte';
   import Icon from '@iconify/svelte';
   import { categoryIcon, categoryTint, categoryInk } from '$lib/categoryIcon';
   import type { PageData } from './$types';
@@ -74,6 +73,13 @@
   // Used for postcodes, which look wrong when a line break splits them.
   function noWrap(s: string): string {
     return s.replace(/\s+/g, ' ');
+  }
+
+  // Is the next session today? Then the hero says so, with a live dot.
+  function isToday(d: string): boolean {
+    const now = new Date();
+    const local = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    return d === local;
   }
 
   // The same homeVenue is shown for most "When & where" sections.
@@ -177,60 +183,142 @@
 
 <main>
   <!-- ───────────────────────── Hero ─────────────────────────
-       A flat block of the cafe's own colour. One centred column: name,
-       tagline, one line of description, the next session, then the two
-       actions. The next session sits here because it is the thing most
-       visitors came to find. -->
-  <section class="bg-brand-600 text-white">
-    <div class="max-w-3xl mx-auto px-4 py-20 md:py-28 text-center">
-      <h1 class="text-4xl md:text-6xl font-bold tracking-tight">{$cafe?.name ?? 'Welcome'}</h1>
-      {#if $cafe?.tagline}
-        <p class="mt-4 text-xl md:text-2xl text-white/90">{$cafe.tagline}</p>
-      {/if}
-      {#if $cafe?.description}
-        <p class="mt-3 text-base md:text-lg text-white/70 max-w-xl mx-auto">{$cafe.description}</p>
-      {/if}
-
-      {#if nextEvent}
-        <div class="mt-10 inline-flex flex-col items-center gap-1 rounded-2xl bg-white/10 ring-1 ring-white/20 px-6 py-4">
-          <span class="eyebrow text-white/70">Next session</span>
-          <span class="text-lg font-semibold">
-            {formatDateShort(nextEvent.date)}, {nextEvent.startTime.slice(0,5)}–{nextEvent.endTime.slice(0,5)}
-          </span>
-          {#if homeVenue}
-            <span class="flex items-start justify-center gap-1.5 text-sm text-white/75">
-              <MapPin size={15} class="shrink-0 mt-0.5" />
-              <span>{homeVenue.name}</span>
+       Two jobs, side by side: who we are on the left, and the one thing most
+       visitors came for on the right — when the next session is. The session
+       card is drawn as a ticket, because a visit here is a ticket: you check
+       an item in, it gets a number, you collect it fixed. -->
+  <section class="hero-bg">
+    <div class="max-w-6xl mx-auto px-4 pt-16 pb-20 md:pt-24 md:pb-28 grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-center">
+      <div class="animate-fade-up">
+        {#if nextEvent}
+          <a href="#when" class="inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-1.5 text-[13px] text-slate-600 ring-1 ring-white/10 hover:text-slate-900 hover:bg-white/[0.07] transition-colors">
+            <span class="relative flex h-2 w-2">
+              {#if isToday(nextEvent.date)}<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60 motion-reduce:hidden"></span>{/if}
+              <span class="relative inline-flex h-2 w-2 rounded-full {isToday(nextEvent.date) ? 'bg-emerald-500' : 'bg-brand-500'}"></span>
             </span>
+            {isToday(nextEvent.date) ? 'Open today' : 'Next session'} · {formatDateShort(nextEvent.date)}
+            <ArrowRight size={14} class="opacity-60" />
+          </a>
+        {:else}
+          <span class="inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-1.5 text-[13px] text-slate-600 ring-1 ring-white/10">
+            <span class="h-2 w-2 rounded-full bg-brand-500"></span> Community repair café
+          </span>
+        {/if}
+
+        <h1 class="mt-6 text-gradient text-[44px] leading-[1.02] sm:text-6xl md:text-7xl font-semibold tracking-[-0.045em]">{cafeName}</h1>
+        {#if $cafe?.tagline}
+          <p class="mt-5 text-xl md:text-2xl font-medium tracking-[-0.015em] text-slate-800">{$cafe.tagline}</p>
+        {/if}
+        {#if !$cafe?.tagline && !$cafe?.description}
+          <p class="mt-5 max-w-xl text-lg md:text-xl leading-relaxed text-slate-500">Bring something broken. Our volunteers will help you work out what is wrong, and fix it together.</p>
+        {/if}
+        {#if $cafe?.description}
+          <p class="mt-3 max-w-xl text-base md:text-lg leading-relaxed text-slate-500">{$cafe.description}</p>
+        {/if}
+
+        <div class="mt-9 flex flex-col sm:flex-row gap-3">
+          <a href={upcomingEvents.length > 0 ? '#when' : '/events'} class="btn-primary btn-lg">
+            <Calendar size={18} /> See upcoming sessions
+          </a>
+          <a href={categories.length > 0 ? '#repair' : '/skills'} class="btn-secondary btn-lg">What we repair</a>
+        </div>
+      </div>
+
+      <!-- The ticket. -->
+      <div class="animate-fade-up [animation-delay:80ms] w-full max-w-md lg:max-w-none mx-auto">
+        <div class="ticket-top rounded-t-3xl bg-surface/90 ring-1 ring-white/[0.08] backdrop-blur-xl px-6 pt-6 pb-7 sm:px-8 sm:pt-8">
+          <div class="flex items-center justify-between">
+            <p class="kicker">Next session</p>
+            {#if nextEvent}
+              <span class="badge {isToday(nextEvent.date) ? 'bg-emerald-100 text-emerald-800' : 'bg-brand-100 text-brand-800'}">
+                {isToday(nextEvent.date) ? 'Today' : 'Upcoming'}
+              </span>
+            {/if}
+          </div>
+          {#if nextEvent}
+            {@const p = dateParts(nextEvent.date)}
+            <div class="mt-5 flex items-end gap-5">
+              <span class="text-7xl font-semibold leading-[0.8] tracking-[-0.05em] text-slate-950 tabular-nums">{p.day}</span>
+              <div class="pb-0.5">
+                <p class="text-lg font-semibold text-slate-900 leading-tight">{p.weekdayLong}</p>
+                <p class="text-slate-500">{p.monthShort} · <span class="font-mono text-[15px]">{nextEvent.startTime.slice(0,5)}–{nextEvent.endTime.slice(0,5)}</span></p>
+              </div>
+            </div>
+            {#if homeVenue}
+              <p class="mt-6 flex items-start gap-2 text-slate-700">
+                <MapPin size={18} class="shrink-0 mt-0.5 text-brand-500" />
+                <span>
+                  <span class="font-medium text-slate-900">{homeVenue.name}</span>
+                  {#if homeVenue.address || homeVenue.postcode}
+                    <span class="block text-sm text-slate-500">{homeVenue.address ?? ''}{#if homeVenue.address && homeVenue.postcode}{', '}{/if}{#if homeVenue.postcode}{noWrap(homeVenue.postcode)}{/if}</span>
+                  {/if}
+                </span>
+              </p>
+            {/if}
+          {:else}
+            <p class="mt-5 text-3xl font-semibold tracking-[-0.03em] text-slate-950">Dates coming soon</p>
+            <p class="mt-2 text-slate-500">We are planning the next session. Check back soon, or get in touch.</p>
           {/if}
         </div>
-      {/if}
-
-      <div class="mt-8 flex flex-col sm:flex-row flex-wrap gap-3 sm:justify-center">
-        {#if upcomingEvents.length > 0}
-          <a href="#when" class="btn-primary !bg-white !text-brand-800 hover:!bg-slate-100"><Calendar size={18} /> See upcoming events</a>
-        {:else}
-          <a href="/events" class="btn-primary !bg-white !text-brand-800 hover:!bg-slate-100"><Calendar size={18} /> See upcoming events</a>
-        {/if}
-        <a href="/skills" class="btn-secondary !bg-white/10 !text-white !ring-white/40 hover:!bg-white/20">What we repair</a>
+        <div class="ticket-bottom rounded-b-3xl bg-surface/90 ring-1 ring-white/[0.08] backdrop-blur-xl px-6 pt-6 pb-6 sm:px-8">
+          <ol class="grid grid-cols-3 gap-3 text-center">
+            <li class="flex flex-col items-center gap-2">
+              <span class="icon-chip !h-10 !w-10"><QrCode size={18} /></span>
+              <span class="text-[13px] text-slate-600 leading-tight">Check in</span>
+            </li>
+            <li class="flex flex-col items-center gap-2">
+              <span class="icon-chip !h-10 !w-10"><Wrench size={18} /></span>
+              <span class="text-[13px] text-slate-600 leading-tight">Repair together</span>
+            </li>
+            <li class="flex flex-col items-center gap-2">
+              <span class="icon-chip !h-10 !w-10"><PackageCheck size={18} /></span>
+              <span class="text-[13px] text-slate-600 leading-tight">Take it home</span>
+            </li>
+          </ol>
+          <div class="mt-6 flex gap-2">
+            {#if nextEvent}
+              <AddToCalendar event={nextEvent} variant="button" class="flex-1 btn-sm" />
+              <a href="/events/{nextEvent.id}" class="btn-ghost btn-sm">Details <ArrowRight size={15} /></a>
+            {:else}
+              <a href="/contact" class="btn-secondary btn-sm flex-1">Get in touch</a>
+            {/if}
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
+  <!-- ──────────────────── Our numbers ───────────────────────── -->
+  {#if showStats && statTiles.length > 0}
+    <section class="border-b border-slate-200 bg-surface/40">
+      <dl class="max-w-6xl mx-auto px-4 grid grid-cols-2 {statTiles.length >= 4 ? 'md:grid-cols-4' : 'md:grid-cols-3'}">
+        {#each statTiles as tile, i}
+          <div class="py-8 md:py-10 px-2 md:px-6 {i % 2 === 1 ? 'border-l' : ''} {i > 0 ? 'md:border-l' : ''} {i >= 2 ? 'border-t md:border-t-0' : ''} border-slate-200">
+            <dt class="kicker">{tile.label}</dt>
+            <dd class="mt-2 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-slate-950 tabular-nums">{tile.value}</dd>
+          </div>
+        {/each}
+      </dl>
+    </section>
+  {/if}
+
   <!-- ──────────────── Intro / "What & Who" ───────────────── -->
   {#if hp.intro?.body || hp.intro?.heading}
     <section class="section">
-      <div class="max-w-2xl mx-auto text-center">
-        {#if hp.intro?.heading}
-          <h2 class="section-title">{hp.intro.heading}</h2>
-        {/if}
+      <div class="grid lg:grid-cols-[1fr_1.4fr] gap-6 lg:gap-16">
+        <div>
+          <p class="eyebrow">About us</p>
+          {#if hp.intro?.heading}
+            <h2 class="section-title mt-3">{hp.intro.heading}</h2>
+          {/if}
+        </div>
         {#if introParagraphs.length > 0}
-          <p class="mt-6 text-xl sm:text-2xl leading-relaxed font-medium text-slate-800 whitespace-pre-line">
-            {introParagraphs[0]}
-          </p>
-          {#each introParagraphs.slice(1) as p}
-            <p class="mt-4 text-lg leading-relaxed text-slate-600 whitespace-pre-line">{p}</p>
-          {/each}
+          <div class="lg:pt-8">
+            <p class="text-lg md:text-xl leading-relaxed text-slate-800 whitespace-pre-line">{introParagraphs[0]}</p>
+            {#each introParagraphs.slice(1) as p}
+              <p class="mt-4 text-base md:text-lg leading-relaxed text-slate-500 whitespace-pre-line">{p}</p>
+            {/each}
+          </div>
         {/if}
       </div>
     </section>
@@ -240,47 +328,110 @@
   {#if Array.isArray(hp.howItWorks) && hp.howItWorks.length > 0}
     <section class="band">
       <div class="section">
-        <SectionHeading eyebrow="Your visit" title="How it works" />
-        <div class="relative mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
-          <!-- Hairline joining the numbered steps, so they read as one
-               sequence rather than four separate boxes. -->
-          <div aria-hidden="true" class="hidden lg:block absolute top-6 left-[12.5%] right-[12.5%] h-px bg-brand-200"></div>
-          {#each hp.howItWorks as step, i}
-            <div class="relative text-center">
-              <div class="w-12 h-12 mx-auto rounded-full bg-brand-600 text-white ring-8 ring-brand-50 flex items-center justify-center text-xl font-bold font-display">{i + 1}</div>
-              <h3 class="mt-4 text-lg font-semibold text-pine">{step.title}</h3>
-              <p class="mt-2 text-slate-600 text-sm leading-relaxed whitespace-pre-line">{step.body}</p>
-            </div>
-          {/each}
+        <div class="max-w-2xl">
+          <p class="eyebrow">Your visit</p>
+          <h2 class="section-title mt-3">How it works</h2>
         </div>
+        <ol class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {#each hp.howItWorks as step, i}
+            <li class="card p-6">
+              <span class="font-mono text-xs text-brand-400">Step {i + 1}</span>
+              <h3 class="mt-3 !text-lg font-semibold text-pine">{step.title}</h3>
+              <p class="mt-2 text-[15px] leading-relaxed text-slate-500 whitespace-pre-line">{step.body}</p>
+            </li>
+          {/each}
+        </ol>
       </div>
     </section>
   {/if}
 
-  <!-- ──────────────────── Our numbers ─────────────────────────
-       A dark block on purpose. The rest of the page alternates cream and a
-       tint, and this section is optional, so making it a third surface keeps
-       that alternation correct whether it is switched on or off. -->
-  {#if showStats && statTiles.length > 0}
-    <section class="bg-brand-800 text-white">
-      <div class="section">
-        <SectionHeading
-          tone="inverse"
-          eyebrow="What we have done together"
-          title="Our numbers"
-          lede="Every repair keeps something working, and keeps it out of the bin."
-        />
-        <dl class="mt-12 grid grid-cols-2 gap-8 {statTiles.length >= 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'}">
-          {#each statTiles as tile}
-            <div class="text-center">
-              <dt class="sr-only">{tile.label}</dt>
-              <dd>
-                <span class="block font-display text-4xl md:text-5xl font-bold leading-none">{tile.value}</span>
-                <span class="mt-3 block text-sm text-white/75">{tile.label}</span>
-              </dd>
+  <!-- ──────────────────── When & where ──────────────────────── -->
+  {#if upcomingEvents.length > 0}
+    <section id="when" class="section scroll-mt-20">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div>
+          <p class="eyebrow">Mark your calendar</p>
+          <h2 class="section-title mt-3">When &amp; where</h2>
+        </div>
+        <a href="/events" class="btn-secondary btn-sm self-start md:self-auto">Full schedule <ArrowRight size={15} /></a>
+      </div>
+
+      <ul class="mt-10 card divide-y divide-slate-200 overflow-hidden">
+        {#each upcomingEvents.slice(0, DATE_PREVIEW) as e, i}
+          {@const p = dateParts(e.date)}
+          <li class="flex items-center gap-4 sm:gap-6 px-4 py-4 sm:px-6 sm:py-5 transition-colors hover:bg-white/[0.02]">
+            <div class="w-12 shrink-0 text-center">
+              <div class="font-mono text-[11px] uppercase tracking-[0.1em] text-brand-400">{p.monthShort}</div>
+              <div class="text-2xl font-semibold leading-tight text-slate-950 tabular-nums">{p.day}</div>
             </div>
+            <a href="/events/{e.id}" class="min-w-0 flex-1 group">
+              <p class="font-medium text-slate-900 group-hover:text-slate-950 truncate">
+                {uniformEventName ? p.weekdayLong : e.name}
+                {#if i === 0}<span class="badge bg-brand-100 text-brand-800 ml-2 align-middle">Next</span>{/if}
+              </p>
+              <p class="mt-0.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500">
+                <span class="inline-flex items-center gap-1.5"><Clock size={14} /> <span class="font-mono">{e.startTime.slice(0,5)}–{e.endTime.slice(0,5)}</span></span>
+                <span class="inline-flex items-center gap-1.5 min-w-0"><MapPin size={14} class="shrink-0" /> <span class="truncate">{e.venue.name}</span></span>
+              </p>
+            </a>
+            <AddToCalendar event={e} variant="compact" />
+          </li>
+        {/each}
+      </ul>
+      {#if upcomingEvents.length > DATE_PREVIEW}
+        <p class="mt-4 text-sm text-slate-500">
+          {upcomingEvents.length - DATE_PREVIEW} more {upcomingEvents.length - DATE_PREVIEW === 1 ? 'date' : 'dates'} booked after these.
+        </p>
+      {/if}
+    </section>
+  {/if}
+
+  <!-- ──────────────── What we repair (categories) ───────────── -->
+  {#if categories.length > 0}
+    <section id="repair" class="band scroll-mt-20">
+      <div class="section">
+        <div class="max-w-2xl">
+          <p class="eyebrow">What we can look at</p>
+          <h2 class="section-title mt-3">What we repair</h2>
+          <p class="section-lede">Bring one of these along, or just ask. We will always take a look.</p>
+        </div>
+        <ul class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {#each categories as cat}
+            <li class="card flex items-center gap-3.5 p-4">
+              <span class="icon-tile !h-10 !w-10 shrink-0" style={`background-color: ${categoryTint(cat.colour)}; color: ${categoryInk(cat.colour)}`}>
+                <Icon icon={categoryIcon(cat.icon, cat.name)} width="20" height="20" />
+              </span>
+              <div class="min-w-0">
+                <p class="font-medium text-slate-900 truncate">{cat.name}</p>
+                <p class="text-xs text-slate-500">{cat.repairerCount} volunteer{cat.repairerCount === 1 ? '' : 's'}</p>
+              </div>
+            </li>
           {/each}
-        </dl>
+        </ul>
+      </div>
+    </section>
+  {/if}
+
+  <!-- ─────────────── Linux Repair Cafe ─────────────────────── -->
+  {#if linuxEnabled}
+    <section class="section">
+      <div class="card p-6 sm:p-10 flex flex-col sm:flex-row gap-6 sm:items-start">
+        <span class="icon-chip !h-12 !w-12 shrink-0"><Laptop size={22} /></span>
+        <div class="min-w-0 flex-1">
+          <p class="eyebrow">Also here</p>
+          <h2 class="mt-2 !text-2xl sm:!text-3xl font-semibold text-pine">{linuxHeading}</h2>
+          <p class="mt-3 max-w-2xl text-slate-500 leading-relaxed whitespace-pre-line">{linuxBody}</p>
+          {#if nextLinuxEvent}
+            <p class="mt-4 inline-flex items-center gap-2 text-sm text-slate-600">
+              <Calendar size={15} class="text-brand-500" />
+              Next session with Linux help: <span class="font-medium text-slate-900">{formatDateShort(nextLinuxEvent.date)}</span>
+              <span class="font-mono">{nextLinuxEvent.startTime.slice(0, 5)}–{nextLinuxEvent.endTime.slice(0, 5)}</span>
+            </p>
+          {/if}
+          <div class="mt-6">
+            <a href="/linux" class="btn-primary">{linuxCta} <ArrowRight size={18} /></a>
+          </div>
+        </div>
       </div>
     </section>
   {/if}
@@ -288,172 +439,17 @@
   <!-- ──────────────────── Photo gallery ─────────────────────── -->
   {#if gallery.length > 0}
     <section class="section">
-      <SectionHeading
-        eyebrow="From our sessions"
-        title="In the workshop"
-        lede={galleryHasSessions
-          ? 'Photos from recent repair sessions. Open one to see which session it came from.'
-          : 'A few photos from recent repair sessions.'}
-      />
+      <div class="max-w-2xl">
+        <p class="eyebrow">From our sessions</p>
+        <h2 class="section-title mt-3">In the workshop</h2>
+        <p class="section-lede">
+          {galleryHasSessions
+            ? 'Photos from recent repair sessions. Open one to see which session it came from.'
+            : 'A few photos from recent repair sessions.'}
+        </p>
+      </div>
       <div class="mt-10">
-        <PhotoGrid
-          photos={gallery}
-          previewCount={PHOTO_PREVIEW}
-          fallbackAlt={`${cafeName} repair café`}
-        />
-      </div>
-    </section>
-  {/if}
-
-  <!-- ──────────────────── When & where ──────────────────────── -->
-  {#if upcomingEvents.length > 0}
-    <section id="when" class="band">
-      <div class="section">
-        <SectionHeading eyebrow="Mark your calendar" title="When &amp; where">
-          {#if homeVenue}
-            <!-- The pin is inline, not a flex sibling, so it stays next to the
-                 first word instead of being stranded when the address wraps. -->
-            <p class="section-lede">
-              <MapPin size={18} class="inline-block align-text-bottom mr-1.5" />{homeVenue.name}{#if homeVenue.address}, {homeVenue.address}{/if}{#if homeVenue.postcode}{' · '}{noWrap(homeVenue.postcode)}{/if}
-            </p>
-          {/if}
-        </SectionHeading>
-
-        <div class="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {#each upcomingEvents.slice(0, DATE_PREVIEW) as e, i}
-            {@const p = dateParts(e.date)}
-            <div class="group relative card overflow-hidden text-center transition-shadow hover:ring-brand-400">
-              {#if i === 0}
-                <span class="absolute top-2 right-2 z-10 rounded-full bg-accent-600 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5">Next</span>
-              {/if}
-              <div class="absolute top-2 left-2 z-10">
-                <!-- Dark, so it reads on the lead tile's solid strip and on
-                     the tinted strips of the tiles that follow it. -->
-                <AddToCalendar event={e} variant="compact" class="!bg-brand-800/90 !text-white !ring-white/20 hover:!bg-brand-800" />
-              </div>
-              <a href="/events" class="block">
-                <!-- The next date keeps the solid brand strip; later dates use
-                     a tint, so one tile leads and the rest support it. -->
-                <div
-                  class="text-xs font-bold uppercase tracking-wider py-1.5 {i === 0 ? 'bg-brand-600 text-white' : 'bg-brand-100 text-brand-800'}"
-                >{p.monthShort}</div>
-                <div class="px-3 py-5">
-                  <div class="text-4xl font-bold font-display text-pine leading-none">{p.day}</div>
-                  <div class="mt-1 text-sm text-slate-500">{p.weekdayLong}</div>
-                  <div class="mt-3 inline-flex items-center gap-1 text-xs font-medium text-slate-600">
-                    <Clock size={12} class="text-clay" /> {e.startTime.slice(0,5)}–{e.endTime.slice(0,5)}
-                  </div>
-                  {#if !uniformEventName}
-                    <div class="mt-2 text-xs text-slate-500 truncate" title={e.name}>{e.name}</div>
-                  {/if}
-                </div>
-              </a>
-            </div>
-          {/each}
-        </div>
-
-        <div class="text-center mt-10">
-          {#if upcomingEvents.length > DATE_PREVIEW}
-            <p class="mb-4 text-sm text-slate-500">
-              We have {upcomingEvents.length - DATE_PREVIEW} more {upcomingEvents.length - DATE_PREVIEW === 1 ? 'date' : 'dates'} booked after these.
-            </p>
-          {/if}
-          <a href="/events" class="btn-secondary">See full schedule</a>
-        </div>
-      </div>
-    </section>
-  {/if}
-
-  <!-- ────────────────── What to bring ───────────────────────── -->
-  {#if hp.whatToBring?.body}
-    <section class="section">
-      <SectionHeading eyebrow="Before you come" title={hp.whatToBring.heading || 'What to bring'} />
-      <div class="mt-10 max-w-3xl mx-auto card p-6 sm:p-10">
-        {#if bring.isList}
-          <ul class="space-y-4">
-            {#each bring.items as item}
-              <li class="flex items-start gap-3 text-slate-700">
-                <CheckCircle2 size={20} class="text-brand-600 shrink-0 mt-0.5" />
-                <span class="leading-relaxed">{item}</span>
-              </li>
-            {/each}
-          </ul>
-        {:else}
-          <div class="space-y-4">
-            {#each bring.paragraphs as p}
-              <p class="text-lg leading-relaxed text-slate-700 whitespace-pre-line">{p}</p>
-            {/each}
-          </div>
-        {/if}
-      </div>
-    </section>
-  {/if}
-
-  <!-- ──────────────── What we repair (categories) ───────────── -->
-  {#if categories.length > 0}
-    <section class="band">
-      <div class="section">
-        <SectionHeading
-          eyebrow="What we can look at"
-          title="What we repair"
-          lede="Bring one of these along, or just ask. We will always take a look."
-        />
-        <div class="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {#each categories as cat}
-            <div class="card p-5 text-center">
-              <!-- One lightness for every tile: the category colour as a soft
-                   wash, with a darkened version of the same colour as the
-                   glyph so it stays readable. -->
-              <span
-                class="icon-tile mx-auto"
-                style={`background-color: ${categoryTint(cat.colour)}; color: ${categoryInk(cat.colour)}`}
-              >
-                <Icon icon={categoryIcon(cat.icon, cat.name)} width="24" height="24" />
-              </span>
-              <p class="mt-3 font-medium text-pine">{cat.name}</p>
-              <p class="text-xs text-slate-500">{cat.repairerCount} volunteer{cat.repairerCount === 1 ? '' : 's'}</p>
-            </div>
-          {/each}
-        </div>
-      </div>
-    </section>
-  {/if}
-
-  <!-- ─────────────── Linux Repair Cafe ───────────────────────
-       Only for cafes that offer it. It sits straight after "What we repair"
-       because that is the moment a visitor is wondering whether their own
-       broken-ish thing counts, and an old computer is exactly the case people
-       assume is beyond help. -->
-  {#if linuxEnabled}
-    <section class="section">
-      <div class="max-w-4xl mx-auto rounded-2xl bg-brand-50 ring-1 ring-brand-200 overflow-hidden">
-        <div class="p-6 sm:p-10 flex flex-col sm:flex-row gap-6 sm:items-start">
-          <span class="shrink-0 grid place-items-center h-14 w-14 rounded-2xl bg-brand-600 text-white">
-            <Laptop size={26} />
-          </span>
-          <div class="min-w-0 flex-1">
-            <p class="eyebrow">Also here</p>
-            <h2 class="mt-2 text-2xl sm:text-3xl font-bold font-display text-pine">{linuxHeading}</h2>
-            <p class="mt-3 text-slate-700 leading-relaxed whitespace-pre-line">{linuxBody}</p>
-
-            {#if nextLinuxEvent}
-              <p class="mt-4 inline-flex items-start gap-2 rounded-xl bg-white ring-1 ring-brand-200 px-4 py-2.5 text-sm text-slate-700">
-                <Calendar size={16} class="shrink-0 mt-0.5 text-brand-700" />
-                <span>
-                  Next session with Linux help:
-                  <span class="font-semibold text-pine">{formatDateShort(nextLinuxEvent.date)}</span>,
-                  {nextLinuxEvent.startTime.slice(0, 5)}–{nextLinuxEvent.endTime.slice(0, 5)}
-                </span>
-              </p>
-            {/if}
-
-            <div class="mt-6">
-              <a href="/linux" class="btn-primary">
-                {linuxCta} <ArrowRight size={18} />
-              </a>
-            </div>
-          </div>
-        </div>
+        <PhotoGrid photos={gallery} previewCount={PHOTO_PREVIEW} fallbackAlt={`${cafeName} repair café`} />
       </div>
     </section>
   {/if}
@@ -461,45 +457,70 @@
   <!-- ──────────────────── Team ──────────────────────────────── -->
   {#if homeRepairers.length > 0}
     <section class="section">
-      <SectionHeading
-        eyebrow="The people who fix things"
-        title="Meet our team"
-        lede="Our repairers are volunteers. They give their time, their tools and their know-how."
-      />
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div class="max-w-2xl">
+          <p class="eyebrow">The people who fix things</p>
+          <h2 class="section-title mt-3">Meet our team</h2>
+          <p class="section-lede">Our repairers are volunteers. They give their time, their tools and their know-how.</p>
+        </div>
+        <a href="/skills" class="btn-secondary btn-sm self-start md:self-auto">See everyone <ArrowRight size={15} /></a>
+      </div>
       <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {#each homeRepairers.slice(0, TEAM_PREVIEW) as r}
           <VolunteerCard volunteer={r} badgeLimit={BADGE_PREVIEW} />
         {/each}
       </div>
-      <div class="text-center mt-10">
-        <a href="/skills" class="btn-secondary">See everyone</a>
-      </div>
     </section>
   {/if}
 
-  <!-- ──────────────────── FAQ ──────────────────────────────── -->
-  {#if Array.isArray(hp.faqs) && hp.faqs.length > 0}
+  <!-- ──────────── What to bring + common questions ──────────── -->
+  {#if hp.whatToBring?.body || (Array.isArray(hp.faqs) && hp.faqs.length > 0)}
     <section class="band">
-      <div class="section">
-        <SectionHeading eyebrow="Good to know" title="Common questions" />
-        <div class="mt-10 max-w-3xl mx-auto space-y-3">
-          {#each hp.faqs as faq, i}
-            <details
-              class="group card transition-shadow hover:ring-brand-400 open:ring-brand-400"
-              open={openFaq === i}
-              on:toggle={(e) => { if ((e.target as HTMLDetailsElement).open) openFaq = i; }}
-            >
-              <summary class="cursor-pointer flex items-center gap-4 px-5 py-4 list-none">
-                <span class="shrink-0 grid place-items-center h-9 w-9 rounded-full bg-brand-100 text-pine font-bold font-display transition-colors group-open:bg-brand-600 group-open:text-white">{i + 1}</span>
-                <span class="flex-1 font-semibold text-pine">{faq.q}</span>
-                <span class="shrink-0 grid place-items-center h-8 w-8 rounded-full bg-slate-100 text-slate-500 transition-transform group-open:rotate-180">
-                  <ChevronDown size={18} />
-                </span>
-              </summary>
-              <div class="px-5 pb-5 sm:pl-[4.5rem] text-slate-600 leading-relaxed whitespace-pre-line">{faq.a}</div>
-            </details>
-          {/each}
-        </div>
+      <div class="section grid gap-12 {hp.whatToBring?.body && hp.faqs?.length ? 'lg:grid-cols-[1fr_1.3fr]' : ''}">
+        {#if hp.whatToBring?.body}
+          <div>
+            <p class="eyebrow">Before you come</p>
+            <h2 class="section-title mt-3">{hp.whatToBring.heading || 'What to bring'}</h2>
+            <div class="mt-8">
+              {#if bring.isList}
+                <ul class="space-y-3.5">
+                  {#each bring.items as item}
+                    <li class="flex items-start gap-3 text-slate-700">
+                      <CheckCircle2 size={19} class="text-brand-500 shrink-0 mt-0.5" />
+                      <span class="leading-relaxed">{item}</span>
+                    </li>
+                  {/each}
+                </ul>
+              {:else}
+                {#each bring.paragraphs as p}
+                  <p class="mt-3 first:mt-0 text-lg leading-relaxed text-slate-600 whitespace-pre-line">{p}</p>
+                {/each}
+              {/if}
+            </div>
+          </div>
+        {/if}
+
+        {#if Array.isArray(hp.faqs) && hp.faqs.length > 0}
+          <div>
+            <p class="eyebrow">Good to know</p>
+            <h2 class="section-title mt-3">Common questions</h2>
+            <div class="mt-8 card divide-y divide-slate-200 overflow-hidden">
+              {#each hp.faqs as faq, i}
+                <details
+                  class="group"
+                  open={openFaq === i}
+                  on:toggle={(e) => { if ((e.target as HTMLDetailsElement).open) openFaq = i; }}
+                >
+                  <summary class="cursor-pointer flex items-center gap-4 px-5 py-4 list-none hover:bg-white/[0.02] transition-colors [&::-webkit-details-marker]:hidden">
+                    <span class="flex-1 font-medium text-slate-900">{faq.q}</span>
+                    <ChevronDown size={18} class="shrink-0 text-slate-500 transition-transform duration-200 group-open:rotate-180" />
+                  </summary>
+                  <div class="px-5 pb-5 -mt-1 text-slate-500 leading-relaxed whitespace-pre-line">{faq.a}</div>
+                </details>
+              {/each}
+            </div>
+          </div>
+        {/if}
       </div>
     </section>
   {/if}
@@ -507,11 +528,11 @@
   <!-- ─────────────── Repair Cafes near us ───────────────────── -->
   {#if localCafes.length > 0}
     <section class="section">
-      <SectionHeading
-        eyebrow="Not just us"
-        title="Repair Cafes near us"
-        lede="We are part of a wider community of repairers. If we cannot help, one of these might."
-      />
+      <div class="max-w-2xl">
+        <p class="eyebrow">Not just us</p>
+        <h2 class="section-title mt-3">Repair Cafes near us</h2>
+        <p class="section-lede">We are part of a wider community of repairers. If we cannot help, one of these might.</p>
+      </div>
       <div class="mt-10 grid gap-6 lg:grid-cols-5 items-start">
         <div class="lg:col-span-3">
           <LocalCafeMap
@@ -534,15 +555,15 @@
               id={`local-cafe-${cafe.slug}`}
               class="rounded-xl p-3 ring-1 transition-colors {selectedLocalSlug === cafe.slug
                 ? 'bg-brand-50 ring-brand-300'
-                : 'bg-white ring-slate-200'}"
+                : 'bg-surface ring-slate-200'}"
             >
               <div class="flex items-start gap-3">
                 <!-- The number matches the pin on the map. -->
                 <button
                   type="button"
                   class="mt-0.5 shrink-0 h-6 w-6 rounded-full text-xs font-bold ring-2 transition-colors {selectedLocalSlug === cafe.slug
-                    ? 'bg-brand-700 text-white ring-brand-700'
-                    : 'bg-white text-brand-800 ring-brand-600 hover:bg-brand-50'}"
+                    ? 'bg-brand-600 text-white ring-brand-700'
+                    : 'bg-surface text-brand-800 ring-brand-600 hover:bg-brand-50'}"
                   aria-label={`Show ${cafe.name} on the map`}
                   on:click={() => (selectedLocalSlug = selectedLocalSlug === cafe.slug ? null : cafe.slug)}
                 >
@@ -558,12 +579,12 @@
                       <span class="text-slate-500">{formatDistance(cafe.distanceKm)}</span>
                     {/if}
                     {#if cafe.website}
-                      <a href={cafe.website} target="_blank" rel="noopener" class="text-brand-700 underline underline-offset-2 hover:text-brand-800">
+                      <a href={cafe.website} target="_blank" rel="noopener" class="text-brand-400 underline underline-offset-2 hover:text-brand-700">
                         Their website
                       </a>
                     {/if}
                     {#if repairCafeOrgUrl(cafe.slug)}
-                      <a href={repairCafeOrgUrl(cafe.slug)} target="_blank" rel="noopener" class="text-brand-700 underline underline-offset-2 hover:text-brand-800">
+                      <a href={repairCafeOrgUrl(cafe.slug)} target="_blank" rel="noopener" class="text-brand-400 underline underline-offset-2 hover:text-brand-700">
                         On repaircafe.org
                       </a>
                     {/if}

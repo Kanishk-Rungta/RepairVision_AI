@@ -12,11 +12,11 @@
 
 <div class={align === 'center' ? 'max-w-2xl mx-auto text-center' : 'max-w-2xl'}>
   {#if eyebrow}
-    <p class="eyebrow" class:text-white={tone === 'inverse'} class:opacity-80={tone === 'inverse'}>{eyebrow}</p>
+    <p class="eyebrow" >{eyebrow}</p>
   {/if}
-  <h2 class="section-title" class:mt-3={eyebrow} class:!text-white={tone === 'inverse'}>{title}</h2>
+  <h2 class="section-title" class:mt-3={eyebrow}>{title}</h2>
   {#if lede}
-    <p class="section-lede" class:!text-white={tone === 'inverse'} class:opacity-85={tone === 'inverse'}>{lede}</p>
+    <p class="section-lede">{lede}</p>
   {/if}
   <slot />
 </div>

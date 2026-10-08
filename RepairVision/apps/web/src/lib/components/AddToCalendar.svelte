@@ -24,7 +24,7 @@
     on:click|stopPropagation={add}
     aria-label={label}
     title="Add to calendar"
-    class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-white/90 text-brand-700 ring-1 ring-black/5 shadow-sm transition hover:bg-white hover:text-brand-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 {className}"
+    class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white/[0.06] text-slate-600 ring-1 ring-white/10 transition hover:bg-white/10 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 {className}"
   >
     <CalendarPlus size={15} />
   </button>
@@ -37,7 +37,7 @@
     type="button"
     on:click={add}
     aria-label={label}
-    class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800 focus:outline-none focus-visible:underline {className}"
+    class="inline-flex items-center gap-1.5 text-sm font-medium text-brand-400 hover:text-brand-700 focus:outline-none focus-visible:underline {className}"
   >
     <CalendarPlus size={16} class="shrink-0" /> Add to calendar
   </button>
