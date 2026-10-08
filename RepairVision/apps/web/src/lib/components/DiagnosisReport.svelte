@@ -7,11 +7,17 @@
    */
   import type { DeviceContext, DiagnosisMeta, DiagnosisResult } from '@circularity/shared';
   import { LIKELIHOOD_LABEL, LIKELIHOOD_TONE, STATUS_LABEL, STATUS_TONE } from '$lib/repairvision';
-  import { AlertTriangle, Eye, EyeOff, ListChecks, OctagonAlert, ScanSearch, ShieldAlert, Sparkles } from 'lucide-svelte';
+  import { AlertTriangle, Eye, EyeOff, ListChecks, OctagonAlert, Scale, ScanSearch, ShieldAlert, Sparkles } from 'lucide-svelte';
 
   export let diagnosis: DiagnosisResult;
   export let meta: DiagnosisMeta;
   export let context: DeviceContext;
+
+  // Opening the advisor from here carries over the device and a rough chance
+  // that the most likely fault is the real one. The numbers are only a
+  // starting point and the advisor lets the person change them.
+  const CHANCE: Record<string, number> = { high: 0.85, medium: 0.65, low: 0.4 };
+  $: advisorHref = `/advisor?item=${encodeURIComponent(context.deviceName)}&success=${CHANCE[diagnosis.possibleCauses[0]?.likelihood ?? 'medium'] ?? 0.65}`;
 
   // Written out in full so Tailwind finds the class names.
   const COLUMNS: Record<number, string> = { 1: '', 2: 'md:grid-cols-2', 3: 'lg:grid-cols-3' };
@@ -165,3 +171,14 @@
     {/if}
   </section>
 </div>
+
+<!-- Once there is a likely fault, the next question is whether to fix it. -->
+{#if diagnosis.possibleCauses.length > 0}
+  <section class="card p-5 mt-4 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h2 class="font-semibold flex items-center gap-2"><Scale size={18} /> Is it worth repairing?</h2>
+      <p class="mt-1 text-sm text-slate-600">Compare the cost of a repair with a replacement, and the waste a repair avoids.</p>
+    </div>
+    <a href={advisorHref} class="btn-secondary btn-sm">Compare costs</a>
+  </section>
+{/if}

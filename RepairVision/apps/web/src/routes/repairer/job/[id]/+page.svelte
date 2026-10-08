@@ -17,7 +17,7 @@
   import { auth } from '$lib/stores/auth';
   import CameraCapture from '$lib/components/CameraCapture.svelte';
   import { clockTime, firstName, formatMinutes, minutesBetween, statusLabel } from '$lib/staff/queue';
-  import { ArrowLeft, Camera as CameraIcon, CheckCircle2, ChevronDown, Package, ScanSearch, User, XCircle } from 'lucide-svelte';
+  import { ArrowLeft, Camera as CameraIcon, CheckCircle2, ChevronDown, Package, Scale, ScanSearch, User, XCircle } from 'lucide-svelte';
 
   $: id = $page.params.id;
 
@@ -171,6 +171,14 @@
     rose: 'ring-rose-500 bg-rose-50 text-rose-900',
     violet: 'ring-violet-500 bg-violet-50 text-violet-900',
   };
+
+  function fmtMoney(n: number, currency: string): string {
+    try {
+      return new Intl.NumberFormat('en-GB', { style: 'currency', currency }).format(n);
+    } catch {
+      return n.toFixed(2);
+    }
+  }
 </script>
 
 <svelte:head><title>{detail?.job.itemDescription ?? 'Repair'}</title></svelte:head>
@@ -230,8 +238,23 @@
         <p class="mt-2 text-slate-700 whitespace-pre-line">{detail.job.faultDescription}</p>
         <!-- Opens RepairVision AI with this repair's details filled in. It
              only reads the repair; nothing here is saved back to it. -->
-        <a href={`/repairer/diagnosis?job=${encodeURIComponent(detail.job.id)}`} class="btn-secondary btn-sm mt-3"><ScanSearch size={16} /> Analyze with RepairVision AI</a>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <a href={`/repairer/diagnosis?job=${encodeURIComponent(detail.job.id)}`} class="btn-secondary btn-sm"><ScanSearch size={16} /> Analyze with RepairVision AI</a>
+          <!-- Opens the repair vs. replace advisor for this repair, so what it works
+               out can be kept on the job. -->
+          <a href={`/advisor?job=${encodeURIComponent(detail.job.id)}`} class="btn-secondary btn-sm"><Scale size={16} /> {detail.job.advisorEstimate ? 'Repair or replace: view' : 'Repair or replace?'}</a>
+        </div>
       </section>
+
+      {#if detail.job.advisorEstimate}
+        {@const est = detail.job.advisorEstimate}
+        <section class="card p-5" aria-label="Repair or replace">
+          <h2 class="font-semibold flex items-center gap-2"><Scale size={18} /> Repair or replace</h2>
+          <p class="mt-2 text-slate-800">{est.result.headline}</p>
+          <p class="mt-1 text-sm text-slate-500">Saved by {est.savedBy.name}. Repair {fmtMoney(est.result.repair.total, est.result.currency)}, replacement {fmtMoney(est.result.replace.total, est.result.currency)}.</p>
+          <a href={`/advisor?job=${encodeURIComponent(detail.job.id)}`} class="btn-ghost btn-sm mt-2">Open the comparison</a>
+        </section>
+      {/if}
 
       <section class="card p-5">
         <div class="flex justify-between items-center gap-2">

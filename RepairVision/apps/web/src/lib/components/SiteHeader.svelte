@@ -56,6 +56,7 @@
         <a href="/events" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">Events</a>
         <a href="/skills" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04] whitespace-nowrap">Skills &amp; Team</a>
         <a href="/diagnosis" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04] whitespace-nowrap">AI Diagnosis</a>
+        <a href="/repair-or-replace" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04] whitespace-nowrap">Repair or replace?</a>
         <a href="/guides" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04] whitespace-nowrap">Repair guides</a>
         <a href="/world" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">Worldwide</a>
         <a href="/about" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">About</a>
@@ -129,6 +130,8 @@
           <a href="/" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Home</a>
           <a href="/events" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Events</a>
           <a href="/skills" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Skills &amp; Team</a>
+          <a href="/diagnosis" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">AI Diagnosis</a>
+          <a href="/repair-or-replace" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Repair or replace?</a>
           <a href="/guides" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Repair guides</a>
           <a href="/world" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Worldwide</a>
           <a href="/about" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">About</a>

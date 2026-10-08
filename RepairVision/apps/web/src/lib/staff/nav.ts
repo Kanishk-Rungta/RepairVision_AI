@@ -30,6 +30,7 @@ import {
   UserPlus,
   Users,
   Wrench,
+  Scale,
 } from 'lucide-svelte';
 import type { AuthUser } from '$lib/stores/auth';
 
@@ -59,6 +60,7 @@ export function navFor(user: AuthUser | null | undefined, options: { linuxEnable
   if (user?.role === 'user') return [{ title: 'RepairVision AI', items: [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/diagnosis', label: 'Diagnose my device', icon: ScanSearch },
+    { href: '/advisor', label: 'Repair or replace?', icon: Scale },
   ] }];
   const session: NavGroup = {
     title: 'Today’s session',
@@ -67,6 +69,7 @@ export function navFor(user: AuthUser | null | undefined, options: { linuxEnable
       { href: '/repairer/checkin', label: 'Check in a visitor', icon: UserPlus },
       { href: '/repairer/photos', label: 'Session photos', icon: Camera },
       { href: '/repairer/diagnosis', label: 'AI Diagnosis', icon: ScanSearch },
+      { href: '/advisor', label: 'Repair or replace?', icon: Scale },
     ],
   };
   const mine: NavGroup = {
