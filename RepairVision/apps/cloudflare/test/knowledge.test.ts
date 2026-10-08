@@ -1,6 +1,7 @@
 // Repair knowledge retrieval. The matching is pure, so it is tested without a database.
 import { describe, expect, it } from 'vitest';
-import { KB } from '../src/services/knowledge/kb.js';
+import { knowledgeRetrieveSchema } from '@circularity/shared';
+import { DEVICE_RISK, DEVICE_TYPES, KB } from '../src/services/knowledge/kb.js';
 import { matchKnowledge, promptContext, tokenize } from '../src/services/knowledge/retrieve.js';
 
 describe('tokenize', () => {
@@ -10,9 +11,40 @@ describe('tokenize', () => {
 });
 
 describe('knowledge base', () => {
-  it('has unique ids and covers all three device types', () => {
+  it('has unique ids', () => {
     expect(new Set(KB.map((e) => e.id)).size).toBe(KB.length);
-    expect(new Set(KB.map((e) => e.deviceType))).toEqual(new Set(['mouse', 'keyboard', 'usb_accessory']));
+  });
+
+  it('covers every device type with at least two entries', () => {
+    for (const type of DEVICE_TYPES) {
+      expect(KB.filter((e) => e.deviceType === type).length, type).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it('gives every device type a risk level, and every entry a known device type', () => {
+    for (const type of DEVICE_TYPES) expect(DEVICE_RISK[type], type).toBeDefined();
+    for (const entry of KB) expect(DEVICE_TYPES as readonly string[]).toContain(entry.deviceType);
+  });
+
+  it('accepts every device type in the request schema, and rejects others', () => {
+    for (const type of DEVICE_TYPES) {
+      const ok = knowledgeRetrieveSchema.safeParse({ hypotheses: [{ label: 'x', deviceType: type }] });
+      expect(ok.success, type).toBe(true);
+    }
+    const bad = knowledgeRetrieveSchema.safeParse({ hypotheses: [{ label: 'x', deviceType: 'spaceship' }] });
+    expect(bad.success).toBe(false);
+  });
+
+  it('never tells a visitor to take a device apart or solder', () => {
+    const banned = /\b(unscrew|solder|desolder|take apart|dismantle|remove the (cover|panel|casing|case|back))\b|\bopen the (case|casing|device|laptop|tv|monitor|speaker|microwave|kettle|tool|battery)\b/i;
+    for (const entry of KB) for (const check of entry.checks) expect(check, entry.id).not.toMatch(banned);
+  });
+
+  it('keeps technician-only devices to looking and stopping', () => {
+    for (const entry of KB.filter((e) => DEVICE_RISK[e.deviceType] === 'technician_only')) {
+      expect(entry.checks.length, entry.id).toBeLessThanOrEqual(5);
+      expect(entry.technicianOnly.length, entry.id).toBeGreaterThan(0);
+    }
   });
 
   it('gives every entry at least one safe check', () => {
@@ -100,5 +132,59 @@ describe('matchKnowledge picks the right entry', () => {
   it.each(cases)('%s (%s): %s', (label, deviceType, symptom, expected) => {
     const [top] = matchKnowledge({ label, deviceType }, symptom);
     expect(top?.id).toBe(expected);
+  });
+});
+
+describe('matchKnowledge for the wider device list', () => {
+  const cases: Array<[string, string, string, string]> = [
+    ['Laptop not charging', 'laptop', 'laptop will not turn on and the charger has no light', 'laptop-no-power'],
+    ['Overheating laptop', 'laptop', 'the fan is very loud and it shuts down', 'laptop-slow-hot'],
+    ['No signal on monitor', 'monitor', 'monitor says no signal', 'monitor-no-picture'],
+    ['Paper jam', 'printer', 'paper keeps jamming and will not feed', 'printer-paper-jam'],
+    ['Router has no internet', 'wifi_router', 'no internet and red light on the router', 'router-no-internet'],
+    ['Stick drift', 'game_controller', 'the character moves by itself, thumbstick drift', 'controller-stick-drift'],
+    ['Charging port blocked', 'smartphone', 'phone not charging and the port has lint', 'phone-not-charging'],
+    ['Battery draining', 'smartphone', 'battery drains fast and phone shuts off', 'phone-battery-drain'],
+    ['Water damage', 'smartphone', 'dropped the phone in water', 'phone-water-damage'],
+    ['Tablet slow', 'tablet', 'tablet is slow and storage is full', 'tablet-slow-storage'],
+    ['Watch will not charge', 'smartwatch', 'smartwatch not charging on its dock', 'watch-charging'],
+    ['Swollen power bank', 'power_bank', 'power bank is swollen and hot', 'powerbank-swollen-hot'],
+    ['One side dead', 'wired_headphones', 'sound only in one ear and it crackles', 'headphones-one-side'],
+    ['Will not pair', 'bluetooth_speaker', 'bluetooth speaker will not pair', 'speaker-no-pair'],
+    ['TV no picture', 'tv', 'sound but no picture and a faint image with a torch', 'tv-no-picture'],
+    ['Remote dead', 'remote_control', 'remote not working, batteries flat', 'remote-not-working'],
+    ['SD card error', 'digital_camera', 'camera says card error, memory card locked', 'camera-card-error'],
+    ['Poor reception', 'radio', 'radio has static and poor reception', 'radio-no-sound'],
+    ['Lamp bulb', 'desk_lamp', 'lamp does not light, bulb blown', 'lamp-no-light'],
+    ['Fan not spinning', 'fan', 'fan hums and will not spin, needs a push', 'fan-wont-spin'],
+    ['Toy batteries', 'toy', 'toy has flat batteries and corrosion on the contacts', 'toy-not-working-batteries'],
+    ['Clock battery', 'clock', 'wall clock stopped, quartz', 'clock-stopped'],
+    ['Torch dim', 'flashlight', 'torch is dim and flickers', 'torch-not-lighting'],
+    ['Smart plug offline', 'smart_home_device', 'smart plug offline and will not connect to wifi', 'smart-wont-connect'],
+    ['Kettle limescale', 'kettle', 'kettle clicks off before boiling, limescale', 'kettle-not-heating'],
+    ['Toaster lever', 'toaster', 'toaster lever will not stay down', 'toaster-wont-stay-down'],
+    ['Coffee flow', 'coffee_machine', 'coffee machine has no water flow, needs descale', 'coffee-no-water'],
+    ['Iron cold', 'iron', 'iron is not heating up', 'iron-not-heating'],
+    ['Dryer cold', 'hair_dryer', 'hair dryer blows cold and the filter is blocked', 'hairdryer-no-heat'],
+    ['Shaver charging', 'electric_shaver', 'shaver will not charge', 'shaver-not-charging'],
+    ['Weak suction', 'vacuum_cleaner', 'vacuum has weak suction, filter blocked', 'vacuum-weak-suction'],
+    ['Microwave no heat', 'microwave', 'microwave runs but does not heat', 'microwave-not-heating'],
+    ['Washer drain', 'washing_machine', 'washing machine will not drain, full of water', 'washer-no-drain'],
+    ['Fridge warm', 'refrigerator', 'fridge is not cold, door seal gaps', 'fridge-not-cooling'],
+    ['Skipped stitches', 'sewing_machine', 'sewing machine skipping stitches and thread breaks', 'sewing-skipped-stitches'],
+    ['Drill dead', 'power_tool', 'cordless drill will not start, battery', 'tool-wont-start'],
+    ['E-bike no power', 'e_bike_scooter', 'electric bike will not power on, battery', 'ebike-no-power'],
+    ['E-bike battery damage', 'e_bike_scooter', 'battery is swollen and smells of burning after a crash', 'ebike-battery-damaged'],
+  ];
+
+  it.each(cases)('%s (%s): %s', (label, deviceType, symptom, expected) => {
+    const [top] = matchKnowledge({ label, deviceType: deviceType as (typeof DEVICE_TYPES)[number] }, symptom);
+    expect(top?.id).toBe(expected);
+  });
+
+  it('reports the risk level of the device', () => {
+    const [top] = matchKnowledge({ label: 'Microwave does not heat', deviceType: 'microwave' }, 'no heat');
+    expect(top.risk).toBe('technician_only');
+    expect(promptContext([{ hypothesis: 'x', knowledge: [top], cases: [], guideLinks: [] }])).toContain('risk: technician_only');
   });
 });

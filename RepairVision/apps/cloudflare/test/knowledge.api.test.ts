@@ -21,7 +21,7 @@ describe('knowledge retrieval API', () => {
     expect(none.status).toBe(400);
     const badType = await call('/api/knowledge/retrieve', {
       token: state.admin,
-      json: { hypotheses: [{ label: 'x', deviceType: 'toaster' }] },
+      json: { hypotheses: [{ label: 'x', deviceType: 'spaceship' }] },
     });
     expect(badType.status).toBe(400);
   });

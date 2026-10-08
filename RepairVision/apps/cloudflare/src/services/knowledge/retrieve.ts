@@ -23,7 +23,7 @@ import { and, desc, eq, isNotNull } from 'drizzle-orm';
 import { db } from '../../db/index.js';
 import { repairJobs } from '../../db/schema.js';
 import { searchGuides } from '../ifixit.js';
-import { KB, KB_LICENSE, type DeviceType, type KbEntry } from './kb.js';
+import { DEVICE_RISK, KB, KB_LICENSE, type DeviceType, type KbEntry, type Risk } from './kb.js';
 
 export interface HypothesisInput {
   /** The fault as the diagnosis words it, e.g. "frayed cable near the plug". */
@@ -36,6 +36,8 @@ export interface KnowledgeSource {
   id: string;
   title: string;
   deviceType: DeviceType;
+  /** How careful a visitor must be with this kind of device. */
+  risk: Risk;
   explanation: string;
   /** Safe for anyone to try. */
   checks: string[];
@@ -151,6 +153,7 @@ export function matchKnowledge(
       id: entry.id,
       title: entry.fault,
       deviceType: entry.deviceType,
+      risk: DEVICE_RISK[entry.deviceType],
       explanation: entry.explanation,
       checks: entry.checks,
       technicianOnly: entry.technicianOnly,
@@ -265,7 +268,7 @@ export function promptContext(evidence: HypothesisEvidence[]): string {
   for (const item of evidence) {
     const lines = [`Hypothesis: ${item.hypothesis}`];
     item.knowledge.forEach((k, i) => {
-      lines.push(`[KB-${i + 1}] ${k.title}: ${k.explanation}`);
+      lines.push(`[KB-${i + 1}] ${k.title} (risk: ${k.risk}): ${k.explanation}`);
       lines.push(`  Safe checks: ${k.checks.join(' | ')}`);
     });
     item.cases.forEach((c, i) => {

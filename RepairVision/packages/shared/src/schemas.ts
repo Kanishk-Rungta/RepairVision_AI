@@ -367,7 +367,20 @@ export const knowledgeRetrieveSchema = z.object({
     .array(
       z.object({
         label: z.string().min(1).max(200),
-        deviceType: z.enum(['mouse', 'keyboard', 'usb_accessory']).optional(),
+        // Keep in step with DEVICE_TYPES in apps/cloudflare/src/services/knowledge/kb.ts.
+        // A test checks the two lists match.
+        deviceType: z
+          .enum([
+          'laptop', 'desktop_pc', 'monitor', 'printer', 'wifi_router', 'game_controller',
+          'mouse', 'keyboard', 'usb_accessory',
+          'smartphone', 'tablet', 'smartwatch', 'power_bank',
+          'wired_headphones', 'bluetooth_speaker', 'tv', 'remote_control', 'digital_camera', 'radio',
+          'desk_lamp', 'fan', 'toy', 'clock', 'flashlight', 'smart_home_device',
+          'kettle', 'toaster', 'coffee_machine', 'iron', 'hair_dryer', 'electric_shaver',
+          'vacuum_cleaner', 'microwave', 'washing_machine', 'refrigerator', 'sewing_machine',
+          'power_tool', 'e_bike_scooter',
+          ])
+          .optional(),
       }),
     )
     .min(1)
