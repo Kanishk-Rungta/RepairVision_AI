@@ -68,7 +68,7 @@
 
 {#if visible}
   <div
-    class="no-print fixed inset-x-0 {raised ? 'bottom-16 md:bottom-0 md:left-64' : 'bottom-0'} z-40 border-t border-slate-200 bg-raised/90 backdrop-blur-md text-slate-800"
+    class="no-print fixed inset-x-0 {raised ? 'bottom-16 md:bottom-0 md:left-[var(--staff-sidebar,16rem)]' : 'bottom-0'} z-40 border-t border-slate-200 bg-raised/90 backdrop-blur-md text-slate-800"
     style="padding-bottom: env(safe-area-inset-bottom)"
     role="region"
     aria-label="Install this app"
