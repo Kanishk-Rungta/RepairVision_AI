@@ -6,6 +6,8 @@
 
 **Dev.to post:** https://dev.to/priyansh_narang_c1b96ab75/repairvision-an-intelligent-repair-cafe-platform-for-multimodal-fault-diagnosis-and-sustainable-4jm2
 
+**Demo video:** https://drive.google.com/file/d/1ZbLdzbeP047wvLAWIMB-HKYnhSUoRLjL/view?usp=sharing
+
 ## Team
 
 **Team Name:** The Blacklisted
@@ -159,15 +161,15 @@ RepairVision is built on an existing open repair-café management app, Circulari
 
 ## Working Application
 
-**Live Application:** _To be added after deployment._
+**Live Application:** https://repair-cafe-hub.circularity-cloudflare.workers.dev
 
-Once deployed, the site can be tested without an account: browse sessions, use the Repair or Replace page, and ask the chat character questions. Register as a device owner to try AI Diagnosis, or sign in to the staff area to see the repair queue, the live board and the admin tools.
+The site can be tested without an account: browse sessions, use the Repair or Replace page, and ask the chat character questions. Register as a device owner to try AI Diagnosis, or sign in to the staff area to see the repair queue, the live board and the admin tools.
 
 ## Demo Video
 
-**Demo Video:** _To be added._
+**Demo Video:** https://drive.google.com/file/d/1ZbLdzbeP047wvLAWIMB-HKYnhSUoRLjL/view?usp=sharing
 
-The demo will cover a visitor checking in an item, a volunteer running AI Diagnosis on it, the Repair vs. Replace verdict, and the site assistant answering questions and opening pages.
+The demo covers a visitor checking in an item, a volunteer running AI Diagnosis on it, the Repair vs. Replace verdict, and the site assistant answering questions and opening pages.
 
 ## Open Source and AI Usage
 
@@ -247,9 +249,9 @@ The whole application, with a local database, runs at http://localhost:8787. For
 
 Optional demo data: `python3 demo/seed.py --base-url http://localhost:8787`.
 
-## Devpost Submission
+## Dev.to Submission
 
-**Devpost Project:** _To be added._
+**Dev.to Post:** https://dev.to/priyansh_narang_c1b96ab75/repairvision-an-intelligent-repair-cafe-platform-for-multimodal-fault-diagnosis-and-sustainable-4jm2
 
 ## Credits and License
 
@@ -279,8 +281,8 @@ Released under the [MIT License](LICENSE). Vendored third-party files keep their
 - [x] Work completed during the hackathon documented
 - [x] Team contributions documented
 - [x] Working application is functional
-- [ ] Live application link added where applicable
-- [ ] Demo video added
+- [x] Live application link added where applicable
+- [x] Demo video added
 - [x] AI and open-source components documented
 - [x] Setup and usage instructions tested
 - [x] Challenges and learnings documented
