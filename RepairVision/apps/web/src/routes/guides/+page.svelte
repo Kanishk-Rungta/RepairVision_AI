@@ -284,9 +284,9 @@
     gap: 0.6rem;
     padding: 0.85rem 1.1rem;
     border-radius: 1rem;
-    background: #fff;
-    border: 1px solid rgb(203 213 225);
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    background: rgb(var(--surface));
+    border: 1px solid rgb(var(--s-300));
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.20);
   }
   .search-row:focus-within {
     border-color: rgb(var(--brand-500));
@@ -298,23 +298,23 @@
     border: 0;
     background: transparent;
     font-size: 1rem;
-    color: rgb(30 41 59);
+    color: rgb(var(--s-800));
   }
   .search-input:focus {
     outline: none;
   }
   .search-input::placeholder {
-    color: rgb(148 163 184);
+    color: rgb(var(--s-400));
   }
 
   .topic {
     padding: 0.45rem 0.9rem;
     border-radius: 9999px;
-    background: #fff;
-    border: 1px solid rgb(203 213 225);
+    background: rgb(var(--surface));
+    border: 1px solid rgb(var(--s-300));
     font-size: 0.85rem;
     font-weight: 500;
-    color: rgb(51 65 85);
+    color: rgb(var(--s-700));
     transition:
       border-color 0.12s ease,
       background-color 0.12s ease;
@@ -331,9 +331,9 @@
     flex-direction: column;
     overflow: hidden;
     border-radius: 1rem;
-    background: #fff;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
-    outline: 1px solid rgb(226 232 240);
+    background: rgb(var(--surface));
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.20);
+    outline: 1px solid rgb(var(--s-200));
     transition: outline-color 0.12s ease;
   }
   .guide-card:hover,
@@ -343,7 +343,7 @@
 
   .guide-image {
     aspect-ratio: 4 / 3;
-    background: rgb(241 245 249);
+    background: rgb(var(--s-100));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -355,7 +355,7 @@
     object-fit: cover;
   }
   .guide-image-empty {
-    color: rgb(148 163 184);
+    color: rgb(var(--s-400));
   }
 
   .chip {

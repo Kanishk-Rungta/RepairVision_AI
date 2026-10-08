@@ -38,7 +38,7 @@
   // Map tiles from CARTO, the same source the world map uses. Their light
   // style sits quietly under the brand-coloured pins. See $lib/mapTiles for
   // the address, the credit line and the cafe's key.
-  const TILE_STYLE = 'light_all';
+  const TILE_STYLE = 'dark_all';
 
   /**
    * A pin drawn as HTML rather than an image. It keeps the pins in the cafe's
@@ -49,8 +49,8 @@
     const base = isOurs
       ? 'bg-accent-600 text-white ring-white'
       : isSelected
-        ? 'bg-brand-700 text-white ring-white'
-        : 'bg-white text-brand-800 ring-brand-600';
+        ? 'bg-brand-600 text-white ring-white'
+        : 'bg-surface text-brand-800 ring-brand-600';
     const size = isOurs || isSelected ? 30 : 26;
     return L.divIcon({
       className: 'local-cafe-pin',
@@ -192,7 +192,7 @@
      header or dialog, and let it inherit the site's typeface. */
   :global(.leaflet-container) {
     font: inherit;
-    background: rgb(241 245 249);
+    background: rgb(var(--s-100));
     z-index: 0;
   }
   :global(.leaflet-pane) {
@@ -208,6 +208,6 @@
     border: 0;
   }
   :global(.leaflet-container a.leaflet-popup-close-button) {
-    color: rgb(71 85 105);
+    color: rgb(var(--s-600));
   }
 </style>

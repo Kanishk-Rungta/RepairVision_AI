@@ -68,7 +68,7 @@
 
 {#if visible}
   <div
-    class="no-print fixed inset-x-0 {raised ? 'bottom-16 md:bottom-0 md:left-64' : 'bottom-0'} z-40 border-t border-brand-700 bg-brand-800 text-white"
+    class="no-print fixed inset-x-0 {raised ? 'bottom-16 md:bottom-0 md:left-64' : 'bottom-0'} z-40 border-t border-slate-200 bg-raised/90 backdrop-blur-md text-slate-800"
     style="padding-bottom: env(safe-area-inset-bottom)"
     role="region"
     aria-label="Install this app"
@@ -77,12 +77,12 @@
       <p class="flex-1 text-sm">
         Add {$cafe?.name ?? 'this site'} to your home screen for quicker access.
       </p>
-      <button type="button" class="btn-primary btn-sm !bg-white !text-brand-800 hover:!bg-slate-100" on:click={install}>
+      <button type="button" class="btn-primary btn-sm" on:click={install}>
         <Download size={16} /> Install
       </button>
       <button
         type="button"
-        class="shrink-0 rounded-lg p-2 text-white/70 hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+        class="shrink-0 rounded-lg p-2 text-slate-500 hover:bg-white/10 hover:text-slate-900"
         aria-label="Not now"
         on:click={() => hide(true)}
       >

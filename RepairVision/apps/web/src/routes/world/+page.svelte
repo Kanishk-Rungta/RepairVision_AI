@@ -342,11 +342,11 @@
      reads as part of the page rather than a picture dropped on it. The tint
      follows the cafe's own brand colour. */
   .map-band {
-    background: rgb(var(--brand-50));
+    background: rgb(var(--surface) / 0.7);
     /* No line along the top: the page heading above uses this same tint, so the
        two run together as one opening block. The section below is a different
        colour, which is what the bottom line tidies up. */
-    border-bottom: 1px solid rgb(var(--brand-100));
+    border-bottom: 1px solid rgb(var(--s-200));
   }
 
   .map-frame {
@@ -356,8 +356,8 @@
     border-radius: 1.25rem;
     overflow: hidden;
     /* Its own background, for the moments before the map itself is there. */
-    background: rgb(241 245 249);
-    box-shadow: 0 0 0 1px rgb(226 232 240);
+    background: rgb(var(--s-100));
+    box-shadow: 0 0 0 1px rgb(var(--s-200));
   }
   @media (min-width: 1024px) {
     .map-frame {
@@ -381,16 +381,16 @@
     padding: 0.35rem 0.6rem;
     border-radius: 0.6rem;
     background: rgba(255, 255, 255, 0.92);
-    color: rgb(30 41 59);
+    color: rgb(var(--s-800));
     font-size: 0.85rem;
-    box-shadow: 0 1px 6px rgba(15, 23, 42, 0.16);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.64);
   }
   .map-counts strong {
     font-size: 1.05rem;
     font-weight: 600;
   }
   .map-counts .muted {
-    color: rgb(100 116 139);
+    color: rgb(var(--s-500));
   }
   /* Top right, so the buttons never sit on top of the counts on a narrow
      screen. */
@@ -407,16 +407,16 @@
     gap: 0.35rem;
     padding: 0.4rem 0.75rem;
     border-radius: 0.6rem;
-    background: rgba(255, 255, 255, 0.94);
-    border: 1px solid rgb(226 232 240);
-    color: rgb(30 41 59);
+    background: rgb(var(--raised) / 0.94);
+    border: 1px solid rgb(var(--s-200));
+    color: rgb(var(--s-800));
     font-size: 0.8rem;
     font-weight: 500;
-    box-shadow: 0 1px 5px rgba(15, 23, 42, 0.14);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.56);
     transition: background-color 0.15s ease;
   }
   .map-btn:hover {
-    background: #fff;
+    background: rgb(var(--surface));
     border-color: rgb(var(--brand-300));
   }
 
@@ -429,7 +429,7 @@
     height: 100%;
     padding: 2rem;
     text-align: center;
-    color: rgb(71 85 105);
+    color: rgb(var(--s-600));
   }
   .map-state a {
     color: rgb(var(--brand-700));
@@ -438,7 +438,7 @@
     width: 1.75rem;
     height: 1.75rem;
     border-radius: 9999px;
-    border: 2px solid rgb(203 213 225);
+    border: 2px solid rgb(var(--s-300));
     border-top-color: rgb(var(--brand-600));
     animation: spin 0.9s linear infinite;
   }
@@ -460,9 +460,9 @@
     gap: 0.75rem;
     padding: 1rem;
     border-radius: 1.25rem;
-    background: #fff;
-    border: 1px solid rgb(226 232 240);
-    color: rgb(30 41 59);
+    background: rgb(var(--surface));
+    border: 1px solid rgb(var(--s-200));
+    color: rgb(var(--s-800));
     /* Hug the content rather than stretching to the height of the map, so an
        empty panel is not a tall empty box. */
     align-self: start;
@@ -475,8 +475,8 @@
     gap: 0.5rem;
     padding: 0.6rem 0.75rem;
     border-radius: 0.7rem;
-    background: rgb(248 250 252);
-    border: 1px solid rgb(226 232 240);
+    background: rgb(var(--s-50));
+    border: 1px solid rgb(var(--s-200));
   }
   .search-row:focus-within {
     border-color: rgb(var(--brand-400));
@@ -486,11 +486,11 @@
     min-width: 0;
     background: transparent;
     border: 0;
-    color: rgb(30 41 59);
+    color: rgb(var(--s-800));
     font-size: 0.9rem;
   }
   .search-input::placeholder {
-    color: rgb(100 116 139);
+    color: rgb(var(--s-500));
   }
   .search-input:focus {
     outline: none;
@@ -502,7 +502,7 @@
     width: 0.85rem;
     height: 0.85rem;
     cursor: pointer;
-    background-color: rgb(100 116 139);
+    background-color: rgb(var(--s-500));
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E")
       center / contain no-repeat;
   }
@@ -514,9 +514,9 @@
     gap: 0.4rem;
     padding: 0.55rem 0.75rem;
     border-radius: 0.7rem;
-    background: rgb(248 250 252);
-    border: 1px solid rgb(226 232 240);
-    color: rgb(30 41 59);
+    background: rgb(var(--s-50));
+    border: 1px solid rgb(var(--s-200));
+    color: rgb(var(--s-800));
     font-size: 0.85rem;
     font-weight: 500;
     transition: background-color 0.15s ease;
@@ -534,12 +534,12 @@
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: rgb(100 116 139);
+    color: rgb(var(--s-500));
   }
   .panel-note {
     font-size: 0.8rem;
     line-height: 1.5;
-    color: rgb(71 85 105);
+    color: rgb(var(--s-600));
   }
 
   .result-list {
@@ -573,7 +573,7 @@
   }
   .result-meta {
     font-size: 0.75rem;
-    color: rgb(100 116 139);
+    color: rgb(var(--s-500));
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -592,10 +592,10 @@
     right: 0.5rem;
     padding: 0.2rem;
     border-radius: 0.4rem;
-    color: rgb(100 116 139);
+    color: rgb(var(--s-500));
   }
   .selected-close:hover {
-    color: rgb(15 23 42);
+    color: rgb(var(--s-900));
     background: rgb(var(--brand-100));
   }
   .selected-name {
@@ -612,7 +612,7 @@
   .selected-address {
     margin-top: 0.3rem;
     font-size: 0.8rem;
-    color: rgb(71 85 105);
+    color: rgb(var(--s-600));
   }
   .selected-links {
     margin-top: 0.5rem;

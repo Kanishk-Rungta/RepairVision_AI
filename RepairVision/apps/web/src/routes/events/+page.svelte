@@ -94,7 +94,7 @@
   >
     <CalendarDays size={22} slot="icon" />
     {#if uniformVenue}
-      <p class="mt-6 inline-flex items-center gap-2 rounded-full bg-white ring-1 ring-brand-200 px-4 py-1.5 text-sm text-slate-700">
+      <p class="mt-6 inline-flex items-center gap-2 rounded-full bg-surface ring-1 ring-brand-200 px-4 py-1.5 text-sm text-slate-700">
         <MapPin size={15} class="text-clay shrink-0" />
         <span>{uniformVenue.name}{#if uniformVenue.postcode}{' · '}{noWrap(uniformVenue.postcode)}{/if}</span>
       </p>

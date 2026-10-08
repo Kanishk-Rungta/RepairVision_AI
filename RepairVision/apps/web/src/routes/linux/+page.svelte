@@ -113,18 +113,18 @@
 
 <main>
   <!-- ───────────────────────── Hero ───────────────────────── -->
-  <section class="bg-brand-600 text-white">
+  <section class="hero-bg text-white">
     <div class="max-w-3xl mx-auto px-4 py-20 md:py-28 text-center">
       <span class="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-white/10 ring-1 ring-white/20">
         <Laptop size={32} />
       </span>
-      <h1 class="mt-6 text-4xl md:text-6xl font-bold tracking-tight">{heroHeading}</h1>
+      <h1 class="mt-6 text-gradient text-4xl md:text-6xl font-semibold tracking-[-0.04em]">{heroHeading}</h1>
       {#if heroTagline}
         <p class="mt-4 text-xl md:text-2xl text-white/90">{heroTagline}</p>
       {/if}
 
       {#if nextEvent}
-        <div class="mt-10 inline-flex flex-col items-center gap-1 rounded-2xl bg-white/10 ring-1 ring-white/20 px-6 py-4">
+        <div class="mt-10 inline-flex flex-col items-center gap-1 rounded-2xl bg-white/[0.04] ring-1 ring-white/10 px-6 py-4 shadow-sm backdrop-blur">
           <span class="eyebrow text-white/70">Next session with Linux help</span>
           <span class="text-lg font-semibold">
             {formatDateShort(nextEvent.date)}, {nextEvent.startTime.slice(0,5)}–{nextEvent.endTime.slice(0,5)}
@@ -140,15 +140,15 @@
 
       <div class="mt-8 flex flex-col sm:flex-row flex-wrap gap-3 sm:justify-center">
         {#if upcoming.length > 0}
-          <a href="#dates" class="btn-primary !bg-white !text-brand-800 hover:!bg-slate-100">
+          <a href="#dates" class="btn-primary">
             <Calendar size={18} /> See when to come
           </a>
         {:else}
-          <a href="/events" class="btn-primary !bg-white !text-brand-800 hover:!bg-slate-100">
+          <a href="/events" class="btn-primary">
             <Calendar size={18} /> See upcoming events
           </a>
         {/if}
-        <a href="/contact" class="btn-secondary !bg-white/10 !text-white !ring-white/40 hover:!bg-white/20">Ask us a question</a>
+        <a href="/contact" class="btn-secondary">Ask us a question</a>
       </div>
     </div>
   </section>
@@ -193,7 +193,7 @@
 
   <!-- ──────────────────── What we have managed ─────────────────────── -->
   {#if showStats && statTiles.length > 0}
-    <section class="bg-brand-800 text-white">
+    <section class="bg-surface border-y border-slate-200 text-white">
       <div class="section">
         <SectionHeading
           tone="inverse"
@@ -265,7 +265,7 @@
                 <span class="absolute top-2 right-2 z-10 rounded-full bg-accent-600 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5">Next</span>
               {/if}
               <div class="absolute top-2 left-2 z-10">
-                <AddToCalendar event={e} variant="compact" class="!bg-brand-800/90 !text-white !ring-white/20 hover:!bg-brand-800" />
+                <AddToCalendar event={e} variant="compact" class="!bg-white/10 !text-white !ring-white/20 hover:!bg-white/20" />
               </div>
               <a href={`/events/${e.id}`} class="block">
                 <div class="text-xs font-bold uppercase tracking-wider py-1.5 {i === 0 ? 'bg-brand-600 text-white' : 'bg-brand-100 text-brand-800'}">{p.monthShort}</div>

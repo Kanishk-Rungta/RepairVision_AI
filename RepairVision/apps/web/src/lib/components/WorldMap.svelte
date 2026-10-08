@@ -53,7 +53,7 @@
    * own roads, parks and place names. See $lib/mapTiles for why the tiles come
    * from CARTO rather than tile.openstreetmap.org, and for the cafe's key.
    */
-  const TILE_STYLE = 'rastertiles/voyager';
+  const TILE_STYLE = 'dark_all';
 
   const HOME_ZOOM = 2;
   const CAFE_ZOOM = 12;
@@ -322,14 +322,14 @@
     width: 100%;
     height: 100%;
     /* What shows through until the tiles arrive. */
-    background: #eef1ec;
+    background: #0a0b0d;
   }
 
   .world-fallback {
     position: absolute;
     inset: auto 1rem 1rem;
     text-align: center;
-    color: rgb(71 85 105);
+    color: rgb(var(--s-600));
     font-size: 0.875rem;
   }
 
@@ -356,15 +356,15 @@
     padding: 2px 7px;
     border: 0;
     border-radius: 0.4rem;
-    background: rgba(255, 255, 255, 0.94);
-    color: rgb(30 41 59);
+    background: rgb(var(--raised) / 0.94);
+    color: rgb(var(--s-800));
     font-size: 0.75rem;
     font-weight: 600;
     white-space: nowrap;
-    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.22);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.88);
   }
   .world-stage :global(.world-label-on) {
-    background: #0f5c4e;
+    background: rgb(var(--brand-600));
     color: #fff;
   }
   .world-stage :global(.world-label::before) {

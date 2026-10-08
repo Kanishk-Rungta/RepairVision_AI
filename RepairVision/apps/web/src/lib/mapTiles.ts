@@ -15,7 +15,7 @@
  */
 
 /** The CARTO styles the site uses. */
-export type CartoStyle = 'light_all' | 'rastertiles/voyager';
+export type CartoStyle = 'light_all' | 'dark_all' | 'rastertiles/voyager';
 
 /** The letters Leaflet swaps into {s}, spreading tile requests over CARTO's hosts. */
 export const CARTO_SUBDOMAINS = 'abcd';

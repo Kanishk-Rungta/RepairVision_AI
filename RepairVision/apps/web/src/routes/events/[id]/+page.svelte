@@ -118,7 +118,7 @@
     {@const p = dateParts(event.date)}
     <article class="card overflow-hidden">
       <!-- Header band -->
-      <div class="relative bg-gradient-to-br from-brand-700 to-brand-500 text-white p-6 sm:p-8">
+      <div class="relative bg-gradient-to-br from-brand-200 via-brand-100 to-surface text-white p-6 sm:p-8">
         {#if isPast}
           <span class="inline-block mb-2 rounded-full bg-white/15 ring-1 ring-white/20 text-[10px] font-bold uppercase tracking-wide px-2 py-0.5">Past event</span>
         {/if}
@@ -209,7 +209,7 @@
           <ul class="mt-3 flex flex-wrap gap-2">
             {#each stats.categories as cat}
               <li
-                class="inline-flex items-center gap-2 rounded-full bg-white ring-1 ring-slate-200 pl-2 pr-3 py-1.5 text-sm text-slate-700"
+                class="inline-flex items-center gap-2 rounded-full bg-surface ring-1 ring-slate-200 pl-2 pr-3 py-1.5 text-sm text-slate-700"
               >
                 <span class="inline-flex h-6 w-6 items-center justify-center rounded-lg" style={`background:${categoryTint(cat.colour)}`}>
                   <Icon icon={categoryIcon(cat.icon, cat.name)} width="14" height="14" style={`color:${categoryInk(cat.colour)}`} />

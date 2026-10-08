@@ -174,7 +174,7 @@
     border-left-width: 3px;
     padding: 0.35rem 0 0.35rem 0.75rem;
     border-radius: 0 0.4rem 0.4rem 0;
-    color: rgb(51 65 85);
+    color: rgb(var(--s-700));
     line-height: 1.6;
   }
 </style>
