@@ -189,4 +189,76 @@ export const KB: KbEntry[] = [
     ],
     technicianOnly: ['Open the case and re-solder or replace the cable at the board.'],
   },
+  {
+    id: 'usb-port-wear',
+    deviceType: 'usb_accessory',
+    fault: 'Loose, dirty or worn USB connector',
+    keywords: [
+      'loose', 'port', 'connector', 'plug', 'wobbly', 'charging slow', 'wont charge',
+      'not detected', 'lint', 'dirt', 'dust', 'bent', 'intermittent', 'connection',
+    ],
+    explanation:
+      'Pocket lint packs into a socket and stops the plug seating fully. Worn or bent contacts also give a connection that comes and goes.',
+    checks: [
+      'Look into the socket with a torch for lint or debris.',
+      'Try a different cable and a different port or charger.',
+      'Check whether the plug fits snugly or wobbles.',
+    ],
+    technicianOnly: [
+      'Clean the socket with a wooden toothpick while it is unplugged.',
+      'Replace the socket on the board.',
+    ],
+  },
+  {
+    id: 'usb-cable-fault',
+    deviceType: 'usb_accessory',
+    fault: 'Faulty USB cable',
+    keywords: [
+      'cable', 'cord', 'lead', 'charges only', 'data', 'not recognised', 'not recognized',
+      'intermittent', 'frayed', 'hot', 'wont work', 'only charges', 'wiggle',
+    ],
+    explanation:
+      'Many cables carry power but not data, and flexed cables break internally. If the accessory works with a different cable, the first cable was the fault.',
+    checks: [
+      'Swap in a cable known to work.',
+      'Inspect for cuts, kinks and bent plug ends.',
+      'Feel the plug after a minute of use. A plug that is warm is normal, but one that is hot should be unplugged and left alone.',
+    ],
+    technicianOnly: ['Replace the cable; do not open sealed moulded plugs.'],
+  },
+  {
+    id: 'usb-hub-power',
+    deviceType: 'usb_accessory',
+    fault: 'Insufficient power on a USB hub or port',
+    keywords: [
+      'hub', 'unpowered', 'drops', 'too many', 'drive', 'devices', 'resets',
+      'disconnects', 'power', 'overload', 'multiple', 'adapter',
+    ],
+    explanation:
+      'A hub shares the power of one port between everything plugged into it. Several hungry devices make some of them drop out or reset.',
+    checks: [
+      'Unplug everything but one device and see whether it behaves.',
+      'Plug the device directly into the computer instead of the hub.',
+      'If the hub has a power adapter, check it is connected and switched on.',
+    ],
+    technicianOnly: ['Test the hub output under load with a USB power meter.'],
+  },
+  {
+    id: 'usb-led-light-switch',
+    deviceType: 'usb_accessory',
+    fault: 'Failed LED strip, fan or small powered accessory',
+    keywords: [
+      'light', 'led', 'lamp', 'fan', 'flicker', 'dim', 'stopped', 'spin', 'strip',
+      'usb light', 'usb fan', 'switch', 'button', 'dead',
+    ],
+    explanation:
+      'Small USB lights and fans have few parts. The switch, the cable and the solder joints where the cable enters are the usual failures, and a fan may simply be clogged with dust.',
+    checks: [
+      'Try a different USB port or a different charger.',
+      'Operate the switch several times and note whether it feels loose.',
+      'For a fan, check that nothing is blocking the blades and turn them by hand with the power off.',
+      'Look for a cable kink where it enters the device.',
+    ],
+    technicianOnly: ['Open the case and check the switch and solder joints.'],
+  },
 ];
