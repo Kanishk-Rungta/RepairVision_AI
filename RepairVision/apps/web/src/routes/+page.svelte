@@ -8,6 +8,7 @@
   import PhotoGrid from '$lib/components/PhotoGrid.svelte';
   import LocalCafeMap from '$lib/components/LocalCafeMap.svelte';
   import { formatDistance, repairCafeOrgUrl, type LocalCafe } from '$lib/localCafes';
+  import { countUp } from '$lib/motion';
   import { Calendar, Clock, MapPin, ChevronDown, CheckCircle2, Laptop, ArrowRight, QrCode, Wrench, PackageCheck } from 'lucide-svelte';
   import Icon from '@iconify/svelte';
   import { categoryIcon, categoryTint, categoryInk } from '$lib/categoryIcon';
@@ -189,9 +190,9 @@
        an item in, it gets a number, you collect it fixed. -->
   <section class="hero-bg">
     <div class="max-w-6xl mx-auto px-4 pt-16 pb-20 md:pt-24 md:pb-28 grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-center">
-      <div class="animate-fade-up">
+      <div>
         {#if nextEvent}
-          <a href="#when" class="inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-1.5 text-[13px] text-slate-600 ring-1 ring-white/10 hover:text-slate-900 hover:bg-white/[0.07] transition-colors">
+          <a href="#when" class="animate-fade-up inline-flex items-center gap-2 rounded-full bg-tint/[0.04] px-3 py-1.5 text-[13px] text-slate-600 ring-1 ring-tint/[0.08] hover:text-slate-900 hover:bg-tint/[0.04] transition-colors">
             <span class="relative flex h-2 w-2">
               {#if isToday(nextEvent.date)}<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60 motion-reduce:hidden"></span>{/if}
               <span class="relative inline-flex h-2 w-2 rounded-full {isToday(nextEvent.date) ? 'bg-emerald-500' : 'bg-brand-500'}"></span>
@@ -200,12 +201,12 @@
             <ArrowRight size={14} class="opacity-60" />
           </a>
         {:else}
-          <span class="inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-1.5 text-[13px] text-slate-600 ring-1 ring-white/10">
+          <span class="animate-fade-up inline-flex items-center gap-2 rounded-full bg-tint/[0.04] px-3 py-1.5 text-[13px] text-slate-600 ring-1 ring-tint/[0.08]">
             <span class="h-2 w-2 rounded-full bg-brand-500"></span> Community repair café
           </span>
         {/if}
 
-        <h1 class="mt-6 text-gradient text-[44px] leading-[1.02] sm:text-6xl md:text-7xl font-semibold tracking-[-0.045em]">{cafeName}</h1>
+        <h1 class="mt-6 text-[44px] leading-[1.04] sm:text-6xl md:text-[80px] font-semibold tracking-[-0.025em]">{cafeName}</h1>
         {#if $cafe?.tagline}
           <p class="mt-5 text-xl md:text-2xl font-medium tracking-[-0.015em] text-slate-800">{$cafe.tagline}</p>
         {/if}
@@ -226,8 +227,8 @@
       </div>
 
       <!-- The ticket. -->
-      <div class="animate-fade-up [animation-delay:80ms] w-full max-w-md lg:max-w-none mx-auto">
-        <div class="ticket-top rounded-t-3xl bg-surface/90 ring-1 ring-white/[0.08] backdrop-blur-xl px-6 pt-6 pb-7 sm:px-8 sm:pt-8">
+      <div class="hero-parallax w-full max-w-md lg:max-w-none mx-auto"><div class="hero-ticket">
+        <div class="ticket-top rounded-t-3xl bg-surface ring-1 ring-tint/[0.06] px-6 pt-6 pb-7 sm:px-8 sm:pt-8">
           <div class="flex items-center justify-between">
             <p class="kicker">Next session</p>
             {#if nextEvent}
@@ -261,7 +262,7 @@
             <p class="mt-2 text-slate-500">We are planning the next session. Check back soon, or get in touch.</p>
           {/if}
         </div>
-        <div class="ticket-bottom rounded-b-3xl bg-surface/90 ring-1 ring-white/[0.08] backdrop-blur-xl px-6 pt-6 pb-6 sm:px-8">
+        <div class="ticket-bottom rounded-b-3xl bg-surface ring-1 ring-tint/[0.06] px-6 pt-6 pb-6 sm:px-8">
           <ol class="grid grid-cols-3 gap-3 text-center">
             <li class="flex flex-col items-center gap-2">
               <span class="icon-chip !h-10 !w-10"><QrCode size={18} /></span>
@@ -285,18 +286,18 @@
             {/if}
           </div>
         </div>
-      </div>
+      </div></div>
     </div>
   </section>
 
   <!-- ──────────────────── Our numbers ───────────────────────── -->
   {#if showStats && statTiles.length > 0}
-    <section class="border-b border-slate-200 bg-surface/40">
+    <section class="band">
       <dl class="max-w-6xl mx-auto px-4 grid grid-cols-2 {statTiles.length >= 4 ? 'md:grid-cols-4' : 'md:grid-cols-3'}">
         {#each statTiles as tile, i}
           <div class="py-8 md:py-10 px-2 md:px-6 {i % 2 === 1 ? 'border-l' : ''} {i > 0 ? 'md:border-l' : ''} {i >= 2 ? 'border-t md:border-t-0' : ''} border-slate-200">
             <dt class="kicker">{tile.label}</dt>
-            <dd class="mt-2 text-3xl md:text-4xl font-semibold tracking-[-0.03em] text-slate-950 tabular-nums">{tile.value}</dd>
+            <dd use:countUp={tile.value} class="mt-2 text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-slate-950 tabular-nums">{tile.value}</dd>
           </div>
         {/each}
       </dl>
@@ -360,7 +361,7 @@
       <ul class="mt-10 card divide-y divide-slate-200 overflow-hidden">
         {#each upcomingEvents.slice(0, DATE_PREVIEW) as e, i}
           {@const p = dateParts(e.date)}
-          <li class="flex items-center gap-4 sm:gap-6 px-4 py-4 sm:px-6 sm:py-5 transition-colors hover:bg-white/[0.02]">
+          <li class="flex items-center gap-4 sm:gap-6 px-4 py-4 sm:px-6 sm:py-5 transition-colors hover:bg-tint/[0.04]">
             <div class="w-12 shrink-0 text-center">
               <div class="font-mono text-[11px] uppercase tracking-[0.1em] text-brand-400">{p.monthShort}</div>
               <div class="text-2xl font-semibold leading-tight text-slate-950 tabular-nums">{p.day}</div>
@@ -512,7 +513,7 @@
                   open={openFaq === i}
                   on:toggle={(e) => { if ((e.target as HTMLDetailsElement).open) openFaq = i; }}
                 >
-                  <summary class="cursor-pointer flex items-center gap-4 px-5 py-4 list-none hover:bg-white/[0.02] transition-colors [&::-webkit-details-marker]:hidden">
+                  <summary class="cursor-pointer flex items-center gap-4 px-5 py-4 list-none hover:bg-tint/[0.04] transition-colors [&::-webkit-details-marker]:hidden">
                     <span class="flex-1 font-medium text-slate-900">{faq.q}</span>
                     <ChevronDown size={18} class="shrink-0 text-slate-500 transition-transform duration-200 group-open:rotate-180" />
                   </summary>
