@@ -477,6 +477,17 @@ export const loginAttempts = sqliteTable(
   (t) => [index('idx_login_attempts_key').on(t.key, t.createdAt)],
 );
 
+/** RepairVision AI Diagnosis requests, for the hourly per-person limit. */
+export const aiDiagnosisUsage = sqliteTable(
+  'ai_diagnosis_usage',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    userId: text('user_id').notNull(),
+    createdAt: timestamp('created_at').notNull().$defaultFn(() => new Date()),
+  },
+  (t) => [index('idx_ai_diagnosis_usage_user').on(t.userId, t.createdAt)],
+);
+
 export type User = typeof users.$inferSelect;
 export type Cafe = typeof cafes.$inferSelect;
 export type Venue = typeof venues.$inferSelect;
