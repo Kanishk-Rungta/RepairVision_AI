@@ -48,7 +48,7 @@
 <main class="min-h-screen grid place-items-center bg-canvas px-4 py-12">
   <form on:submit={submit} class="card p-8 w-full max-w-sm">
     <h1 class="text-2xl font-semibold">Sign in</h1>
-    <p class="mt-1 text-sm text-slate-600">For repairers and admins.</p>
+    <p class="mt-1 text-sm text-slate-600">Sign in to diagnose your device or access your workspace.</p>
     {#if $page.url.searchParams.get('next')}
       <p class="mt-3 text-sm rounded-lg bg-slate-50 ring-1 ring-slate-200 px-3 py-2 text-slate-700">Sign in to carry on where you were.</p>
     {/if}
@@ -66,6 +66,7 @@
         <LogIn size={18} /> Sign in
       </button>
     </div>
+    <p class="mt-6 text-center text-sm text-slate-600">New to RepairVision? <a href={'/register?next=' + encodeURIComponent($page.url.searchParams.get('next') || '/diagnosis')} class="text-brand-500 hover:underline">Create an account</a></p>
     <a href="/" class="block text-center mt-6 text-sm text-slate-500 hover:underline">Back to home</a>
   </form>
 </main>
