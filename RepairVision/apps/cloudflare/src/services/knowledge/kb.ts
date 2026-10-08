@@ -333,4 +333,94 @@ export const KB: KbEntry[] = [
     ],
     technicianOnly: ['Open the case and clean or replace the switch.'],
   },
+  {
+    id: 'kb-wrong-characters',
+    deviceType: 'keyboard',
+    fault: 'Wrong characters appear: language or layout setting',
+    keywords: [
+      'wrong letter', 'wrong character', 'wrong symbol', 'types different', 'at sign',
+      'quote', 'pound', 'hash', 'layout', 'language', 'swapped', 'y and z', 'special characters',
+      'symbols', 'different keys',
+    ],
+    explanation:
+      'The keyboard sends the position of a key and the computer decides what character it is. When symbols such as @ and " are swapped, the language or layout in the computer does not match the keyboard.',
+    checks: [
+      'Open a text editor and type the symbols that are wrong.',
+      'Check the keyboard layout or language setting on the computer.',
+      'Try the keyboard on another computer set to the same layout.',
+    ],
+    technicianOnly: [],
+  },
+  {
+    id: 'kb-fn-numlock',
+    deviceType: 'keyboard',
+    fault: 'Number lock or function lock is on or off',
+    keywords: [
+      'numbers', 'numpad', 'number pad', 'num lock', 'numlock', 'fn', 'function key',
+      'f keys', 'volume', 'media keys', 'arrows instead', 'keypad', 'moves cursor',
+      'nothing happens', 'lock',
+    ],
+    explanation:
+      'Num Lock decides whether the number pad types digits or moves the cursor, and a function lock decides whether the top row acts as F-keys or media keys. Pressing them by accident looks like a fault.',
+    checks: [
+      'Press Num Lock and test the number pad again.',
+      'Look for an Fn Lock or Fn key, and try the top row with and without Fn.',
+      'Watch the indicator lights when pressing the lock keys.',
+    ],
+    technicianOnly: [],
+  },
+  {
+    id: 'kb-repeating-key',
+    deviceType: 'keyboard',
+    fault: 'Key repeating or typing on its own',
+    keywords: [
+      'repeating', 'repeats', 'types by itself', 'types on its own', 'double letters',
+      'extra letters', 'stuck key', 'keeps typing', 'ghost', 'ghosting', 'phantom',
+      'doubles', 'bouncing', 'chatter',
+    ],
+    explanation:
+      'A key that types more than once is held partly down by dirt, or its contacts bounce. A key that types by itself is physically stuck or shorted.',
+    checks: [
+      'Unplug the keyboard and look at the key from the side. It should sit level with its neighbours.',
+      'Press and release the key several times to free anything stuck.',
+      'Tap the keyboard upside down to loosen crumbs.',
+      'Check whether the same key misbehaves on another computer.',
+    ],
+    technicianOnly: ['Remove the keycap and clean or replace the switch.'],
+  },
+  {
+    id: 'kb-spacebar-keycap',
+    deviceType: 'keyboard',
+    fault: 'Loose, rattling or sticking space bar or large key',
+    keywords: [
+      'space bar', 'spacebar', 'enter', 'shift', 'backspace', 'rattle', 'wobble',
+      'uneven', 'sticks down', 'stabiliser', 'stabilizer', 'tilts', 'large key', 'clatter',
+      'keycap', 'popped off',
+    ],
+    explanation:
+      'Large keys have a metal bar or plastic stabiliser that keeps them level. If it comes unclipped the key tilts, rattles or catches on one side.',
+    checks: [
+      'Press the key at each end. A key that tilts or catches at one end has lost its stabiliser.',
+      'Look for a keycap that has popped off and is sitting loose.',
+      'Look for debris stopping the key travelling fully down.',
+    ],
+    technicianOnly: ['Remove the keycap and refit the stabiliser, or replace it.'],
+  },
+  {
+    id: 'kb-backlight',
+    deviceType: 'keyboard',
+    fault: 'Keyboard backlight not working',
+    keywords: [
+      'backlight', 'backlit', 'lights', 'led', 'illumination', 'rgb', 'dark', 'no light',
+      'light off', 'brightness', 'glow', 'lighting', 'flicker',
+    ],
+    explanation:
+      'The backlight usually has its own on/off and brightness keys, and may turn off by itself after a delay. If the keys work but the light never comes on, the LEDs or their power track may have failed.',
+    checks: [
+      'Look for a backlight key, often an Fn combination, and press it several times.',
+      'Try the keyboard in a different USB port, because some lighting needs more power.',
+      'Check whether the keyboard works normally without light.',
+    ],
+    technicianOnly: ['Open the case and check the LED strip and its connector.'],
+  },
 ];
