@@ -1,7 +1,8 @@
 import type { App } from '../../lib/router.js';
 import { db } from '../../db/index.js';
 import { cafeGallery, cafes } from '../../db/schema.js';
-import { cafeSettingsSchema } from '@circularity/shared';
+import { advisorSettingsSchema, cafeSettingsSchema } from '@circularity/shared';
+import { advisorSettings, saveAdvisorSettings } from '../../services/advisor/settings.js';
 import { asc, eq } from 'drizzle-orm';
 import { audit } from '../../utils/audit.js';
 import { saveValidatedImage, deleteImage } from '../../services/imageUpload.js';
@@ -159,6 +160,26 @@ export async function adminSettingsRoutes(app: App): Promise<void> {
       metadata: { enabled: updated?.linuxEnabled ?? null },
     });
     return updated;
+  });
+
+  // ───────────────── Repair vs. replace advisor ──────────────────
+  // The currency the advisor shows prices in, and the two shares of a
+  // replacement's price that decide "repair" and "replace".
+  app.get('/api/admin/settings/advisor', async () => advisorSettings());
+
+  app.patch('/api/admin/settings/advisor', async (request, reply) => {
+    const me = request.auth!;
+    const parsed = advisorSettingsSchema.safeParse(request.body);
+    if (!parsed.success) {
+      reply.code(400).send({ error: parsed.error.issues[0]?.message || 'Check the advisor settings.', code: 'validation/failed' });
+      return;
+    }
+    if (!(await saveAdvisorSettings(parsed.data))) {
+      reply.code(404).send({ error: 'Cafe not initialized', code: 'cafe/missing' });
+      return;
+    }
+    await audit({ request, actorId: me.sub, actorType: me.role, action: 'cafe.advisor_updated', entityType: 'cafe', entityId: 'cafe', metadata: parsed.data });
+    return advisorSettings();
   });
 
   // ────────────────── SEO + analytics settings ──────────────────────

@@ -72,7 +72,8 @@ export async function signAccessToken(user: TokenUser): Promise<string> {
   );
 }
 
-async function readAuth(request: HubRequest): Promise<JWTPayload | null> {
+/** Who is asking, if anyone: for routes open to everyone that treat signed-in people a little differently. */
+export async function readAuth(request: HubRequest): Promise<JWTPayload | null> {
   const header = request.headers['authorization'] ?? '';
   const match = /^Bearer\s+(.+)$/i.exec(header);
   if (!match) return null;
