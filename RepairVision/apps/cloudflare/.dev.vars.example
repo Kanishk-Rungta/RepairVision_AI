@@ -2,7 +2,8 @@
 # in the same folder and fill in your own values. .dev.vars is git-ignored:
 # never commit a real key.
 #
-# RepairVision AI Diagnosis: a Gemini API key from https://aistudio.google.com/apikey
+# RepairVision AI Diagnosis and the site assistant (the chat character):
+# a Gemini API key from https://aistudio.google.com/apikey
 GEMINI_API_KEY=
 
 # Optional. The model defaults to gemma-4-26b-a4b-it.
@@ -15,6 +16,8 @@ GEMINI_API_KEY=
 # GEMMA_TIMEOUT_MS=90000
 # Diagnosis requests per signed-in person per hour. Default 30.
 # AI_DIAGNOSIS_HOURLY_LIMIT=30
+# Questions one visitor may ask the site assistant per hour. Default 20.
+# AI_CHAT_HOURLY_LIMIT=20
 
 # Demo data: after `python demo/seed.py --base-url http://localhost:8787`
 # (python3 on macOS/Linux), "true" shows one-click buttons for the demo admin,

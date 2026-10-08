@@ -298,3 +298,34 @@ After the owner completes the one-time `/setup`, anyone can create an account at
 Public accounts use the `user` role. They can access diagnosis and follow-up endpoints, but cannot access staff repair records, session photos or admin endpoints. They are excluded from public team listings and volunteer counts. Registration validates name, email and password, normalizes emails, handles duplicates, hashes passwords and limits attempts per address. Existing login, refresh cookies and logout also work for these accounts.
 
 The SQLite role column is already plain text, so no database migration is required. Diagnosis sessions remain in the current tab and are not saved. The `GEMINI_API_KEY` secret is still required for model requests; account creation works independently of it.
+
+## Site assistant (the chat character)
+
+The character in the corner of the site (the Things widget, see
+`apps/web/static/things/README.md`) answers visitors' questions with the same
+Gemma model and `GEMINI_API_KEY` as AI Diagnosis. Nothing is scripted.
+
+How a question is answered (`apps/cloudflare/src/routes/chat.ts`,
+`apps/cloudflare/src/services/chat/assistant.ts`):
+
+1. The widget sends `POST /api/chat` with `{ "question": "...", "page": "/current/path" }`.
+2. The hub reads its own public API in-process: the cafe and its FAQs, the
+   home venue, upcoming and recent sessions (including one running now),
+   the numbers, and what it repairs and who repairs it. This is exactly what
+   the public pages show, so a visitor's name, contact details or repair can
+   never reach the model.
+3. Gemma gets that data, today's date and time in the cafe's `TZ`, the list of
+   pages it may open, and the question. It replies with JSON:
+   `{ "answer": "...", "navigate": "/events" | null }`.
+4. `navigate` is kept only if it is on the list (fixed public pages plus
+   `/events/<id>` and `/team/<id>` from the data); anything else is dropped.
+5. The site shows the answer and, when `navigate` is set, opens that page
+   after a short pause, with the chat still open.
+
+Limits: open to everyone, 20 questions per visitor address per hour
+(`AI_CHAT_HOURLY_LIMIT`), questions up to 500 characters. Thinking is set to
+`minimal` and the wait is capped at 45 seconds, so answers come back quickly.
+Without `GEMINI_API_KEY` the endpoint answers 503 `ai/not_configured` and the
+widget says it cannot answer right now.
+
+Tests: `apps/cloudflare/test/chat.test.ts` (no real API calls).
