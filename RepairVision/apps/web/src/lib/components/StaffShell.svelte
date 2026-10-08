@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Logo from './Logo.svelte';
   // The frame round every page staff see after signing in: the admin area and
   // the repairer area alike. See $lib/staff/nav.ts for why it is one frame.
   //
@@ -16,7 +17,7 @@
   import { auth } from '$lib/stores/auth';
   import { cafe } from '$lib/stores/cafe';
   import { homeFor, isAdminRole, isCurrent, navFor, tabsFor } from '$lib/staff/nav';
-  import { Globe, LogOut, Menu, ShieldAlert, Wrench, X } from 'lucide-svelte';
+  import { Globe, LogOut, Menu, ShieldAlert, X } from 'lucide-svelte';
 
   /** Only admins may see this part of the site. */
   export let requireAdmin = false;
@@ -60,29 +61,29 @@
 </script>
 
 {#if $auth && user}
-  <div class="min-h-screen bg-slate-100 md:flex">
+  <div class="min-h-screen bg-canvas md:flex">
     <!-- ── Sidebar, on a laptop or tablet ─────────────────────────────── -->
-    <aside class="hidden md:flex md:flex-col w-64 shrink-0 bg-white border-r border-slate-200 sticky top-0 h-screen no-print">
+    <aside class="hidden md:flex md:flex-col w-64 shrink-0 bg-surface border-r border-slate-200 sticky top-0 h-screen no-print">
       <a href={homeFor(user)} class="flex items-center gap-3 px-5 py-4 border-b border-slate-200 min-w-0">
         {#if $cafe?.logoUrl}
           <img src={$cafe.logoUrl} alt="" class="h-9 w-auto max-w-[7rem] rounded-md object-contain shrink-0" />
         {:else}
-          <span class="h-9 w-9 rounded-lg bg-brand-600 text-white inline-flex items-center justify-center shrink-0"><Wrench size={18} /></span>
+          <Logo size={30} />
         {/if}
         <span class="font-semibold text-slate-900 leading-tight truncate">{$cafe?.name || 'Repair Cafe'}</span>
       </a>
       <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-5 text-sm" aria-label="Main">
         {#each groups as group}
           <div>
-            <p class="px-3 mb-1 text-[0.7rem] font-semibold uppercase tracking-wider text-slate-400">{group.title}</p>
+            <p class="px-3 mb-1 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-slate-400">{group.title}</p>
             {#each group.items as item}
               {@const current = isCurrent(item, pathname)}
               <a
                 href={item.href}
-                class="flex items-center gap-3 px-3 py-2 rounded-lg {current ? 'bg-brand-50 text-brand-800 font-semibold' : 'text-slate-700 hover:bg-slate-100'}"
+                class="flex items-center gap-3 px-3 py-2 rounded-lg {current ? 'bg-white/[0.07] text-slate-950 font-medium shadow-[0_1px_0_0_rgb(255_255_255/0.06)_inset]' : 'text-slate-500 hover:text-slate-900 hover:bg-white/[0.05]'}"
                 aria-current={current ? 'page' : undefined}
               >
-                <svelte:component this={item.icon} size={18} class={current ? 'text-brand-700' : 'text-slate-400'} />
+                <svelte:component this={item.icon} size={18} class={current ? 'text-brand-400' : 'text-slate-400'} />
                 {item.label}
               </a>
             {/each}
@@ -98,19 +99,19 @@
         <button type="button" on:click={signOut} class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-100"><LogOut size={18} class="text-slate-400" /> Sign out</button>
         {#if admin}
           <a href="/admin/settings?tab=about" class="block px-3 pt-2 text-xs text-slate-400 hover:text-slate-600" title="Version">
-            Repair Cafe Hub {$cafe?.appVersion ?? ''}
+            RepairVision {$cafe?.appVersion ?? ''}
           </a>
         {/if}
       </div>
     </aside>
 
     <!-- ── Top bar, on a phone ───────────────────────────────────────── -->
-    <div class="md:hidden sticky top-0 z-30 bg-white border-b border-slate-200 px-3 py-2 flex items-center justify-between gap-2 no-print">
+    <div class="md:hidden sticky top-0 z-30 bg-canvas/80 backdrop-blur-xl border-b border-slate-200 px-3 py-2 flex items-center justify-between gap-2 no-print">
       <a href={homeFor(user)} class="flex items-center gap-2 min-w-0">
         {#if $cafe?.logoUrl}
           <img src={$cafe.logoUrl} alt="" class="h-8 w-auto max-w-[6rem] rounded-md object-contain" />
         {:else}
-          <span class="h-8 w-8 rounded-lg bg-brand-600 text-white inline-flex items-center justify-center"><Wrench size={16} /></span>
+          <Logo size={28} />
         {/if}
         <span class="font-semibold text-slate-900 truncate">{$cafe?.name || 'Repair Cafe'}</span>
       </a>
@@ -127,8 +128,8 @@
 
     {#if drawerOpen}
       <div class="md:hidden fixed inset-0 z-50 flex no-print" role="dialog" aria-modal="true" aria-label="Menu">
-        <button type="button" class="absolute inset-0 bg-slate-900/50" aria-label="Close the menu" on:click={() => (drawerOpen = false)}></button>
-        <div class="relative ml-auto w-80 max-w-[85vw] h-full bg-white flex flex-col shadow-xl">
+        <button type="button" class="absolute inset-0 bg-black/65 backdrop-blur-sm" aria-label="Close the menu" on:click={() => (drawerOpen = false)}></button>
+        <div class="relative ml-auto w-80 max-w-[85vw] h-full bg-surface flex flex-col shadow-xl">
           <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
             <div class="min-w-0">
               <p class="font-semibold text-slate-900 truncate">{user.displayName}</p>
@@ -142,8 +143,8 @@
                 <p class="px-3 mb-1 text-xs font-semibold uppercase tracking-wider text-slate-400">{group.title}</p>
                 {#each group.items as item}
                   {@const current = isCurrent(item, pathname)}
-                  <a href={item.href} class="flex items-center gap-3 px-3 py-3 rounded-lg {current ? 'bg-brand-50 text-brand-800 font-semibold' : 'text-slate-800 hover:bg-slate-100'}" aria-current={current ? 'page' : undefined}>
-                    <svelte:component this={item.icon} size={20} class={current ? 'text-brand-700' : 'text-slate-400'} />
+                  <a href={item.href} class="flex items-center gap-3 px-3 py-3 rounded-lg {current ? 'bg-white/[0.07] text-slate-950 font-medium' : 'text-slate-700 hover:bg-white/[0.05]'}" aria-current={current ? 'page' : undefined}>
+                    <svelte:component this={item.icon} size={20} class={current ? 'text-brand-400' : 'text-slate-400'} />
                     {item.label}
                   </a>
                 {/each}
@@ -175,10 +176,10 @@
     </div>
 
     <!-- ── Bottom tabs, on a phone ──────────────────────────────────── -->
-    <nav class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-white border-t border-slate-200 grid no-print" style="grid-template-columns: repeat({tabs.length}, minmax(0, 1fr)); padding-bottom: env(safe-area-inset-bottom);" aria-label="Quick links">
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-surface border-t border-slate-200 grid no-print" style="grid-template-columns: repeat({tabs.length}, minmax(0, 1fr)); padding-bottom: env(safe-area-inset-bottom);" aria-label="Quick links">
       {#each tabs as tab}
         {@const current = isCurrent(tab, pathname)}
-        <a href={tab.href} class="flex flex-col items-center gap-0.5 py-2 text-xs {current ? 'text-brand-700 font-semibold' : 'text-slate-500'}" aria-current={current ? 'page' : undefined}>
+        <a href={tab.href} class="flex flex-col items-center gap-0.5 py-2 text-xs {current ? 'text-brand-400 font-semibold' : 'text-slate-500'}" aria-current={current ? 'page' : undefined}>
           <svelte:component this={tab.icon} size={22} />
           {tab.label}
         </a>
@@ -186,5 +187,5 @@
     </nav>
   </div>
 {:else}
-  <div class="min-h-screen grid place-items-center bg-slate-100 text-slate-500">Loading…</div>
+  <div class="min-h-screen grid place-items-center bg-canvas text-slate-500">Loading…</div>
 {/if}

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Logo from './Logo.svelte';
   import { cafe } from '$lib/stores/cafe';
   import { Mail, MapPin, Heart } from 'lucide-svelte';
 
@@ -12,7 +13,7 @@
 
 <!-- A solid dark block closes the page. Without it the page trails off into
      white and never feels finished. -->
-<footer class="bg-brand-900 text-white no-print">
+<footer class="bg-canvas border-t border-slate-200 text-white no-print">
   <div class="max-w-6xl mx-auto px-4 py-14">
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
       <div>
@@ -31,7 +32,7 @@
       </div>
 
       <div>
-        <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/50">Visit</p>
+        <p class="kicker">Visit</p>
         <ul class="mt-4 space-y-2 text-white/80">
           <li><a class="hover:text-white" href="/events">Events</a></li>
           <li><a class="hover:text-white" href="/skills">Skills &amp; team</a></li>
@@ -43,7 +44,7 @@
       </div>
 
       <div>
-        <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/50">Get in touch</p>
+        <p class="kicker">Get in touch</p>
         <ul class="mt-4 space-y-2 text-white/80">
           {#if $cafe?.contactEmail}
             <li>
@@ -71,5 +72,11 @@
       </div>
     </div>
 
+    <div class="mt-12 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm text-slate-500">
+      <p>© {new Date().getFullYear()} {$cafe?.name ?? ''}</p>
+      <p class="inline-flex items-center gap-2">
+        <span>Powered by</span> <Logo size={18} wordmark />
+      </p>
+    </div>
   </div>
 </footer>

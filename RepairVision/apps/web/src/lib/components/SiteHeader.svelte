@@ -1,9 +1,10 @@
 <script lang="ts">
+  import Logo from './Logo.svelte';
   import { goto } from '$app/navigation';
   import { afterNavigate } from '$app/navigation';
   import { auth, type AuthState } from '$lib/stores/auth';
   import { cafe } from '$lib/stores/cafe';
-  import { LogOut, Wrench, Menu, X, Laptop } from 'lucide-svelte';
+  import { LogOut, Menu, X, Laptop } from 'lucide-svelte';
   import { api } from '$lib/api';
 
   export let variant: 'public' | 'admin' | 'repairer' = 'public';
@@ -29,18 +30,18 @@
   }
 </script>
 
-<header class="bg-white shadow-sm border-b border-slate-200 no-print sticky top-0 z-30">
+<header class="bg-canvas/70 backdrop-blur-xl border-b border-slate-200/80 no-print sticky top-0 z-30">
   <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
     <div class="flex items-center gap-3 min-w-0">
       <!-- Only the cafe's own name and logo here. The Circularity credit
            lives in the footer. Most cafe logos are wide wordmarks, so we give
            the image its own width and cap it, rather than squashing it into a
            square. -->
-      <a href="/" class="flex items-center gap-3 text-slate-900 font-semibold text-lg min-w-0">
+      <a href="/" class="flex items-center gap-3 text-slate-900 font-semibold text-base tracking-tight min-w-0">
         {#if $cafe?.logoUrl}
           <img src={$cafe.logoUrl} alt="" class="h-10 w-auto max-w-[9rem] rounded-lg object-contain shrink-0" />
         {:else}
-          <span class="h-10 w-10 rounded-lg bg-brand-600 text-white inline-flex items-center justify-center shrink-0"><Wrench size={18} /></span>
+          <Logo size={32} />
         {/if}
         <span class="truncate">{$cafe?.name || 'Repair Cafe'}</span>
       </a>
@@ -49,13 +50,13 @@
     <!-- Desktop nav -->
     <nav class="hidden md:flex items-center gap-2 text-sm">
       {#if variant === 'public'}
-        <a href="/" class="px-3 py-2 rounded-lg hover:bg-slate-100">Home</a>
-        <a href="/events" class="px-3 py-2 rounded-lg hover:bg-slate-100">Events</a>
-        <a href="/skills" class="px-3 py-2 rounded-lg hover:bg-slate-100 whitespace-nowrap">Skills &amp; Team</a>
-        <a href="/guides" class="px-3 py-2 rounded-lg hover:bg-slate-100 whitespace-nowrap">Repair guides</a>
-        <a href="/world" class="px-3 py-2 rounded-lg hover:bg-slate-100">Worldwide</a>
-        <a href="/about" class="px-3 py-2 rounded-lg hover:bg-slate-100">About</a>
-        <a href="/contact" class="px-3 py-2 rounded-lg hover:bg-slate-100">Contact</a>
+        <a href="/" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Home</a>
+        <a href="/events" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Events</a>
+        <a href="/skills" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06] whitespace-nowrap">Skills &amp; Team</a>
+        <a href="/guides" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06] whitespace-nowrap">Repair guides</a>
+        <a href="/world" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Worldwide</a>
+        <a href="/about" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">About</a>
+        <a href="/contact" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Contact</a>
         {#if linuxEnabled}
           <!-- Its own menu, styled apart from the rest. A Linux Repair Cafe is
                a different offer from a repair session, and a visitor looking
@@ -78,10 +79,10 @@
         {/if}
       {:else if user}
         {#if variant === 'repairer'}
-          <a href="/repairer" class="px-3 py-2 rounded-lg hover:bg-slate-100">Dashboard</a>
-          <a href="/repairer/checkin" class="px-3 py-2 rounded-lg hover:bg-slate-100 whitespace-nowrap">Register a repair</a>
-          <a href="/repairer/photos" class="px-3 py-2 rounded-lg hover:bg-slate-100">Photos</a>
-          <a href="/repairer/profile" class="px-3 py-2 rounded-lg hover:bg-slate-100">My profile</a>
+          <a href="/repairer" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Dashboard</a>
+          <a href="/repairer/checkin" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06] whitespace-nowrap">Register a repair</a>
+          <a href="/repairer/photos" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Photos</a>
+          <a href="/repairer/profile" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">My profile</a>
         {/if}
         <span class="text-slate-600">{user.displayName}</span>
         <button class="btn-ghost btn-sm" on:click={logout}>
@@ -111,17 +112,17 @@
   {#if mobileOpen}
     <nav
       id="site-mobile-nav"
-      class="md:hidden border-t border-slate-200 bg-white shadow-sm"
+      class="md:hidden border-t border-slate-200 bg-surface shadow-sm"
     >
       <div class="max-w-6xl mx-auto px-4 py-2 flex flex-col">
         {#if variant === 'public'}
-          <a href="/" class="px-3 py-3 rounded-lg hover:bg-slate-100 text-slate-800">Home</a>
-          <a href="/events" class="px-3 py-3 rounded-lg hover:bg-slate-100 text-slate-800">Events</a>
-          <a href="/skills" class="px-3 py-3 rounded-lg hover:bg-slate-100 text-slate-800">Skills &amp; Team</a>
-          <a href="/guides" class="px-3 py-3 rounded-lg hover:bg-slate-100 text-slate-800">Repair guides</a>
-          <a href="/world" class="px-3 py-3 rounded-lg hover:bg-slate-100 text-slate-800">Worldwide</a>
-          <a href="/about" class="px-3 py-3 rounded-lg hover:bg-slate-100 text-slate-800">About</a>
-          <a href="/contact" class="px-3 py-3 rounded-lg hover:bg-slate-100 text-slate-800">Contact</a>
+          <a href="/" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Home</a>
+          <a href="/events" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Events</a>
+          <a href="/skills" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Skills &amp; Team</a>
+          <a href="/guides" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Repair guides</a>
+          <a href="/world" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Worldwide</a>
+          <a href="/about" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">About</a>
+          <a href="/contact" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Contact</a>
           {#if linuxEnabled}
             <a
               href="/linux"
@@ -142,10 +143,10 @@
           {/if}
         {:else if user}
           {#if variant === 'repairer'}
-            <a href="/repairer" class="px-3 py-3 rounded-lg hover:bg-slate-100 text-slate-800">Dashboard</a>
-            <a href="/repairer/checkin" class="px-3 py-3 rounded-lg hover:bg-slate-100 text-slate-800">Register a repair</a>
-            <a href="/repairer/photos" class="px-3 py-3 rounded-lg hover:bg-slate-100 text-slate-800">Photos</a>
-            <a href="/repairer/profile" class="px-3 py-3 rounded-lg hover:bg-slate-100 text-slate-800">My profile</a>
+            <a href="/repairer" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Dashboard</a>
+            <a href="/repairer/checkin" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Register a repair</a>
+            <a href="/repairer/photos" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Photos</a>
+            <a href="/repairer/profile" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">My profile</a>
             <div class="h-px bg-slate-200 my-2"></div>
           {/if}
           <div class="px-3 py-3 text-slate-600 text-sm">Signed in as <span class="font-medium text-slate-800">{user.displayName}</span></div>
