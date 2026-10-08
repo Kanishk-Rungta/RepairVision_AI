@@ -16,7 +16,7 @@
 
   let cafe: any = null;
   let busy = false;
-  type Tab = 'profile' | 'home' | 'linux' | 'gallery' | 'local' | 'maps' | 'preferences' | 'seo' | 'gdpr' | 'telemetry' | 'backup' | 'about';
+  type Tab = 'profile' | 'home' | 'linux' | 'gallery' | 'local' | 'maps' | 'preferences' | 'advisor' | 'seo' | 'gdpr' | 'telemetry' | 'backup' | 'about';
   let tab: Tab = 'profile';
 
   $: isSuperAdmin = $auth?.user.role === 'super_admin';
@@ -455,6 +455,47 @@
     }
   }
 
+  // ── Repair or replace advisor ─────────────────────────────────────
+  // The currency it shows, and the two points a verdict is judged against,
+  // held as percentages here because that is how people think of them.
+  let advisorLoaded = false;
+  let advisorCurrency = 'GBP';
+  let advisorRepairPct = 50;
+  let advisorReplacePct = 90;
+  let advisorMsg = '';
+  let advisorErr = '';
+
+  async function loadAdvisor() {
+    advisorLoaded = true;
+    try {
+      const s = await api<{ currency: string; repairShare: number; replaceShare: number }>('/api/admin/settings/advisor');
+      advisorCurrency = s.currency;
+      advisorRepairPct = Math.round(s.repairShare * 100);
+      advisorReplacePct = Math.round(s.replaceShare * 100);
+    } catch (e: any) {
+      advisorErr = e?.message || 'Could not load the advisor settings.';
+    }
+  }
+  $: if (tab === 'advisor' && !advisorLoaded) void loadAdvisor();
+
+  async function saveAdvisor() {
+    busy = true;
+    advisorMsg = '';
+    advisorErr = '';
+    try {
+      const s = await api<{ currency: string; repairShare: number; replaceShare: number }>('/api/admin/settings/advisor', {
+        method: 'PATCH',
+        json: { currency: advisorCurrency, repairShare: advisorRepairPct / 100, replaceShare: advisorReplacePct / 100 },
+      });
+      advisorCurrency = s.currency;
+      advisorMsg = 'Saved.';
+    } catch (e: any) {
+      advisorErr = e?.message || 'Could not save.';
+    } finally {
+      busy = false;
+    }
+  }
+
   $: if (tab === 'backup' && isSuperAdmin && !backupInfo) {
     void loadBackupInfo();
   }
@@ -463,7 +504,7 @@
 <h1 class="text-2xl font-bold">Settings</h1>
 
 <div class="mt-3 flex gap-2 flex-wrap">
-  {#each [['profile','Cafe profile'],['home','Home page'],['linux','Linux Repair Cafe'],['gallery','Gallery'],['local','Local cafes'],['maps','Maps'],['preferences','Check-in & preferences'],['seo','SEO & analytics'],['gdpr','GDPR'],['telemetry','Sharing our numbers'], ...(isSuperAdmin ? [['backup','Backup & restore']] : []),['about','About']] as [key, label]}
+  {#each [['profile','Cafe profile'],['home','Home page'],['linux','Linux Repair Cafe'],['gallery','Gallery'],['local','Local cafes'],['maps','Maps'],['preferences','Check-in & preferences'],['advisor','Repair or replace'],['seo','SEO & analytics'],['gdpr','GDPR'],['telemetry','Sharing our numbers'], ...(isSuperAdmin ? [['backup','Backup & restore']] : []),['about','About']] as [key, label]}
     <button class="btn-{tab === key ? 'primary' : 'secondary'} btn-sm" on:click={() => (tab = key as Tab)}>{label}</button>
   {/each}
   <a href="/admin/settings/users" class="btn-secondary btn-sm">Users…</a>
@@ -1158,6 +1199,33 @@
         <p class="text-xs text-slate-500 mt-1">Customer PII (name, contact) is purged this many days after the event.</p>
       </div>
       <div class="flex justify-end"><button class="btn-primary" on:click={savePrefs} disabled={busy}>Save preferences</button></div>
+    </div>
+  {/if}
+
+  {#if tab === 'advisor'}
+    <div class="card p-6 mt-4 max-w-2xl space-y-5">
+      <p class="text-sm text-slate-600">
+        The repair or replace page compares a repair with buying a new one. These settings decide the money it speaks in and when it tells people to repair or replace. Anyone can use that page, signed in or not.
+      </p>
+      <div>
+        <label class="label" for="adv-cur">Currency</label>
+        <input id="adv-cur" class="input w-28 uppercase" maxlength="3" bind:value={advisorCurrency} />
+        <p class="text-xs text-slate-500 mt-1">A three-letter code, such as GBP, EUR or USD.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="label" for="adv-rep">Repair when it costs up to</label>
+          <div class="flex items-center gap-2"><input id="adv-rep" class="input w-24" type="number" min="10" max="95" step="5" bind:value={advisorRepairPct} /> <span class="text-sm text-slate-600">% of a new one</span></div>
+        </div>
+        <div>
+          <label class="label" for="adv-repl">Replace when it costs more than</label>
+          <div class="flex items-center gap-2"><input id="adv-repl" class="input w-24" type="number" min="20" max="150" step="5" bind:value={advisorReplacePct} /> <span class="text-sm text-slate-600">% of a new one</span></div>
+        </div>
+      </div>
+      <p class="text-xs text-slate-500">In between, the answer is "too close to call" and waste avoided is the tie-breaker. The usual rule of thumb is 50% and 90%.</p>
+      {#if advisorErr}<p class="text-sm text-rose-600" role="alert">{advisorErr}</p>{/if}
+      {#if advisorMsg}<p class="text-sm text-emerald-700">{advisorMsg}</p>{/if}
+      <div class="flex justify-end"><button class="btn-primary" on:click={saveAdvisor} disabled={busy}>Save</button></div>
     </div>
   {/if}
 
