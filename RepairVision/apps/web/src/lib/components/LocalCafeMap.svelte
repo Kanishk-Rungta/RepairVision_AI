@@ -15,14 +15,14 @@
   import { createEventDispatcher, onDestroy, onMount } from 'svelte';
   import 'leaflet/dist/leaflet.css';
   import type { LocalCafe } from '$lib/localCafes';
-  import { CARTO_SUBDOMAINS, cartoTileUrl } from '$lib/mapTiles';
+  import { syncBaseLayer, type BaseLayerState } from '$lib/mapTiles';
 
   export let cafes: LocalCafe[] = [];
   /** Our own cafe, drawn differently so it is clearly the middle of the group. */
   export let ours: LocalCafe | null = null;
   export let selectedSlug: string | null = null;
   export let height = '22rem';
-  /** The cafe's CARTO key, from the public profile. Null means watermarked tiles. */
+  /** The cafe's CARTO key, from the public profile. Null means the free OpenFreeMap background. */
   export let cartoApiKey: string | null = null;
 
   const dispatch = createEventDispatcher<{ select: { slug: string | null } }>();
@@ -30,7 +30,7 @@
   let container: HTMLDivElement;
   let map: any = null;
   let L: any = null;
-  let tiles: any = null;
+  const base: BaseLayerState = { layer: null, kind: null };
   let markers = new Map<string, any>();
   let ready = false;
   let failed = false;
@@ -123,14 +123,12 @@
         // so the wheel must scroll the page, not zoom the map. Clicking the
         // map first says "I mean this", and then the wheel zooms.
         scrollWheelZoom: false,
-        attributionControl: false,
+        // The map sources ask for their credit to be visible (see $lib/mapTiles).
+        attributionControl: true,
         zoomControl: true,
       });
-      tiles = L.tileLayer(cartoTileUrl(TILE_STYLE, cartoApiKey), {
-        subdomains: CARTO_SUBDOMAINS,
-        maxZoom: 19,
-      }).addTo(map);
-      map.on('click', () => map.scrollWheelZoom.enable());
+      map.attributionControl.setPrefix(false);
+    map.on('click', () => map.scrollWheelZoom.enable());
       map.on('mouseout', () => map.scrollWheelZoom.disable());
       draw();
       fit();
@@ -141,10 +139,10 @@
     }
   });
 
-  // The key can arrive after the map is drawn, or change while the page is
-  // open. Leaflet swaps the address and fetches fresh tiles. Nothing happens
-  // when the address is the same as before.
-  $: if (tiles) tiles.setUrl(cartoTileUrl(TILE_STYLE, cartoApiKey));
+  // The background: CARTO with the cafe's key, OpenFreeMap without one (see
+  // $lib/mapTiles). The key can arrive after the map is drawn, or change while
+  // the page is open, and this swaps or re-points the layer to match.
+  $: if (map && L) void syncBaseLayer(L, map, base, cartoApiKey, TILE_STYLE);
 
   onDestroy(() => {
     if (map) {

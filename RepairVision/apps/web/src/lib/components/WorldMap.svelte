@@ -25,7 +25,7 @@
     type CafeIndex,
     type NetworkCafe,
   } from '$lib/repairCafeNetwork';
-  import { CARTO_SUBDOMAINS, cartoTileUrl } from '$lib/mapTiles';
+  import { syncBaseLayer, type BaseLayerState } from '$lib/mapTiles';
 
   export let cafes: NetworkCafe[] = [];
   /** This cafe's own entry, drawn larger and never folded into a group. */
@@ -34,7 +34,7 @@
   export let selected: NetworkCafe | null = null;
   /** True once the map is drawn, so the page can drop its placeholder. */
   export let loaded = false;
-  /** The cafe's CARTO key, from the public profile. Null means watermarked tiles. */
+  /** The cafe's CARTO key, from the public profile. Null means the free OpenFreeMap background. */
   export let cartoApiKey: string | null = null;
 
   const dispatch = createEventDispatcher<{ select: NetworkCafe }>();
@@ -63,7 +63,7 @@
   let container: HTMLDivElement;
   let L: any = null;
   let map: any = null;
-  let tiles: any = null;
+  const base: BaseLayerState = { layer: null, kind: null };
   let groupLayer: any = null;
   let cafeLayer: any = null;
   let oursLayer: any = null;
@@ -258,18 +258,16 @@
       // the wheel zooms.
       scrollWheelZoom: false,
       zoomControl: true,
-      attributionControl: false,
+      // The map sources ask for their credit to be visible (see $lib/mapTiles).
+        attributionControl: true,
     }).setView([home?.lat ?? 25, home?.lng ?? 5], HOME_ZOOM);
 
-    tiles = L.tileLayer(cartoTileUrl(TILE_STYLE, cartoApiKey), {
-      subdomains: CARTO_SUBDOMAINS,
-      maxZoom: MAX_ZOOM,
-    }).addTo(map);
 
     groupLayer = L.layerGroup().addTo(map);
     cafeLayer = L.layerGroup().addTo(map);
     oursLayer = L.layerGroup().addTo(map);
 
+    map.attributionControl.setPrefix(false);
     map.on('click', () => map.scrollWheelZoom.enable());
     map.on('mouseout', () => map.scrollWheelZoom.disable());
     map.on('moveend', queueRedraw);
@@ -291,10 +289,10 @@
     redraw();
   }
 
-  // The key can arrive after the map is drawn, or change while the page is
-  // open. Leaflet swaps the address and fetches fresh tiles. Nothing happens
-  // when the address is the same as before.
-  $: if (tiles) tiles.setUrl(cartoTileUrl(TILE_STYLE, cartoApiKey));
+  // The background: CARTO with the cafe's key, OpenFreeMap without one (see
+  // $lib/mapTiles). The key can arrive after the map is drawn, or change while
+  // the page is open, and this swaps or re-points the layer to match.
+  $: if (map && L) void syncBaseLayer(L, map, base, cartoApiKey, TILE_STYLE);
 
   onDestroy(() => {
     if (map) {

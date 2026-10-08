@@ -35,7 +35,9 @@ const config = {
         // The progressive web app: its own service worker, and its own
         // manifest. Both are same-origin only. Without these they would fall
         // back to script-src, which allows https: for analytics.
-        'worker-src': ['self'],
+        // blob: is for the map: MapLibre GL draws OpenFreeMap's vector tiles
+        // in a worker it starts from its own bundled code (src/lib/mapTiles.ts).
+        'worker-src': ['self', 'blob:'],
         'manifest-src': ['self'],
         'frame-ancestors': ['none'],
         // Allow embedded maps from common providers. We deliberately allowlist
