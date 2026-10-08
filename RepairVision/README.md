@@ -31,10 +31,16 @@ volunteer repair queues, session scheduling, reports and an admin dashboard.
 
 ### Key Features
 
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
-- [Feature 4]
+**New for Hack Day: RepairVision AI Diagnosis** ([docs/repairvision-ai.md](docs/repairvision-ai.md))
+
+- Multimodal fault diagnosis with Google Gemma 4 (`gemma-4-26b-a4b-it`): describe a device and add an optional photo to get up to three possible faults, each with supporting and missing evidence, plus safe checks to try.
+- Guided troubleshooting: one question at a time, up to five, with the diagnosis re-evaluated after each answer.
+- Safety guardrails that work independently of the model, covering mains voltage, swollen batteries, microwaves, high voltage, smoke and burning.
+- An **Analyze with RepairVision AI** button on each repair, which prefills the form without changing the repair record.
+
+**Inherited from Circularity Repair Café Hub**
+
+- Public website, QR check-in, volunteer repair queues, repair photos, session scheduling, reports and an admin dashboard.
 
 ## Innovation and Differentiation
 
@@ -51,12 +57,12 @@ volunteer repair queues, session scheduling, reports and an admin dashboard.
 
 | Category        | Technologies                |
 | --------------- | --------------------------- |
-| Frontend        | [Technologies / N/A]        |
-| Backend         | [Technologies / N/A]        |
-| Database        | [Technologies / N/A]        |
-| AI / ML         | [Models / frameworks / N/A] |
-| Infrastructure  | [Technologies / N/A]        |
-| APIs / Services | [Services / N/A]            |
+| Frontend        | SvelteKit, TypeScript, Tailwind CSS |
+| Backend         | Cloudflare Workers (TypeScript) |
+| Database        | Cloudflare D1 (Drizzle ORM), Cloudflare R2 for photos |
+| AI / ML         | Google Gemma 4 `gemma-4-26b-a4b-it` (RepairVision AI Diagnosis) |
+| Infrastructure  | Cloudflare Workers, D1, R2 |
+| APIs / Services | Google Gemini API (hosted Gemma 4); iFixit API (inherited repair guides) |
 
 
 If a category or technology is not implemented in the project, specify `N/A` instead of leaving the field blank.
@@ -71,7 +77,11 @@ If a category or technology is not implemented in the project, specify `N/A` ins
 
 ## Implementation During the Hackathon
 
-[Describe what the team built during the Hack Day and the major functionality or components completed during the event.]
+- **RepairVision AI Diagnosis.** This covers the Gemma 4 integration on the Worker, the diagnostic prompts, schema validation of the model's replies, safety guardrails, rate limiting, the AI Diagnosis page with guided multi-turn troubleshooting, the repair-page integration and the automated tests. See [docs/repairvision-ai.md](docs/repairvision-ai.md).
+
+The repair café management application it builds on was imported from Circularity Repair Café Hub. That imported functionality is not described here as built during the event.
+
+[Describe any further work the team completed during the Hack Day.]
 
 ### Team Contributions
 
@@ -98,7 +108,7 @@ The submitted application should be functional and accessible through the provid
 
 ### AI / Models
 
-- **[Model]:** [How it is used]
+- **Google Gemma 4 (`gemma-4-26b-a4b-it`), via the Google Gemini API:** powers RepairVision AI Diagnosis. It reads the device description and an optional photo, then returns structured fault hypotheses, safe checks and follow-up questions. It is called only from the Worker. The output is validated, passed through safety rules, and always shown as provisional and unverified. Gemma is released by Google under the [Gemma Terms of Use](https://ai.google.dev/gemma/terms).
 
 ### Open Source Components
 
@@ -125,9 +135,16 @@ cd [project-directory]
 
 ### Environment Variables
 
+The hub needs no variables to run. The AI Diagnosis feature needs a Gemini API key, stored as a Worker secret. For local development, copy `apps/cloudflare/.dev.vars.example` to `apps/cloudflare/.dev.vars`, which is git-ignored:
+
 ```env
-[VARIABLE_NAME]=[value]
+GEMINI_API_KEY=            # required for AI Diagnosis; a secret, never commit it
+GEMMA_MODEL=gemma-4-26b-a4b-it   # optional
+GEMMA_THINKING_LEVEL=high        # optional: high | minimal
+AI_DIAGNOSIS_HOURLY_LIMIT=30     # optional
 ```
+
+For production, run `pnpm --filter @circularity/cloudflare exec wrangler secret put GEMINI_API_KEY`. The full list of settings is in [docs/repairvision-ai.md](docs/repairvision-ai.md#setup).
 
 
 

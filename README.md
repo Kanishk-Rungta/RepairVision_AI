@@ -21,6 +21,12 @@ pnpm cf:test
 
 Stack: SvelteKit, Tailwind CSS, Cloudflare Workers, D1, R2, Drizzle ORM and shared TypeScript validation. No AI model integration was identified during this migration.
 
+## RepairVision AI Diagnosis (added after the import)
+
+A new feature for the Hack Day, separate from the imported Repair Cafe Hub functionality. It provides multimodal fault diagnosis and guided troubleshooting with Google Gemma 4 (`gemma-4-26b-a4b-it`) through the Gemini API. Signed-in staff can open it from **AI Diagnosis** in the menu, or with **Analyze with RepairVision AI** on a repair.
+
+It requires a `GEMINI_API_KEY` Worker secret. For local development, copy `RepairVision/apps/cloudflare/.dev.vars.example` to `.dev.vars`. Setup, API, architecture, safety limits and testing are documented in [RepairVision/docs/repairvision-ai.md](RepairVision/docs/repairvision-ai.md).
+
 ## Attribution and verification
 
 The source identifies itself as Circularity Repair Cafe Hub. Existing branding, comments, embedded fonts, dependency metadata and contributor history are retained. Original commit authors include Kanishk Rungta, Priyansh Narang, Keertan Vasani and Adiseshan Ramanan; the source README identifies the team as The Blacklisted.
