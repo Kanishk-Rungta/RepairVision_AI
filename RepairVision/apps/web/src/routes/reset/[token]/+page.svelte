@@ -1,8 +1,9 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import { homeFor } from '$lib/staff/nav';
   import { goto } from '$app/navigation';
   import { api } from '$lib/api';
-  import { auth } from '$lib/stores/auth';
+  import { auth, type AuthState } from '$lib/stores/auth';
 
   $: token = $page.params.token;
   let password = '';
@@ -15,13 +16,13 @@
     if (password !== confirm) { error = 'Passwords do not match'; return; }
     busy = true;
     try {
-      const res = await api<{ accessToken: string; user: { role: string } }>(`/api/auth/reset/${token}`, {
+      const res = await api<AuthState>(`/api/auth/reset/${token}`, {
         method: 'POST',
         json: { password },
         autoRefresh: false,
       });
       auth.set({ accessToken: res.accessToken, user: res.user as any });
-      goto(res.user.role === 'repairer' ? '/repairer' : '/admin/dashboard');
+      goto(homeFor(res.user));
     } catch (e: any) {
       error = e?.message || 'Reset link expired or invalid';
     } finally { busy = false; }

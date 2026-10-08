@@ -4,6 +4,6 @@
   import StaffShell from '$lib/components/StaffShell.svelte';
 </script>
 
-<StaffShell>
+<StaffShell requireStaff>
   <slot />
 </StaffShell>

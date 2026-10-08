@@ -52,10 +52,14 @@ export function isAdminRole(user: AuthUser | null | undefined): boolean {
 
 /** The page to land on after signing in, or when you press the cafe's name. */
 export function homeFor(user: AuthUser | null | undefined): string {
-  return isAdminRole(user) ? '/admin/dashboard' : '/repairer';
+  return user?.role === 'user' ? '/dashboard' : isAdminRole(user) ? '/admin/dashboard' : '/repairer';
 }
 
 export function navFor(user: AuthUser | null | undefined, options: { linuxEnabled: boolean }): NavGroup[] {
+  if (user?.role === 'user') return [{ title: 'RepairVision AI', items: [
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/diagnosis', label: 'Diagnose my device', icon: ScanSearch },
+  ] }];
   const session: NavGroup = {
     title: 'Today’s session',
     items: [
@@ -102,6 +106,7 @@ export function navFor(user: AuthUser | null | undefined, options: { linuxEnable
 
 /** The few places a phone needs one tap away, in a bar at the bottom. */
 export function tabsFor(user: AuthUser | null | undefined): NavItem[] {
+  if (user?.role === 'user') return navFor(user, { linuxEnabled: false })[0]!.items;
   const tabs: NavItem[] = [
     { href: '/repairer', label: 'Queue', icon: ClipboardList, also: ['/repairer/job'] },
     { href: '/repairer/checkin', label: 'Check in', icon: UserPlus },
@@ -131,6 +136,16 @@ export function isCurrent(item: NavItem, pathname: string): boolean {
 export function safeNext(next: string | null | undefined, user: AuthUser): string {
   const home = homeFor(user);
   if (!next || !next.startsWith('/') || next.startsWith('//') || next.startsWith('/login')) return home;
-  if (next.startsWith('/admin') && !isAdminRole(user)) return home;
-  return next;
+  if (/[\\\u0000-\u001f]/.test(next) || next.startsWith('/register')) return home;
+  try {
+    const destination = new URL(next, 'https://repairvision.invalid');
+    const path = decodeURIComponent(destination.pathname);
+    if (destination.origin !== 'https://repairvision.invalid') return home;
+    if (/^\/(login|register|setup)(\/|$)/.test(path)) return home;
+    if (/^\/repairer(\/|$)/.test(path) && user.role === 'user') return home;
+    if (/^\/admin(\/|$)/.test(path) && !isAdminRole(user)) return home;
+    return `${destination.pathname}${destination.search}${destination.hash}`;
+  } catch {
+    return home;
+  }
 }

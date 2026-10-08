@@ -21,6 +21,7 @@
 
   /** Only admins may see this part of the site. */
   export let requireAdmin = false;
+  export let requireStaff = false;
 
   let ready = false;
   let drawerOpen = false;
@@ -67,7 +68,7 @@
   $: groups = navFor(user, { linuxEnabled: $cafe?.linuxEnabled === true });
   $: tabs = tabsFor(user);
   $: pathname = $page.url.pathname;
-  $: allowed = !requireAdmin || admin;
+  $: allowed = (!requireAdmin || admin) && (!requireStaff || user?.role !== 'user');
 
   function toSignIn() {
     const here = `${$page.url.pathname}${$page.url.search}`;
@@ -202,7 +203,7 @@
 
       <div class="border-t border-slate-200 p-3 text-sm space-y-1">
         {#if collapsed}
-          <div class="side-item relative mx-auto mb-1 grid h-9 w-9 place-items-center rounded-full bg-brand-500/15 text-[12px] font-semibold text-brand-400 ring-1 ring-brand-500/25" tabindex="0" role="img" aria-label={user.displayName} data-tip={`${user.displayName} · ${admin ? (user.role === 'super_admin' ? 'Super admin' : 'Admin') : 'Repairer'}`}>
+          <div class="side-item relative mx-auto mb-1 grid h-9 w-9 place-items-center rounded-full bg-brand-500/15 text-[12px] font-semibold text-brand-400 ring-1 ring-brand-500/25" tabindex="0" role="img" aria-label={user.displayName} data-tip={`${user.displayName} · ${admin ? (user.role === 'super_admin' ? 'Super admin' : 'Admin') : user.role === 'user' ? 'Device owner' : 'Repairer'}`}>
             {initials(user.displayName)}
           </div>
           <a href="/" class="side-item relative mx-auto grid h-10 w-10 place-items-center rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/[0.05]" aria-label="View the website" data-tip="View the website">
@@ -216,7 +217,7 @@
             <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-500/15 text-[11px] font-semibold text-brand-400 ring-1 ring-brand-500/25">{initials(user.displayName)}</span>
             <div class="min-w-0">
               <p class="font-medium text-slate-900 truncate">{user.displayName}</p>
-              <p class="text-xs text-slate-500">{admin ? (user.role === 'super_admin' ? 'Super admin' : 'Admin') : 'Repairer'}</p>
+              <p class="text-xs text-slate-500">{admin ? (user.role === 'super_admin' ? 'Super admin' : 'Admin') : user.role === 'user' ? 'Device owner' : 'Repairer'}</p>
             </div>
           </div>
           <a href="/" class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white/[0.05]"><Globe size={18} class="text-slate-400" /> View the website</a>
@@ -265,7 +266,7 @@
           <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
             <div class="min-w-0">
               <p class="font-semibold text-slate-900 truncate">{user.displayName}</p>
-              <p class="text-xs text-slate-500">{admin ? 'Admin' : 'Repairer'}</p>
+              <p class="text-xs text-slate-500">{admin ? 'Admin' : user.role === 'user' ? 'Device owner' : user.role === 'user' ? 'Device owner' : 'Repairer'}</p>
             </div>
             <button type="button" class="h-10 w-10 inline-flex items-center justify-center rounded-lg hover:bg-slate-100" aria-label="Close the menu" on:click={() => (drawerOpen = false)}><X size={22} /></button>
           </div>
@@ -299,9 +300,9 @@
         {:else}
           <div class="card p-8 max-w-lg mx-auto text-center mt-8">
             <span class="h-12 w-12 mx-auto rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center"><ShieldAlert size={24} /></span>
-            <h1 class="text-xl font-semibold mt-4">This page is for admins</h1>
-            <p class="mt-2 text-slate-600">You are signed in as a repairer, so this part of the hub is not open to you. Everything you need for the session is in the repair queue.</p>
-            <a href="/repairer" class="btn-primary mt-6">Go to the repair queue</a>
+            <h1 class="text-xl font-semibold mt-4">{requireAdmin ? 'This page is for admins' : 'This page is for staff'}</h1>
+            <p class="mt-2 text-slate-600">Your account does not have access to this workspace. Return to your dashboard to continue.</p>
+            <a href={homeFor(user)} class="btn-primary mt-6">Go to my dashboard</a>
           </div>
         {/if}
       </main>
