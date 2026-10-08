@@ -36,6 +36,14 @@ export interface Bindings {
   DATA_RETENTION_DEFAULT_DAYS?: string;
   EVENT_GENERATION_MONTHS?: string;
 
+  // Repair vs. Replace Advisor: optional live part prices
+  // (src/services/advisor/parts.ts). Without them the advisor still finds part
+  // names and links on iFixit, and the person types in the price.
+  /** https URL of a parts price service (contract in parts.ts). */
+  PARTS_PRICE_API_URL?: string;
+  /** Its API key. A secret, never a plain variable. */
+  PARTS_PRICE_API_KEY?: string;
+
   // RepairVision AI Diagnosis (src/services/repairvision). All optional: the
   // rest of the hub works without them, and the diagnosis page says plainly
   // that it is not set up.

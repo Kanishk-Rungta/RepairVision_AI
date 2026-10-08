@@ -21,3 +21,10 @@ GEMINI_API_KEY=
 # repairer and device owner on the sign-in and sign-up pages. Never set this
 # on a real cafe's hub.
 # DEMO_ACCOUNTS=true
+
+# Repair vs. Replace Advisor: live part prices. Optional. Without these the
+# advisor still finds part names and iFixit store links, and the person types in
+# the price. The URL must be https; the contract is in
+# src/services/advisor/parts.ts. The key is a secret.
+# PARTS_PRICE_API_URL=
+# PARTS_PRICE_API_KEY=
