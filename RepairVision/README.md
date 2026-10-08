@@ -1,7 +1,7 @@
 # Repair Cafe Hub
+
 A repair cafe management application with a public website, QR check-in,
 volunteer repair queues, session scheduling, reports and an admin dashboard.
-
 
 ## Team
 
@@ -13,7 +13,6 @@ volunteer repair queues, session scheduling, reports and an admin dashboard.
 | Keertan Vasani    | [Contribution] |
 | Adiseshan Ramanan | [Contribution] |
 | Kanishk Rungta    | [Contribution] |
-
 
 ## Problem Statement
 
@@ -54,16 +53,14 @@ volunteer repair queues, session scheduling, reports and an admin dashboard.
 
 ### Technology Stack
 
-
-| Category        | Technologies                |
-| --------------- | --------------------------- |
-| Frontend        | SvelteKit, TypeScript, Tailwind CSS |
-| Backend         | Cloudflare Workers (TypeScript) |
-| Database        | Cloudflare D1 (Drizzle ORM), Cloudflare R2 for photos |
-| AI / ML         | Google Gemma 4 `gemma-4-26b-a4b-it` (RepairVision AI Diagnosis) |
-| Infrastructure  | Cloudflare Workers, D1, R2 |
+| Category        | Technologies                                                             |
+| --------------- | ------------------------------------------------------------------------ |
+| Frontend        | SvelteKit, TypeScript, Tailwind CSS                                      |
+| Backend         | Cloudflare Workers (TypeScript)                                          |
+| Database        | Cloudflare D1 (Drizzle ORM), Cloudflare R2 for photos                    |
+| AI / ML         | Google Gemma 4 `gemma-4-26b-a4b-it` (RepairVision AI Diagnosis)          |
+| Infrastructure  | Cloudflare Workers, D1, R2                                               |
 | APIs / Services | Google Gemini API (hosted Gemma 4); iFixit API (inherited repair guides) |
-
 
 If a category or technology is not implemented in the project, specify `N/A` instead of leaving the field blank.
 
@@ -152,8 +149,6 @@ To try the hub with one-click demo accounts on the sign-in page, seed it with `p
 
 The interface has a light and a dark theme. The toggle in the header (and in the staff sidebar) switches between them; the choice is kept in a `theme` cookie so the server can draw the right theme on the first paint, and with no choice the site follows the system setting. Each cafe's brand and accent colours are built into both themes. Animations (hero entrance, scroll reveals, page transitions, count-ups) live in `apps/web/src/lib/motion.ts` and the motion section of `apps/web/src/app.css`, and all of them stand down for visitors who ask for reduced motion.
 
-
-
 ### Running the Project
 
 ```bash
@@ -203,6 +198,7 @@ The interface has a light and a dark theme. The toggle in the header (and in the
 - [ ] Credits added
 - [ ] License added
 - [ ] Repository is organized and complete
+
 ### Device-owner accounts
 
 Once the application owner finishes `/setup`, device owners can register at `/register`, sign in at `/login`, and use `/dashboard` ? `/diagnosis`. The homepage includes **Diagnose my device**. Public accounts have diagnosis access without staff or admin permissions. Diagnosis sessions are not saved.

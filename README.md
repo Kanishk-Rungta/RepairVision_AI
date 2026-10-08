@@ -6,12 +6,12 @@
 
 **Team Name:** The Blacklisted
 
-| Member | Contribution |
-| ------ | ------------ |
-| Kanishk Rungta | RepairVision AI Diagnosis (Gemma 4 multimodal, guided troubleshooting, safety guardrails), public device-owner sign-up, demo accounts |
-| Keertan Vasani | Repair vs. Replace Advisor, light and dark theme system, motion and the redesigned sign-in page |
-| Adiseshan Ramanan | Repair knowledge base and the retrieval that backs up each diagnosis |
-| Priyansh Narang | Dark Raycast-style redesign, RepairVision logo and landing page, collapsible staff sidebar, Gemma site assistant |
+| Member            | Contribution                                                                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Kanishk Rungta    | RepairVision AI Diagnosis (Gemma 4 multimodal, guided troubleshooting, safety guardrails), public device-owner sign-up, demo accounts |
+| Keertan Vasani    | Repair vs. Replace Advisor, light and dark theme system, motion and the redesigned sign-in page                                       |
+| Adiseshan Ramanan | Repair knowledge base and the retrieval that backs up each diagnosis                                                                  |
+| Priyansh Narang   | Dark Raycast-style redesign, RepairVision logo and landing page, collapsible staff sidebar, Gemma site assistant                      |
 
 ## Problem Statement
 
@@ -99,14 +99,14 @@ flowchart LR
 
 ### Technology Stack
 
-| Category | Technologies |
-| --------------- | --------------------------- |
-| Frontend | SvelteKit (Svelte 5), TypeScript, Tailwind CSS, Lenis, Leaflet, Chart.js, Lucide icons |
-| Backend | Cloudflare Workers, TypeScript, a small Fastify-style router on the Fetch API |
-| Database | Cloudflare D1 (SQLite) with Drizzle ORM |
-| AI / ML | Google Gemma 4 (`gemma-4-26b-a4b-it`) through the Gemini API |
-| Infrastructure | Cloudflare Workers, D1, R2 and static assets, deployed with Wrangler |
-| APIs / Services | Gemini API, iFixit API, repaircafe.org directory, CARTO map tiles |
+| Category        | Technologies                                                                           |
+| --------------- | -------------------------------------------------------------------------------------- |
+| Frontend        | SvelteKit (Svelte 5), TypeScript, Tailwind CSS, Lenis, Leaflet, Chart.js, Lucide icons |
+| Backend         | Cloudflare Workers, TypeScript, a small Fastify-style router on the Fetch API          |
+| Database        | Cloudflare D1 (SQLite) with Drizzle ORM                                                |
+| AI / ML         | Google Gemma 4 (`gemma-4-26b-a4b-it`) through the Gemini API                           |
+| Infrastructure  | Cloudflare Workers, D1, R2 and static assets, deployed with Wrangler                   |
+| APIs / Services | Gemini API, iFixit API, repaircafe.org directory, CARTO map tiles                      |
 
 ### How It Works
 
