@@ -4,11 +4,14 @@
 //  One Worker serves the whole site: the pages, the API, the photos and the
 //  hourly jobs.
 //
-//  Nothing in this file is about one particular cafe, so it works as it is
-//  and you do not need to edit it.
+//  The Worker name and the two resource ids below belong to RepairVision's
+//  own Cloudflare account. Everything else works for any cafe as it is.
 // =============================================================================
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
+  // RepairVision's live site:
+  // https://repair-cafe-hub.circularity-cloudflare.workers.dev
+  // (<name>.<account subdomain>.workers.dev).
   "name": "repair-cafe-hub",
   "main": "src/worker.ts",
   "compatibility_date": "2026-08-15",
@@ -30,10 +33,19 @@
   // also reachable at <name>.<your-subdomain>.workers.dev.
   "workers_dev": true,
 
-  // The database and the file bucket. No ids are written here: the first
-  // `wrangler deploy` creates both on your account and remembers them.
-  "d1_databases": [{ "binding": "DB", "database_name": "repair-cafe-hub" }],
-  "r2_buckets": [{ "binding": "UPLOADS", "bucket_name": "repair-cafe-hub-uploads" }],
+  // The database and the uploads store, pinned by id to the ones already on
+  // RepairVision's Cloudflare account, so every deploy (even after renaming
+  // the Worker) reuses them rather than creating empty ones. A fresh account
+  // should remove the two ids: the first `wrangler deploy` then creates both.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "repair-cafe-hub", "database_id": "4888c9d1-dc70-4151-acfc-90de865ff9fa" }
+  ],
+  // Photos and other uploads. This account keeps them in Workers KV, which
+  // needs no payment method (src/lib/kvUploads.ts). With R2 enabled on the
+  // account, R2 is the better home: swap the kv_namespaces line for
+  //   "r2_buckets": [{ "binding": "UPLOADS", "bucket_name": "repair-cafe-hub-uploads" }],
+  // Uploads already in KV are not moved across; take a backup first.
+  "kv_namespaces": [{ "binding": "UPLOADS_KV", "id": "3e73761fee5c4dc8bc8a675e78bd41b5" }],
 
   // The hourly jobs (telemetry if agreed, the update check, refreshing the
   // Repair Cafe directory) run after ordinary visits, so no cron trigger is
