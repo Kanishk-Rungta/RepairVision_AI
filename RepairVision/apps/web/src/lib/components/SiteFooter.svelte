@@ -11,20 +11,19 @@
   $: socials = Object.entries($cafe?.socialLinks ?? {}).filter(([, v]) => Boolean(v));
 </script>
 
-<!-- A solid dark block closes the page. Without it the page trails off into
-     white and never feels finished. -->
-<footer class="bg-canvas border-t border-slate-200 text-white no-print">
+<!-- A Studio Mist block closes the page, so it does not trail off into white. -->
+<footer class="band border-t border-slate-200 text-ink no-print">
   <div class="max-w-6xl mx-auto px-4 py-14">
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
       <div>
         <p class="font-display text-xl font-semibold">{$cafe?.name ?? ''}</p>
-        {#if $cafe?.tagline}<p class="mt-2 text-white/70">{$cafe.tagline}</p>{/if}
+        {#if $cafe?.tagline}<p class="mt-2 text-slate-500">{$cafe.tagline}</p>{/if}
         {#if $cafe?.donateUrl}
           <a
             href={$cafe.donateUrl}
             target="_blank"
             rel="noopener"
-            class="mt-5 inline-flex items-center gap-2 rounded-xl bg-white/10 ring-1 ring-white/20 px-4 py-2 text-sm font-semibold transition-colors hover:bg-white/20"
+            class="mt-5 inline-flex items-center gap-2 rounded-xl bg-tint/[0.05] ring-1 ring-tint/[0.12] px-4 py-2 text-sm font-semibold transition-colors hover:bg-tint/[0.08]"
           >
             <Heart size={16} /> Support us
           </a>
@@ -33,7 +32,7 @@
 
       <div>
         <p class="kicker">Visit</p>
-        <ul class="mt-4 space-y-2 text-white/80">
+        <ul class="mt-4 space-y-2 text-slate-700">
           <li><a class="hover:text-white" href="/events">Events</a></li>
           <li><a class="hover:text-white" href="/skills">Skills &amp; team</a></li>
           <li><a class="hover:text-white" href="/guides">Repair guides</a></li>
@@ -45,7 +44,7 @@
 
       <div>
         <p class="kicker">Get in touch</p>
-        <ul class="mt-4 space-y-2 text-white/80">
+        <ul class="mt-4 space-y-2 text-slate-700">
           {#if $cafe?.contactEmail}
             <li>
               <a class="inline-flex items-start gap-2 hover:text-white" href="mailto:{$cafe.contactEmail}">

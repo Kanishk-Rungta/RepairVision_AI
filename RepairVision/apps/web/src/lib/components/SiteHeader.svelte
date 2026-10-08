@@ -1,6 +1,7 @@
 <script lang="ts">
   import { homeFor } from '$lib/staff/nav';
   import Logo from './Logo.svelte';
+  import ThemeToggle from './ThemeToggle.svelte';
   import { goto } from '$app/navigation';
   import { afterNavigate } from '$app/navigation';
   import { auth, type AuthState } from '$lib/stores/auth';
@@ -49,16 +50,16 @@
     </div>
 
     <!-- Desktop nav -->
-    <nav class="hidden md:flex items-center gap-2 text-sm">
+    <nav class="hidden xl:flex items-center gap-2 text-sm">
       {#if variant === 'public'}
-        <a href="/" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Home</a>
-        <a href="/events" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Events</a>
-        <a href="/skills" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06] whitespace-nowrap">Skills &amp; Team</a>
-        <a href="/diagnosis" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900">AI Diagnosis</a>
-        <a href="/guides" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06] whitespace-nowrap">Repair guides</a>
-        <a href="/world" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Worldwide</a>
-        <a href="/about" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">About</a>
-        <a href="/contact" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Contact</a>
+        <a href="/" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">Home</a>
+        <a href="/events" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">Events</a>
+        <a href="/skills" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04] whitespace-nowrap">Skills &amp; Team</a>
+        <a href="/diagnosis" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04] whitespace-nowrap">AI Diagnosis</a>
+        <a href="/guides" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04] whitespace-nowrap">Repair guides</a>
+        <a href="/world" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">Worldwide</a>
+        <a href="/about" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">About</a>
+        <a href="/contact" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">Contact</a>
         {#if linuxEnabled}
           <!-- Its own menu, styled apart from the rest. A Linux Repair Cafe is
                a different offer from a repair session, and a visitor looking
@@ -84,22 +85,25 @@
         {/if}
       {:else if user}
         {#if variant === 'repairer'}
-          <a href="/repairer" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Dashboard</a>
-          <a href="/repairer/checkin" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06] whitespace-nowrap">Register a repair</a>
-          <a href="/repairer/photos" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">Photos</a>
-          <a href="/repairer/profile" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-white/[0.06]">My profile</a>
+          <a href="/repairer" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">Dashboard</a>
+          <a href="/repairer/checkin" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04] whitespace-nowrap">Register a repair</a>
+          <a href="/repairer/photos" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">Photos</a>
+          <a href="/repairer/profile" class="px-3 py-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-tint/[0.04]">My profile</a>
         {/if}
         <span class="text-slate-600">{user.displayName}</span>
         <button class="btn-ghost btn-sm" on:click={logout}>
           <LogOut size={16} /> <span>Sign out</span>
         </button>
       {/if}
+      <ThemeToggle />
     </nav>
 
     <!-- Mobile trigger -->
+    <div class="xl:hidden flex items-center gap-1">
+    <ThemeToggle />
     <button
       type="button"
-      class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500"
+      class="xl:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500"
       aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
       aria-expanded={mobileOpen}
       aria-controls="site-mobile-nav"
@@ -111,23 +115,24 @@
         <Menu size={22} />
       {/if}
     </button>
+    </div>
   </div>
 
   <!-- Mobile drawer -->
   {#if mobileOpen}
     <nav
       id="site-mobile-nav"
-      class="md:hidden border-t border-slate-200 bg-surface shadow-sm"
+      class="xl:hidden border-t border-slate-200 bg-surface shadow-sm"
     >
       <div class="max-w-6xl mx-auto px-4 py-2 flex flex-col">
         {#if variant === 'public'}
-          <a href="/" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Home</a>
-          <a href="/events" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Events</a>
-          <a href="/skills" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Skills &amp; Team</a>
-          <a href="/guides" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Repair guides</a>
-          <a href="/world" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Worldwide</a>
-          <a href="/about" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">About</a>
-          <a href="/contact" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Contact</a>
+          <a href="/" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Home</a>
+          <a href="/events" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Events</a>
+          <a href="/skills" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Skills &amp; Team</a>
+          <a href="/guides" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Repair guides</a>
+          <a href="/world" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Worldwide</a>
+          <a href="/about" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">About</a>
+          <a href="/contact" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Contact</a>
           {#if linuxEnabled}
             <a
               href="/linux"
@@ -151,10 +156,10 @@
           {/if}
         {:else if user}
           {#if variant === 'repairer'}
-            <a href="/repairer" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Dashboard</a>
-            <a href="/repairer/checkin" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Register a repair</a>
-            <a href="/repairer/photos" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">Photos</a>
-            <a href="/repairer/profile" class="px-3 py-3 rounded-lg hover:bg-white/[0.06] text-slate-700 hover:text-slate-900">My profile</a>
+            <a href="/repairer" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Dashboard</a>
+            <a href="/repairer/checkin" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Register a repair</a>
+            <a href="/repairer/photos" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">Photos</a>
+            <a href="/repairer/profile" class="px-3 py-3 rounded-lg hover:bg-tint/[0.04] text-slate-700 hover:text-slate-900">My profile</a>
             <div class="h-px bg-slate-200 my-2"></div>
           {/if}
           <div class="px-3 py-3 text-slate-600 text-sm">Signed in as <span class="font-medium text-slate-800">{user.displayName}</span></div>

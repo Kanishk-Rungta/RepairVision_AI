@@ -27,12 +27,11 @@
   }
 </script>
 
-<section class="relative isolate overflow-hidden hero-bg text-white">
+<section class="relative isolate overflow-hidden hero-bg text-ink">
   {#if image}
     <div aria-hidden="true" class="absolute inset-0 -z-20 bg-cover bg-center" style={`background-image: url('${image}')`}></div>
     <div aria-hidden="true" class="absolute inset-0 -z-10 bg-canvas/85"></div>
   {:else}
-    <div aria-hidden="true" class="absolute inset-0 -z-10 bg-gradient-to-b from-transparent to-canvas/60"></div>
   {/if}
 
   <div class="section text-center">
@@ -43,7 +42,7 @@
         {formatDate(event.date)}, {event.startTime.slice(0, 5)}–{event.endTime.slice(0, 5)}
       </p>
       {#if venue}
-        <p class="mt-1 text-white/75">{venue.name}{#if venue.postcode}, {noWrap(venue.postcode)}{/if}</p>
+        <p class="mt-1 text-slate-500">{venue.name}{#if venue.postcode}, {noWrap(venue.postcode)}{/if}</p>
       {/if}
     {/if}
     <div class="mt-8 flex flex-col sm:flex-row flex-wrap gap-3 sm:justify-center">
@@ -51,7 +50,7 @@
         <Calendar size={18} /> {ctaLabel}
       </a>
       {#if event}
-        <AddToCalendar {event} variant="button" class="!bg-white/10 !text-white !ring-1 !ring-white/40 hover:!bg-white/20" />
+        <AddToCalendar {event} variant="button" class="!bg-tint/[0.05] !text-slate-900 !ring-1 !ring-tint/[0.12] hover:!bg-tint/[0.08]" />
       {/if}
     </div>
   </div>
