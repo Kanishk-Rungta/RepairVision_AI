@@ -1,6 +1,6 @@
 import type { App } from '../lib/router.js';
-import { loginSchema, passwordSchema } from '@circularity/shared';
-import { db } from '../db/index.js';
+import { loginSchema, passwordSchema, registrationSchema } from '@circularity/shared';
+import { db, isUniqueViolation } from '../db/index.js';
 import { passwordResetTokens, users } from '../db/schema.js';
 import { hashPassword, verifyPassword } from '../utils/password.js';
 import { and, count, eq, gt } from 'drizzle-orm';
@@ -9,6 +9,7 @@ import { rotateRefreshToken } from '../lib/auth.js';
 import { audit } from '../utils/audit.js';
 import { hashToken, randomToken } from '../utils/tokens.js';
 import { env } from '../env.js';
+import { isSetupCompleted } from '../services/cafeCache.js';
 
 const REFRESH_COOKIE = 'circ_refresh';
 
@@ -32,6 +33,49 @@ async function recentFailures(key: string): Promise<number> {
 }
 
 export async function authRoutes(app: App): Promise<void> {
+  app.post('/api/auth/register', async (request, reply) => {
+    if (!(await isSetupCompleted())) {
+      return reply.code(503).send({ error: 'The application owner needs to finish setup first.', code: 'setup/required' });
+    }
+    // Count every registration attempt per address, including successful ones.
+    const key = `register:${request.ip}`;
+    if ((await recentFailures(key)) >= LOGIN_MAX_FAILURES) {
+      return reply.code(429).send({ error: 'Too many registration attempts. Wait 10 minutes and try again.', code: 'auth/rate_limited' });
+    }
+    await db.insert(loginAttempts).values({ key });
+    const parsed = registrationSchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.code(400).send({ error: parsed.error.issues[0]?.message || 'Check your account details.', code: 'validation/failed' });
+    }
+    const passwordHash = await hashPassword(parsed.data.password);
+    let user;
+    try {
+      [user] = await db.insert(users).values({
+        email: parsed.data.email,
+        displayName: parsed.data.displayName,
+        passwordHash,
+        role: 'user',
+        showOnPublicPage: false,
+        showOnHomePage: false,
+        lastLoginAt: new Date(),
+      }).returning();
+    } catch (err) {
+      if (isUniqueViolation(err, 'users.email')) {
+        return reply.code(409).send({ error: 'An account with this email already exists. Sign in instead.', code: 'user/email_taken' });
+      }
+      throw err;
+    }
+    const tokens = await app.issueTokens(user);
+    reply.setCookie(REFRESH_COOKIE, tokens.refreshToken, {
+      httpOnly: true, sameSite: 'lax', path: '/', maxAge: 60 * 60 * 24 * env.REFRESH_TOKEN_DAYS,
+    });
+    await audit({ request, actorId: user.id, actorType: 'user', action: 'auth.register', entityType: 'user', entityId: user.id });
+    reply.code(201);
+    return { accessToken: tokens.accessToken, user: {
+      id: user.id, email: user.email, displayName: user.displayName, role: user.role, avatarUrl: user.avatarUrl,
+    } };
+  });
+
   // Per-route rate limiting on login
   app.post(
     '/api/auth/login',

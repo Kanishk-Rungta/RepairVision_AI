@@ -32,7 +32,7 @@ export interface UploadedFile {
 export interface JWTPayload {
   sub: string;
   email: string;
-  role: 'super_admin' | 'admin' | 'repairer';
+  role: 'super_admin' | 'admin' | 'repairer' | 'user';
   displayName: string;
 }
 

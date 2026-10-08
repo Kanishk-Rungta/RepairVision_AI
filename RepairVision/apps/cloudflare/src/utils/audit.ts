@@ -5,7 +5,7 @@ import type { HubRequest } from '../lib/router.js';
 interface AuditOptions {
   request?: HubRequest;
   actorId?: string | null;
-  actorType: 'admin' | 'repairer' | 'customer' | 'system' | 'super_admin';
+  actorType: 'admin' | 'repairer' | 'customer' | 'system' | 'super_admin' | 'user';
   action: string;
   entityType: string;
   entityId?: string | null;

@@ -66,7 +66,7 @@ function formText(form: FormData, name: string): string | null {
 }
 
 export async function repairVisionRoutes(app: App): Promise<void> {
-  app.addHook('preHandler', app.requireRole('super_admin', 'admin', 'repairer'));
+  app.addHook('preHandler', app.requireRole('super_admin', 'admin', 'repairer', 'user'));
 
   app.get('/api/repairvision/status', async () => {
     const config = readGemmaConfig();

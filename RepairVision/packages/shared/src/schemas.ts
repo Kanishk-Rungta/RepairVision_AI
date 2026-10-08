@@ -91,6 +91,12 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+export const registrationSchema = z.object({
+  displayName: z.string().trim().min(1, 'Enter your name').max(100),
+  email: z.string().trim().email('Please enter a valid email address').toLowerCase(),
+  password: passwordSchema.max(128),
+}).strict();
+
 export const checkInSubmitSchema = z
   .object({
     customerName: z.string().min(1).max(50).optional(),

@@ -303,7 +303,7 @@ export async function publicRoutes(app: App): Promise<void> {
     const [volunteerRow] = await db
       .select({ count: sql<number>`COUNT(*)` })
       .from(users)
-      .where(and(eq(users.isActive, true), ne(users.role, 'super_admin')));
+      .where(and(eq(users.isActive, true), ne(users.role, 'super_admin'), ne(users.role, 'user')));
 
     return {
       eventCount: Number(r.event_count ?? 0),
@@ -467,7 +467,7 @@ export async function publicRoutes(app: App): Promise<void> {
         showOnHomePage: users.showOnHomePage,
       })
       .from(users)
-      .where(and(eq(users.isActive, true), eq(users.showOnPublicPage, true)))
+      .where(and(eq(users.isActive, true), eq(users.showOnPublicPage, true), ne(users.role, 'user')))
       .orderBy(asc(users.displayName));
 
     // users.skills stores skill_category UUIDs (the admin UI binds checkbox
@@ -510,7 +510,7 @@ export async function publicRoutes(app: App): Promise<void> {
         repairCount: users.repairCountCache,
       })
       .from(users)
-      .where(and(eq(users.id, id), eq(users.isActive, true), eq(users.showOnPublicPage, true)))
+      .where(and(eq(users.id, id), eq(users.isActive, true), eq(users.showOnPublicPage, true), ne(users.role, 'user')))
       .limit(1);
     if (!row) {
       reply.code(404).send({ error: 'Not found', code: 'repairer/not_found' });
@@ -603,7 +603,7 @@ export async function publicRoutes(app: App): Promise<void> {
       .where(
         and(
           eq(users.isActive, true),
-          eq(users.showOnPublicPage, true),
+          eq(users.showOnPublicPage, true), ne(users.role, 'user'),
           eq(users.linuxRepairer, true),
         ),
       )

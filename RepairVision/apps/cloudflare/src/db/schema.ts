@@ -94,7 +94,7 @@ const json = <T = unknown>(name: string) => text(name, { mode: 'json' }).$type<T
 
 // ── Enums ────────────────────────────────────────────────────────────────────
 
-export const USER_ROLES = ['super_admin', 'admin', 'repairer'] as const;
+export const USER_ROLES = ['super_admin', 'admin', 'repairer', 'user'] as const;
 export const REPAIR_STATUSES = [
   'waiting',
   'in_progress',

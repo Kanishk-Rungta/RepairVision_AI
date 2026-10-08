@@ -1,4 +1,4 @@
-export type UserRole = 'super_admin' | 'admin' | 'repairer';
+export type UserRole = 'super_admin' | 'admin' | 'repairer' | 'user';
 
 // `awaiting_return` means the repair is paused: the visitor is coming back
 // with a part at a later session. It is an open state, not a finished one.
