@@ -359,3 +359,21 @@ export const cafeSettingsSchema = z.object({
   // URL or just the slug; the server reduces it to a slug before saving.
   repaircafeSlug: z.string().max(300).optional().nullable().or(z.literal('')),
 });
+
+// Repair knowledge retrieval: the faults a diagnosis suggests, and the
+// symptom the visitor described.
+export const knowledgeRetrieveSchema = z.object({
+  hypotheses: z
+    .array(
+      z.object({
+        label: z.string().min(1).max(200),
+        deviceType: z.enum(['mouse', 'keyboard', 'usb_accessory']).optional(),
+      }),
+    )
+    .min(1)
+    .max(5),
+  symptom: z.string().max(500).default(''),
+  guideLinks: z.boolean().optional(),
+});
+
+export type KnowledgeRetrievePayload = z.infer<typeof knowledgeRetrieveSchema>;
